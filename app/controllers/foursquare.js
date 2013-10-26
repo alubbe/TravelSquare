@@ -5,6 +5,56 @@ var mongoose = require('mongoose'),
   async = require('async'),
   _ = require('underscore');
 
+exports.getMiddleOfLongLat = function(coordArray) {
+	
+	//sums
+	var sumX = 0;
+	var sumY = 0;
+	var sumZ = 0;
+	console.log(coordArray);
+
+	//iteratre throught all coordinates
+	var coordCount = coordArray.length;
+	for (var i = 0; i < coordCount; i++) {
+		//Convert into cartesian coordinates
+
+		//convert into radiants
+		var radiantLat = coordArray[i][0] *Math.PI / 180;
+		var radiantLong = coordArray[i][1] * Math.PI * 180;
+		
+
+		var x = Math.cos(radiantLat) * Math.cos(radiantLong);
+		var y = Math.cos(radiantLat) * Math.sin(radiantLong);
+		var z = Math.sin(radiantLat);
+		
+		console.log(y);
+
+		sumX += x;
+		sumY += y;
+		sumZ += z;
+	}
+
+	sumX /= coordCount;
+	sumY /= coordCount;
+	sumZ /= coordCount;
+
+	
+
+	var resultLon = Math.atan2(sumY, sumX);
+    var resultHyp = Math.sqrt(sumX * sumX + sumY * sumY);
+    var resultLat = Math.atan2(sumZ, resultHyp);
+
+    resultLon *= 180 / Math.PI;
+    resultLat *= 180 /Math.PI;
+
+    return [resultLat,resultLon];
+
+};
+
+console.log('Calculate middle');
+console.log(exports.getMiddleOfLongLat([[5, 100], [5, 5]]));  
+console.log('finished');
+
 exports.getFromFoursquare = function(req, res) {
 	
 	//sinnvoller Code goes here
@@ -37,45 +87,11 @@ exports.getBerlin = function(req, res) {
 		});
 	};
 
+
 http.request(options, callback).end();
 res.render('foursquare/berlin', {
 		location: location
 	});
 };
 
-exports.getMiddleOfLongLat = function(coordArray) {
-	
-	//sums
-	var sumX = 0;
-	var sumY = 0;
-	var sumZ = 0;
 
-	//iteratre throught all coordinates
-	var coordCount = coordArray.length;
-	for (var i = 0; i >= coordCount; i++) {
-		//Convert into cartesian coordinates
-
-		//convert into radiants
-		var radiantLat = coordArray[i][0] * PI / 180;
-		var radiantLong = coordArray[i][1] * PI * 180;
-
-		var x = Math.cos(radiantLat) * Math.cos(radiantLong);
-		var y = Math.cos(radiantLat) * Math.sin(radiantLong);
-		var z = MAth.cos(radiantLat);
-
-		sumX += x;
-		sumY += y;
-		sumZ += z;
-	}
-
-	sumX /= coordCount;
-	sumY /= coordCount;
-	sumZ /= coordCount;
-
-	var resultLon = Math.atan2(sumY, sumX);
-    var resultHyp = Math.sqrt(sumX * sumX + sumY * sumY);
-    var resultLat = Math.atan2(sumZ, resultHyp);
-
-    return new Array(resultLon);
-
-};
