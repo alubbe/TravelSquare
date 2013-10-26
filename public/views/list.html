@@ -97,7 +97,6 @@ DETT    {{venueDetails}}
 
 
 
-<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
 
 
       <footer>
@@ -106,31 +105,3 @@ DETT    {{venueDetails}}
     </div> <!-- /container -->
 
 
-
-
-<section data-ng-controller="IndexController">
-	<h1>This is the home view</h1>
-	Controller-Test: {{test}}
-	<br />
-	<input type="text" ng-model="venuename" placeholder="sushi">
-	
-	Random Venues:
-	{--{list.response.venues}}
-	<ul>
-
-    <li ng-repeat="vent in list.response.venues">
-    Name: {--{vent}}
-    ID: {--{vent.id}}
-    
-    </li>
- 
-	</li>
-	</ul>
-	
-	
-	<br /><br />
-	Debug: list:
-<!--	{{list}}-->
-	{--{venueDetails}}
-	<br /><br /><br /><br /><br /><br /><br /><br />
-</section>
