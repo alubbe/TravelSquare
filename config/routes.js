@@ -77,4 +77,7 @@ module.exports = function(app, passport, auth) {
     var index = require('../app/controllers/index');
     app.get('/', index.render);
 
+    //foursquare routes
+    var foursquare = require('../app/controllers/foursquare');
+    app.get('/test', foursquare.getFromFoursquare);
 };
