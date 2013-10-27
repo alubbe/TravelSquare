@@ -12,11 +12,8 @@ h1 {
   font-weight: 400;
 }
 h2 {
-  width: 260px;
-  height: 50px;
   margin: 10px 5px;
   padding-top: 5px;
-  float: left;
   font-size: 32px;
   line-height: 36px;
   font-weight: 700;
@@ -79,21 +76,17 @@ p {
   height: 460px;
 }
 .info_window {
-  position: static;
-  left: 0px;
-  top: 0px;
-  display: block;
-  width: 140px;
-  height: 120px;
-  margin: 10px 10px 11px;
+  width: 220px;
+  height: 220px;
+  margin: 5px;
   float: left;
   border: 2px solid #a6a6a6;
   border-radius: 0px;
 }
 .img_info_window {
-  width: 130px;
-  height: 110px;
-  margin: 3px 5px 5px 3px;
+  width: 205px;
+  height: 205px;
+  margin: 5px;
   padding: 5px;
   float: none;
 }
@@ -103,10 +96,8 @@ p {
   top: -50px;
   z-index: 1;
   display: block;
-  width: 110px;
   clear: left;
   color: white;
-  font-size: 16px;
 }
 .category_header {
   height: 45px;
@@ -252,13 +243,4 @@ p {
   height: 60px;
   margin-top: 0px;
   float: left;
-}
-.info_window_box {
-  position: static;
-  display: block;
-  overflow: visible;
-  height: 160px;
-  padding: 5px;
-  float: left;
-  border: 2px solid #a3a3a3;
 }
