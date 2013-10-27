@@ -51,7 +51,7 @@ exports.getMiddleOfLatLong = function(coordArray) {
 
 };
 
-exports.distanceBetween = function(lat1, lng1, lat2, lng2){
+distanceBetween = function(lat1, lng1, lat2, lng2){
 	lat1 = lat1 * Math.PI / 180;
 	lat2 = lat2 * Math.PI / 180;
 	var R = 6371, //km
