@@ -1,3 +1,15 @@
+
+
+angular.module('mean.system').controller('SplashCrtl', ['$http','$scope', 'Global', function ($http,$scope, Global) {
+    $scope.global = Global;
+    $scope.test = "SplashController"
+        
+}]);
+
+
+
+
+
 angular.module('mean.system').controller('IndexController', ['$http','$scope', 'Global', function ($http,$scope, Global) {
     $scope.global = Global;
     $scope.test = "Indexcontroller"
