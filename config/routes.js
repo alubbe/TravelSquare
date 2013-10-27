@@ -80,4 +80,6 @@ module.exports = function(app, passport, auth) {
     //foursquare routes
     var foursquare = require('../app/controllers/foursquare');
     app.get('/test', foursquare.getFromFoursquare);
+    app.get('/itenary', foursquare.buildItenary);
+    app.get('/foursquare/:location', foursquare.getBerlin);
 };
