@@ -11,8 +11,8 @@ angular.module('mean.system').controller('SplashCrtl', ['$http','$scope', 'Globa
 
 
 angular.module('mean.system').controller('IndexController', ['$http','$scope', 'Global', function ($http,$scope, Global) {
-    $scope.global = Global;
-    $scope.test = "Indexcontroller"
+   $scope.global = Global;
+    $scope.test = "Indexcontroller";
     
 //    $http.get('').success(function(data) {
 //  $scope.list = data;
@@ -47,7 +47,7 @@ angular.module('mean.system').controller('IndexController', ['$http','$scope', '
              return;       
         });
          
-    return 
+    return;
     }
     
     
@@ -62,7 +62,7 @@ angular.module('mean.system').controller('IndexController', ['$http','$scope', '
              return;       
         });
          
-    return 
+    return;
     }
     
     
