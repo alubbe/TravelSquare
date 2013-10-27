@@ -19,13 +19,12 @@
     <hr>Sections:
      <ul id="day-details" class="span10">
                         <li ng-repeat="section in sections" ng-class="{closed:!section.selected}">
-                                <div class="title" ng-click="openSection($index)">{##{section}}...</div>
+                                <div class="title" ng-click="openSection($index)">{{section.name}}...</div>
                                 <div id="c{{$index}}" class="content">
-                                        <ul>
-                                                <li ng-repeat="venue in section.venues">
-                                                        {{section.content}}...
-                                                </li>
-                                        </ul>
+                                       
+                                       CONTENT: {{section.name}}
+                                       
+                                       
                                 </div>
                         </li>
                 </ul>
