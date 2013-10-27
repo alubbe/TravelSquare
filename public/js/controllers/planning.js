@@ -3,6 +3,9 @@ angular.module('mean.system').controller('PlanningController', ['$http','$scope'
     $scope.global = Global;
     $scope.test = "PlanningController"
     
+    $scope.city = "Barcelona";
+     
+        
    // TSxhr($http, $scope, url, "allVenues");
     
  	
@@ -21,47 +24,51 @@ angular.module('mean.system').controller('PlanningController', ['$http','$scope'
  //$scope.sections.coffee.name = "COFFEE";
  //$scope.sections.food.selected = false;
 	
+	
+	
 	$scope.venues = [];
 	$scope.venues['FOOD'] = testjson() ;
 	
 	$scope.venues['FOOD'].selected = false;
 	$scope.venues['FOOD'].name = "FOOD"
  	console.log($scope.venues['FOOD'].name)
- 	 	$scope.sections = [$scope.venues['FOOD']];
+ 	
+ 	
+ 	$scope.venues['ART'] = testjson() ;
+	
+	$scope.venues['ART'].selected = false;
+	$scope.venues['ART'].name = "ART"
+ 	console.log($scope.venues['ART'].name)
+ 	
+ 	 	$scope.sections = [$scope.venues['FOOD'], $scope.venues['ART']];
  
-        $scope.openSection = function(index) {
-            for (var i in $scope.sections) {
-                if (i == index) {
-                    // Display new section
-                    $('#c'+i).css({
-                        visibility: 'visible',
-                        display: 'block'
-                    }).animate({
-                        height: $scope.getHeightOfSection(index)+'px',
-                        padding: '5px'
-                    }, 300);
-                    continue;
-                }
-                // Hide all other sections
-                $scope.sections[i].selected = false;
-                $('#c'+i).animate({
-                    height: 0,
-                    padding: '0 5px'
-                }, 300, function () {
-                    $(this).css({
-                        visibility: 'hidden',
-                        display: 'none'
-                    });
-                });
-            }
-            $scope.sections[index].selected = true;
-        };
+     
+        // The colors and titles for the venue sections
+        var titleBarColors = [
+            'rgb(242,77,96)',
+            'rgb(250,202,10)',
+            'rgb(181,60,94)',
+            'rgb(210,217,10)',
+            'rgb(151,30,24)',
+            'rgb(69,130,94)'
+        ];
+ 
 
-        $scope.getHeightOfSection = function(index) {
-            return $scope.sections[index].venues.length * 23;
-        };
-
-
+		urlpre = "http://localhost:3000/foursquare/" + $scope.city + "/";
+		urlpost = "/8";
+		
+		$scope.catsRestname = ['food',  'coffee', 'sights', 'shops', 'arts', 'outdoors',  'drinks'];
+		$scope.catsTitels = ['FOOD',  'COFFEE', 'SIGHTS', 'SHOPPING', 'ARTS & EVENTS', 'OUTDOORS', 'NIGHTLIFE',];
+		$scope.allvenues = [];
+		for (var catgory in catsRestname){
+			url = urlpre + catgory + urlpost;
+			TSxhrPush($http, $scope, url, catgory, "allvenues");
+		}
+		
+		
+		
+       
+       
        
        
         
@@ -70,10 +77,10 @@ angular.module('mean.system').controller('PlanningController', ['$http','$scope'
 
 
  
-    function TSxhr($http, $scope, url, variablename){
+    function TSxhrPush($http, $scope, url, catgory, variablename){
             $http.jsonp(url)               
        			  .success(function (data) {
-              $scope[variablename] = data;
+              $scope[variablename].[catgory] = data;
         }).error(function (data, status, headers, config) {
 
              alert('Please try again soon.');  
