@@ -570,6 +570,8 @@ iterativeShit = function(matrix, center, i, j, n, totalSlots, tourstops, optimiz
 		if(i % 7 == 4) tourstops.stops[n].timeframe = "Afternoon 2 - Shopping or Outdoors";
 		if(i % 7 == 5) tourstops.stops[n].timeframe = "Evening - Food";
 		if(i % 7 == 6) tourstops.stops[n].timeframe = "Night - Nightlife";
+		var _l = i;
+		tourstops.stops[n].day = Math.floor(_l / 7) + 1;
 		// remove matrix[i][j]
 		_matrix[i%7].splice(j, 1);
 		if (n >= totalSlots - 1) {

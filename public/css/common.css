@@ -330,7 +330,7 @@ header * {
   content: ''; }
 
 #background_main_image {
-  background-image: url(../images/paris.jpg); }
+  background-image: url(../img/paris.jpg); }
 
 .background_main_image {
   height: 550px;
@@ -339,6 +339,7 @@ header * {
   background-repeat: no-repeat;
   margin: auto;
   position: relative;
+  margin-top: -100px;
   text-shadow: rgba(0, 0, 0, 0.6) 0 0 15px, rgba(0, 0, 0, 0.6) 0 -1px 1px; }
 
 #main_unit {
@@ -351,20 +352,12 @@ header * {
 #spacer2 {
   height: 60px; }
 
-#background_cloud {
-  opacity: 0.8;
-  position: absolute;
-  left: 50%;
-  margin-left: -550px;
-  width: 600px;
-  height: 180px;
-  background-image: url(../images/background_spray_blur.png); }
-
 .background_main_image h1 {
   color: white;
   font-size: 48px;
   line-height: 48px;
-  margin: 100px 0 20px 0; }
+  margin: 100px 0 20px 0;
+  font-family: Montserrat, Verdana; }
 
 .background_main_image h1.show-for-small {
   font-size: 36px;
@@ -423,9 +416,8 @@ input.input_elements, select.input_elements {
 
 #submit_location_button {
   height: 41px;
-  font-size: 15px;
+  font-size: 20px;
   color: white;
-  text-shadow: 0 -1px #008080, 0 0 #008080, 0 0 #008080, 0px -1px #008080;
   border: 1px solid #008080;
   -webkit-box-shadow: inset #f0f0f0 0 0 4px;
   -moz-box-shadow: inset #f0f0f0 0 0 4px;
@@ -433,7 +425,8 @@ input.input_elements, select.input_elements {
   margin: 0;
   width: 100%;
   padding: 4px 5px 0 5px;
-  font-weight: normal; }
+  font-weight: bold;
+  background-color: rgb(255,225,89); }
 
 #rooms_min {
   color: #4d4f50; }
