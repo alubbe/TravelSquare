@@ -517,7 +517,22 @@ exports.buildItenary = function(req, res) {
 						console.log(tourstopsList.stops);
 						console.log(tourstopsList.stops[7]);
 						var done = iterativeShit(tourstopsList.stops, tourstopsList.center, tourstopsList.beginningSlot, null, 0, tourstopsList.totalSlots, {stops:[]}, {stops:[], sumOfSquares: 999999999});
-						res.jsonp(done);
+
+						//get detailed information for all venues contained in done
+						var ids = new Array();
+
+						console.log(done);
+						for(i = 0; i<done.stops.length; i++)
+							ids.push(done.stops[0].venue.id); // add id
+
+						var asyncCallback = function(response) {
+							var stops = {
+								stops: new Array()};
+							stops.stops=response;
+							res.jsonp(stops);
+						};
+						
+						getVenueDetails(ids, asyncCallback);
 					} 
 				});
 			};
