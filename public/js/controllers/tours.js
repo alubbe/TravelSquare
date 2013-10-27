@@ -12,7 +12,9 @@ angular.
                 mapsWrapper = new GoogleMapsWrapper();
                 mapsWrapper.initializeMap();
                 // Save tour and select first day
-                $scope.tour = $scope.parseData(tour);
+                $scope.tour = {
+                    days: $scope.parseData(tour)
+                };
                 $scope.selectDay(0);
             });
         };
@@ -44,10 +46,7 @@ angular.
             var locations = [];
             var currentSection;
             $scope.sections = []
-            for (var i in selectedDay.venues) {
-                if (typeof selectedDay.venues[i] == 'function' || !selectedDay.venues[i].location) {
-                    continue;
-                }
+            for (var i = 0; i < selectedDay.venues.length; i++) {
                 // Save location
                 locations.push(selectedDay.venues[i].location);
                 // Add venue to a section
@@ -65,9 +64,10 @@ angular.
                 }
                 currentSection.venues.push(selectedDay.venues[i]);
             }
+            console.log($scope.sections);
 
             // Update the heights of all sections
-            for (var i in $scope.sections) {
+            for (var i = 0; i < $scope.sections.length; i++) {
                 $('#c'+i).css({
                     height: $scope.getHeightOfSection(i)+'px'
                 });
@@ -81,7 +81,7 @@ angular.
         };
 
         $scope.openSection = function(index) {
-            for (var i in $scope.sections) {
+            for (var i = 0; i < $scope.sections.length; i++) {
                 if (i == index) {
                     // Display new section
                     $('#c'+i).css({
@@ -110,22 +110,25 @@ angular.
 
         $scope.parseData = function(data) {
             var days = [];
-            for (var i in data) {
+            for (var i = 0; i < data.days.length; i++) {
                 var day = {
                     date: '',
                     venues: []
                 };
-                var stops = data[i].stops;
-                for (var j in stops) {
+                var stops = data.days[i].stops;
+                for (var j = 0; j < stops.length; j++) {
                     // Determine time code
                     var timeCode = 3;
-                    if (stops[j].timeframe.startsWith('Morning')) {
+                    var timeFrame = data.days[i].timeframes[j];//.venue.timeframe || stops[j].timeframe;
+                    console.log(timeFrame);
+                    if (timeFrame && timeFrame.indexOf('Morning') == 0) {
                         timeCode = 0;
-                    } else if (stops[j].timeframe.startsWith('Lunch')) {
+                    } else if (timeFrame && timeFrame.indexOf('Lunch') == 0) {
                         timeCode = 1;
-                    } else if (stops[j].timeframe.startsWith('Afternoon')) {
+                    } else if (timeFrame && timeFrame.indexOf('Afternoon') == 0) {
                         timeCode = 2;
                     }
+                    console.log(timeFrame);
                     // Build address
                     var address = '';
                     var name = '<unknown>';
@@ -148,6 +151,7 @@ angular.
                 }
                 days.push(day);
             }
+            console.log(days);
             return days;
         }
 
