@@ -1,9 +1,12 @@
 
 angular.module('mean.system').controller('PlanningController', ['$http','$scope', 'Global', function ($http,$scope, Global) {
-    $scope.global = Global;
-    $scope.test = "PlanningController"
     
-    $scope.city = "Barcelona";
+    var cityp = window.location.href;
+    var city = cityp.split("?")[1];
+    $scope.global = Global;
+    $scope.test = "PlanningController";
+    
+    $scope.city = city;
      
         
    // TSxhr($http, $scope, url, "allVenues");
