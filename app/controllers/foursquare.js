@@ -13,7 +13,7 @@ distanceBetween = function(lat1, lng1, lat2, lng2){
 		dLon = (lng2-lng1) * Math.PI / 180,
 		a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2),
 		c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-	 
+
 	return R * c;
 };
 
@@ -61,9 +61,9 @@ getMiddleOfLatLongMatrix = function(coordArray) {
 };
 
 exports.getFromFoursquare = function(req, res) {
-	
+
 	//sinnvoller Code goes here
-	
+
 	res.render('foursquare/test');
 };
 
@@ -104,7 +104,7 @@ addMorePlaces = function(tourstopsList, i, category, amount, callback) {
 					if(items[_i].venue.id == tourstopsList.stops[i][j].id) {
 						exists = true;
 						break;
-					}	
+					}
 				}
 				//is in list
 				if(exists == false)
@@ -199,7 +199,7 @@ exports.getVenuesCityCat = function(req, res) {
 	console.log(city)
 	console.log(category);
 
-	
+
 	//create callback
 	callback = function(response) {
 		var data = '';
@@ -212,13 +212,13 @@ exports.getVenuesCityCat = function(req, res) {
 			//parse json
 			var parsed = JSON.parse(data);
 
-			
+
 
 			venueCount = parsed.response.groups[0].items.length // set venueCount;
 
 			var ids = new Array();
 
-			for(var i = 0; i<venueCount; i++) 
+			for(var i = 0; i<venueCount; i++)
 				//collect ids
 				ids.push( parsed.response.groups[0].items[i].venue.id);
 
@@ -356,7 +356,7 @@ exports.getBerlin = function(req, res) {
 	};
 
 	var places = [{
-		
+
 		id: '50d751d8e4b0b55bc64f3161'
 	},
 	{
@@ -489,7 +489,7 @@ exports.buildItenary = function(req, res) {
 	for(var _i = 0; _i < timesOfTheDay.length; _i++){
 	// find out what slot will first be relevant
 		if (timesOfTheDay[_i] >= tourstopsList.arrivalTime && tourstopsList.beginningSlot == null) tourstopsList.beginningSlot = _i;
-	// find out which slot will be just too late for the itenary 
+	// find out which slot will be just too late for the itenary
 		if (timesOfTheDay[_i] > tourstopsList.departureTime && tourstopsList.endingSlot == null) tourstopsList.endingSlot = _i - 1;
 	}
 	if (tourstopsList.beginningSlot == null) tourstopsList.beginningSlot = timesOfTheDay.length;
@@ -500,7 +500,7 @@ exports.buildItenary = function(req, res) {
 	//console.log(tourstopsList.beginningSlot);
 	//console.log(tourstopsList.endingSlot);
 	//console.log(tourstopsList.totalSlots);
-	
+
 	// add a centre to the tourstopsList and fill up the list if it wasn't full already
 	var expectedSlots = [0,0,0,0,0,0,0], i, diff, queueLength = 0, numberOfReturns = 0;
 
@@ -546,14 +546,21 @@ exports.buildItenary = function(req, res) {
 						var asyncCallback = function(response) {
 							var stops = {
 								days: new Array()};
-							
+
 							var currentPhase = 0;
-							//add days 
+							//add days
 							var stopsADay = {
-								stops: new Array()};
+								stops: new Array(),
+								timeframes: new Array()	};
+
 							for(i = 0; i<done.stops.length;i++){
 								if(currentPhase <= returnPhase(done.stops[i].timeframe)) {
+									var timef = {
+										timeframe: done.stops[i].timeframe
+									};
 									stopsADay.stops.push(response[i]);
+									stopsADay.timeframes.push(done.stops[i].timeframe);
+
 									currentPhase = returnPhase(done.stops[i].timeframe);
 									//console.log(returnPhase(done.stops[i].timeframe));
 								}
@@ -561,15 +568,16 @@ exports.buildItenary = function(req, res) {
 								{
 									stops.days.push(stopsADay);
 									stopsADay.stops = new Array();
+									stopsADay.timeframes = new Array();
 									currentPhase = 0;
 								}
 							}
 							//console.log(stops.days.length);
 							res.jsonp(stops);
 						};
-						
+
 						getVenueDetails(ids, asyncCallback);
-					} 
+					}
 				});
 			};
 		}
@@ -622,12 +630,12 @@ complete = function(tourstopsList, beginningSlot, endingSlot, lenghtOfADay){
 
 	return tourstopsList;
 };
- 
+
 // i denotes the current slot, j the how manyth stop is being considered within that slot and n how often deep the function is within itself
 iterativeShit = function(matrix, center, i, j, n, totalSlots, tourstops, optimizedTourstops){
 	//the JS way of copying arrays :)
 	var _matrix = [];
-	for(var _i = 0; _i < matrix.length; _i++) _matrix[_i] = matrix[_i].slice(); 
+	for(var _i = 0; _i < matrix.length; _i++) _matrix[_i] = matrix[_i].slice();
 	//console.log("i = " + i + " & j = " + j + " & n = " + n + " & totalSlots = " + totalSlots);
 
 	//do this if it's the first time this functions gets launched
@@ -685,7 +693,7 @@ checkConfiguration = function(tourstops, center, optimizedTourstops){
 
 		// add the distance between the two stops
 		tourstops.sumOfSquares += Math.pow(distanceBetween(lat1, lng1, lat2, lng2), 2);
-		// if it is the start of travel or the first stop of the day, add the distance to the center (i.e. hotel) 
+		// if it is the start of travel or the first stop of the day, add the distance to the center (i.e. hotel)
 		if(i == 0 || tourstops.stops[i].asd == 1) tourstops.sumOfSquares += Math.pow(distanceBetween(lat1, lng1, center.lat, center.lng), 2);
 		// if it is the the last stop of the day, add the distance to the center (i.e. hotel)
 		if(tourstops.stops[i].i == 2) tourstops.sumOfSquares += Math.pow(distanceBetween(lat2, lng2, center.lat, center.lng), 2);

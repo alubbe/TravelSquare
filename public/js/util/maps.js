@@ -23,14 +23,14 @@ function GoogleMapsWrapper() {
 
 	this.updateRoute = function(places) {
 		// Remove old markers
-		for (var i in this.markers) {
+		for (var i = 0; i < this.markers.length; i++) {
 			this.markers[i].setMap(null);
 		}
 		this.markers = [];
 
 		// Create all markers
 		this.bounds = new google.maps.LatLngBounds();
-		for (var i in places) {
+		for (var i = 0; i < places.length; i++) {
 			var color = (i == 0) ? '' : '_green';
 			var marker = new google.maps.Marker({
 				position: new google.maps.LatLng(places[i].lat, places[i].lng),
