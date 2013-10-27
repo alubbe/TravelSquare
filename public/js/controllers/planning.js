@@ -1,12 +1,13 @@
 
 angular.module('mean.system').controller('PlanningController', ['$http','$scope', 'Global', function ($http,$scope, Global) {
     
-    var cityp = window.location.href;
-    var city = cityp.split("?")[1];
+    var _params = window.location.href.split("?")[1].split("#")[0];
+    var params =  JSON.parse('{"' + _params.replace(/&/g, "\",\"").replace(/\=/g,"\":\"").replace(/%2C/g,",").replace(/\+/g," ") + '"}');
     $scope.global = Global;
     $scope.test = "PlanningController";
     
-    $scope.city = city;
+    $scope.city = params.location;
+    $scope.days = params.days;
     $scope.sections = [
       {
         code: 0,
