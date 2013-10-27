@@ -3,45 +3,10 @@
       .heart {position: absolute; top:20px;right: 30px; width: 20px; height: 20px;background-image: url(../img/heart_filled.png);}
     </style>
     <section data-ng-controller="PlanningController" data-ng-init="findOne()">
-    Test: {{test}}
-    
-    {{allvenues}}
-   
-  
-    <hr>
-    
-     <ul id="day-details" class="span10">
-                        <li ng-repeat="section in sections" ng-class="{closed:!section.selected}">
-                                <div class="title" ng-click="openSection($index)">{{section.name}}...</div>
-                                <div id="c{{$index}}" class="content">
-                                        <ul>
-                                         
-                                           <ul>
-     <li ng-repeat="section in venues['FOOD']" >
-     
-    
-{{section.venue.name}}
-- Likes {{section.venue.likes.count}}
-- Rating {{section.venue.rating}}
-- Photo {{section.venue.photos}}
-<hr>
+    <section data-ng-controller="PlanningController" data-ng-init="init()">
 
-     </li>
-     </ul>
-    
-                                         
-                                         
-                                        </ul>
-                                </div>
-                        </li>
-                </ul>
-            ...    
-        <hr>        
-                
-                
-                
-    
-    
+
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
     <link rel="stylesheet" type="text/css" href="css/webflow.css">
@@ -54,14 +19,56 @@
         }
       });
     </script>
-  
+
     <script type="text/javascript" src="js/webflow.js" defer></script>
-  
-  
-  
-  
-  
-  
+
+    <style type="text/css">
+      #planning-details {
+      list-style-type: none;
+      margin: 0;
+    }
+
+#planning-details li {
+  margin-bottom: 5px;
+}
+
+#planning-details li div.category_header {
+  padding: 5px;
+  font-size: 1.4em;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0;
+}
+
+#planning-details li div.category_header h2 {
+  margin: 0;
+}
+
+#planning-details li div.content {
+  padding: 0 5px;
+  height: 0;
+  visibility: hidden;
+  display: none;
+  margin-top: 0;
+  width: auto;
+  border-left: 2px solid grey;
+  border-right: 2px solid grey;
+  border-bottom: 2px solid grey;
+}
+
+li div.venue-box {
+  width: 140px;
+  height: 140px;
+  margin: 10px;
+  background-color: green;
+}
+
+    </style>
+
+
+
+
+
   <div class="section_header">
     <div class="header_bar">
       <img class="logo_travelsquare" src="/img/travelsquare_Mini.png" width="130" alt="travelsquare_Mini.png">
@@ -75,19 +82,33 @@
           <div class="w-clearfix bloody_empty_div">
             <a class="w-clearfix w-inline-block link1" href="/">
               <img class="" src="img/notepad.png" width="60" height="50" style="padding-right:15px;" alt="notepad.png">
-            
+
             </a>
-          
+
             <a class="w-inline-block link2" href="/tour">
               <img class="" src="img/map.png" width="50" height="50" alt="map.png">
             </a>
-            
-           
-           
+
+
+
           </div>
         </div>
       </div>
-      <div class="category_header">
+      <ul id="planning-details" class="span12">
+        <li ng-repeat="section in sections" ng-class="{closed:!section.selected}">
+          <titleboxfront></titleboxfront>
+          <div id="c{{$index}}" class="content">
+            <ul>
+              <li ng-repeat="venue in section.venues" class="info_window">
+                <div class="venue-box">{{venue.venue.name}}</div>
+                <div class="heart"> </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+
+      <!-- <div class="category_header">
         <h2 class="category_titles">FOOD</h2>
       </div>
       <div class="w-clearfix sub_section">
@@ -154,7 +175,7 @@
       </div>
       <div class="w-clearfix category_header category_outdoors">
         <h2 class="category_titles categoy_outdoors">OUTDOORS</h2><a class="button cta" href="#">Plan My Trip</a>
-      </div>
+      </div> -->
     </div>
   </div>
 </body>
