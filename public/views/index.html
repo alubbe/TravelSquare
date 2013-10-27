@@ -1,136 +1,106 @@
-  
- <style>
- /* Move down content because we have a fixed navbar that is 50px tall */
-body {
-  padding-top: 50px;
-  padding-bottom: 20px;
-}
-
- </style> 
-
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">TravelSquare</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
-              </ul>
-            </li>
-          </ul>
-          <form class="navbar-form navbar-right">
-            <div class="form-group">
-              <input type="text" placeholder="Email" class="form-control">
-            </div>
-            <div class="form-group">
-              <input type="password" placeholder="Password" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-success">Sign in</button>
-          </form>
-        </div><!--/.navbar-collapse -->
-      </div>
-    </div>
-
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-   <!-- <div class="jumbotron">
-      <div class="container">
-        <h2>Hello!</h2>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-      </div>
-    </div>
--->
-    <div class="container">
-      <!-- Example row of columns -->
+<!DOCTYPE html>
+<html lang="de" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.1.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="css/normalize.css" media="all" rel="stylesheet"/>
+    <link href="css/foundation.css" media="all" rel="stylesheet"/>
+    <link href="css/style.css" media="all" rel="stylesheet"/>
+    <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><script type="text/javascript">window.oldIE = true;</script><![endif]-->
+  </head>
+  <body>
+    <!--[if lt IE 8]><p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p><![endif]-->
+    <header>
+      <a href="index.html" id="logo"><img alt="muuuf" height="25" src="images/travelsquare_Mini.png" width="98"/></a>
+      <ul id="navbar_rechts">
+        <li><a class="navBarLinks" href="about.html">About</a></li>
+      </ul>
+    </header>
+    <div class="background_main_image" id="background_main_image">
       <div class="row">
-        <div class="col-lg-4">
-          <h2>Heading</h2>
-          <p>Your picks, you can move each element around just drag and drop it.</p>
-          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+        <div class="small-11 small-centered columns">
+          <div id="background_cloud">
+          </div>
+          <div id="main_unit">
+            <h1 class="hide-for-small">Your personal travel planner</h1>
+            <h1 class="show-for-small">Your personal travel planner</h1>
+            <h2>Travelsquare makes personalised recommendations for you, creates the best routes and neatly organises your itineraries on a map.</h2>
+            <form action="karte.html" class="position-left" id="search_form">
+              <div class="row collapse">
+                <div class="large-4 columns styled">
+                  <input autocomplete="on" class="input_elements" id="searchbox" name="address" placeholder="Wo möchtest du wohnen?" type="text"/>
+                </div>
+                <div class="large-8 columns">
+                  <div class="row collapse">
+                    <div class="large-4 columns styled">
+                      <input autocomplete="off" class="input_elements" id="price_max" name="price_max" placeholder="max. Miete (warm)" type="text"/>
+                    </div>
+                    <div class="large-8 columns">
+                      <div class="row collapse">
+                        <div class="large-4 columns styled hide-for-small">
+                          <select class="input_elements" id="rooms_min" name="rooms_min">
+                            <option value="1">min. 1 Zi.</option>
+                            <option value="2">min. 2 Zi.</option>
+                            <option value="3">min. 3 Zi.</option>
+                            <option value="4">min. 4 Zi.</option>
+                            <option value="5">min. 5 Zi.</option>
+                          </select>
+                        </div>
+                        <div class="large-4 columns styled hide-for-small">
+                          <select class="input_elements" id="m2_min" name="m2_min">
+                            <option value="25">min. 25m2</option>
+                            <option value="50">min. 50m2</option>
+                            <option value="75">min. 75m2</option>
+                            <option value="100">min. 100m2</option>
+                            <option value="150">min. 150m2</option>
+                          </select>
+                        </div>
+                        <div class="large-4 columns styled">
+                          <button class="position-left radius" id="submit_location_button" type="submit"><i class="icon icon-search"></i>&nbsp;SUCHEN&nbsp;</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
-    
-DETT    {{venueDetails}}
-{{console.log(venueDetails);}}
-     <li ng-repeat="ven in venueDetails">
-    Name: {{ven.name}}
-    ID: {{ven}}
-    <img src="{{}}110x110{{}}">
-    </li>
-    
-    
-    <div class="row">
-  <div class="col-md-3">.col-md-1
-  <br></div>
-  <div class="col-md-3">.col-md-1<br>.....</div>
-  <div class="col-md-3">.col-md-1<br>.....</div>
-  <div class="col-md-3">.col-md-1<br>.....</div>
-</div>
-<div class="row">
-  <div class="col-md-3">.col-md-1<br>.....</div>
-  <div class="col-md-3">.col-md-1<br>.....</div>
-  <div class="col-md-3">.col-md-1<br>.....</div>
-  <div class="col-md-3">.col-md-1<br>.....</div>
-</div>
-
-       
-    
-
-      <hr>
-
-
-
-<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
-
-
-      <footer>
-        <p>&copy;TravelSquare from TC Hackathon</p>
-      </footer>
-    </div> <!-- /container -->
-
-
-
-
-<section data-ng-controller="IndexController">
-	<h1>This is the home view</h1>
-	Controller-Test: {{test}}
-	<br />
-	<input type="text" ng-model="venuename" placeholder="sushi">
-	
-	Random Venues:
-	{--{list.response.venues}}
-	<ul>
-
-    <li ng-repeat="vent in list.response.venues">
-    Name: {--{vent}}
-    ID: {--{vent.id}}
-    
-    </li>
- 
-	</li>
-	</ul>
-	
-	
-	<br /><br />
-	Debug: list:
-<!--	{{list}}-->
-	{--{venueDetails}}
-	<br /><br /><br /><br /><br /><br /><br /><br />
-</section>
+      </div>
+    </div>
+    <div class="text_block">
+      <h3>Alle Wohnungen auf einer Karte</h3>
+    </div>
+    <div class="image_block" data-stellar-background-ratio="0.3" id="background_secondary_image_1"></div>
+    <div class="text_block">
+      <h3>Super einfache Wohnungssuche</h3>
+    </div>
+    <div class="image_block background_right" data-stellar-background-ratio="0.3" id="background_secondary_image_2"></div>
+    <div class="text_block">
+      <h3>Alle Infos auf einen Blick</h3>
+    </div>
+    <div class="image_block" data-stellar-background-ratio="0.3" id="background_secondary_image_3"></div>
+    <div id="fb-root"></div>
+    <footer>
+      <div class="row">
+        <div class="large-3 columns">
+          <a href="about.html">About muuuf</a>
+        </div>
+        <div class="large-3 columns">
+          <a data-uv-default-mode="feedback" data-uv-feedback-tab_name="Ideen und Vorschläge" data-uv-forum-id="203442" data-uv-lightbox="classic_widget" data-uv-link-color="#007dbf" data-uv-mode="full" data-uv-primary-color="#c0477f" data-uv-support-tab_name="Kontakt" data-uv-topic-id="34089" href="javascript:void(0)">Ideen?</a>
+        </div>
+        <div class="large-3 columns">
+          <a class="fb-like" data-colorscheme="dark" data-font="arial" data-href="http://www.facebook.com/muuuf.de" data-send="false" data-show-faces="false" data-width="100"></a>
+        </div>
+        <div class="large-3 columns">
+          <a href="impressum.html">Impressum</a>
+        </div>
+      </div>
+    </footer>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/stellar.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
