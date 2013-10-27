@@ -8,7 +8,7 @@
 
 #day-selection li {
 	margin-bottom: 10px;
-	border: 3px solid #333333;
+	border: 2px solid grey;
 	padding: 0.5em;
 	font-size: 1.6em;
 }
@@ -55,7 +55,7 @@
 	font-size: 1.4em;
 	font-weight: bold;
 	cursor: pointer;
-	border: 2px solid #333333;
+	background-color: red;
 }
 
 #day-details li div.content {
@@ -65,10 +65,53 @@
 	display: none;
 	margin-top: 0;
 	width: auto;
-	border-left: 2px solid #555555;
-	border-right: 2px solid #555555;
-	border-bottom: 2px solid #555555;
+	border-left: 2px solid grey;
+	border-right: 2px solid grey;
+	border-bottom: 2px solid grey;
 }
 
+ul.venues {
+	list-style-type: none;
+	margin: 0;
+}
 
+li.venue {
+	height: 60px;
+	margin-bottom: 5px;
+	padding: 5px;
+	border-bottom: 2px solid grey;
+}
 
+li.venue:last-child {
+	border: none;
+}
+
+li.venue img {
+	position: relative;
+	float: left;
+	max-width: 75px;
+	max-height: 50px;
+}
+
+li.venue div.info {
+	position: relative;
+	float: left;
+	width: 650px;
+	height: 45px;
+	max-height: 50px;
+	margin: 0 5px 5px 5px;
+}
+
+li.venue .info .name {
+	font-size: 16pt;
+	font-weight: bold;
+}
+
+li.venue .info .address {
+	font-size: 11pt;
+	margin-left: 15px;
+}
+
+li.venue .info .blurb {
+	font-size: 9pt;
+}
