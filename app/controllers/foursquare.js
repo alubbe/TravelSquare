@@ -124,11 +124,58 @@ addMorePlaces = function(tourstopsList, i, category, amount, callback) {
 	https.request(options, async).end();
 };
 
+getVenueDetails = function(arrayId, callback) {
+	//arrayId contains a list of venue ids
+	//callback will be called first argument containing all venue details
+	//count of venues
+	var venueCount = arrayId.length;
+
+	//"gloabal" variable saving how many request venuaCallback got served
+	var receiveCount = 0; //
+
+	//array which sotres all options for the http requests
+	var options = new Array();
+
+	//get https
+	var https = require('https');
+
+	//create array for saving details
+	venueDetails = new Array();
+
+	//venueCallback
+	venueCallback = function(response) {
+		var data = '';
+
+		response.on('data', function(chunk) {
+			data += chunk; //append data
+		});
+
+		response.on('end', function() {
+			receiveCount++; // received venue details
+
+			venueDetails.push(JSON.parse(data).response); // add received data to array
+
+			if(receiveCount == venueCount) // all venue details received
+				callback(venueDetails);
+		});
+
+		response.on("error", function(e){
+			console.log(e);
+		});
+	};
+
+	for(var i = 0; i<venueCount; i++) {
+		var venueOption = {
+			host: 'api.foursquare.com',
+			path: '/v2/venues/'+ arrayId[i] + '?client_id=WUH3Z4VTUYMQCD54KHR0O2BBXXSCIBIQ31I2NX2VGNL2T4AF&client_secret=S0LD0WYY11CYTJQZ01EYBBL0SGNSLUN0RXRXJOJMO0Y540WU&v=20130815%20%20%20'
+		};
+		options.push(venueOption);
+		//demand venue details
+		https.request(options[i], venueCallback).end();
+	}
+};
+
 exports.getVenuesCityCat = function(req, res) {
-	//venue coubt
-	var venueCount = 0;
-	var receiveCount = 0;
-	var venueDetails = new Array();
 	//define variables
 	var city = req.params.city;
 	var category = req.params.category;
@@ -152,26 +199,7 @@ exports.getVenuesCityCat = function(req, res) {
 	console.log(city)
 	console.log(category);
 
-	venueCallback = function(response) {
-		var data = '';
-
-		response.on('data', function(chunk) {
-			data += chunk; //append data
-		});
-
-		response.on('end', function() {
-			receiveCount++; // received venue details
-
-			venueDetails.push(JSON.parse(data).response); // add received data to array
-
-			if(receiveCount == venueCount) // all venue details received
-				res.jsonp(venueDetails); // post all received data
-		});
-
-		response.on("error", function(e){
-			console.log(e);
-		});
-	};
+	
 	//create callback
 	callback = function(response) {
 		var data = '';
@@ -184,19 +212,23 @@ exports.getVenuesCityCat = function(req, res) {
 			//parse json
 			var parsed = JSON.parse(data);
 
-			var options = new Array();
+			
 
 			venueCount = parsed.response.groups[0].items.length // set venueCount;
 
-			for(var i = 0; i<venueCount; i++) {
-				var venueOption = {
-					host: 'api.foursquare.com',
-					path: '/v2/venues/'+ parsed.response.groups[0].items[i].venue.id + '?client_id=WUH3Z4VTUYMQCD54KHR0O2BBXXSCIBIQ31I2NX2VGNL2T4AF&client_secret=S0LD0WYY11CYTJQZ01EYBBL0SGNSLUN0RXRXJOJMO0Y540WU&v=20130815%20%20%20'
-				};
-				options.push(venueOption);
-				//demand venue details
-				https.request(options[i], venueCallback).end();
+			var ids = new Array();
+
+			for(var i = 0; i<venueCount; i++) 
+				//collect ids
+				ids.push( parsed.response.groups[0].items[i].venue.id);
+
+			//callback function to post results
+			var postJason = function(toPost) {
+				res.jsonp(toPost); // post all received data
 			}
+
+			//get venue details for id and call postJason with result
+			getVenueDetails(ids, postJason);
 		});
 
 		response.on("error", function(e){
@@ -340,6 +372,23 @@ exports.getBerlin = function(req, res) {
 	console.log(exports.getMiddleOfLatLongSimple([[40,6], [41,5], [45.768543, 4], [41.90876, 6.0987654], [41.023587,5], [45, 4], [41, 6], [41,5], [45, 4], [41, 6]]));
 
 };
+
+returnPhase = function(phase) {
+	if(phase == 'Morning 1 - Food or Cafe')
+		return 0;
+if(phase == 'Morning 2 - Arts or Sights')
+		return 1;
+if(phase == 'Lunch - Food')
+		return 2;
+if(phase == 'Afternoon 1 - Food or Cafe')
+		return 3;
+if(phase == 'Afternoon 2 - Shopping or Outdoors')
+		return 4;
+if(phase == 'Evening - Food')
+		return 5;
+if(phase == 'Night - Nightlife')
+		return 6;
+}
 
 exports.buildItenary = function(req, res) {
 	var tourstops = {},
@@ -485,7 +534,41 @@ exports.buildItenary = function(req, res) {
 						console.log(tourstopsList.stops);
 						console.log(tourstopsList.stops[7]);
 						var done = iterativeShit(tourstopsList.stops, tourstopsList.center, tourstopsList.beginningSlot, null, 0, tourstopsList.totalSlots, {stops:[]}, {stops:[], sumOfSquares: 999999999});
-						res.jsonp(done);
+
+						//get detailed information for all venues contained in done
+						var ids = new Array();
+
+						console.log(done);
+						for(i = 0; i<done.stops.length; i++)
+							ids.push(done.stops[0].venue.id); // add id
+						//res.jsonp(done.stops[2].timeframe);
+
+						var asyncCallback = function(response) {
+							var stops = {
+								days: new Array()};
+							
+							var currentPhase = 0;
+							//add days 
+							var stopsADay = {
+								stops: new Array()};
+							for(i = 0; i<done.stops.length;i++){
+								if(currentPhase <= returnPhase(done.stops[i].timeframe)) {
+									stopsADay.stops.push(response[i]);
+									currentPhase = returnPhase(done.stops[i].timeframe);
+									//console.log(returnPhase(done.stops[i].timeframe));
+								}
+								else
+								{
+									stops.days.push(stopsADay);
+									stopsADay.stops = new Array();
+									currentPhase = 0;
+								}
+							}
+							//console.log(stops.days.length);
+							res.jsonp(stops);
+						};
+						
+						getVenueDetails(ids, asyncCallback);
 					} 
 				});
 			};
