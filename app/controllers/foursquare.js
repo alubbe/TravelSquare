@@ -71,7 +71,7 @@ exports.getFromFoursquare = function(req, res) {
 	res.render('foursquare/test');
 };
 
-addMorePLaces = function(placesArray, category, radius, center, amount, callback) {
+addMorePlaces = function(placesArray, category, radius, center, amount, callback) {
 	//places array constains of items which have lat long and id
 	//center has lat, long
 	var https = require('https');
@@ -103,9 +103,10 @@ addMorePLaces = function(placesArray, category, radius, center, amount, callback
 			var placesArrayLength = placesArray.length;
 
 			var result = new Array();
-			for(var i = 0; i<itemsLentgh; i++){
+			for(var i = 0; i < itemsLentgh; i++){
 				var exists = false;
 				for(var j = 0; j < placesArrayLength; j++) {
+					console.log('check for ' + placesArray[j].id +' and ' + items[i].venue.id )
 					if(items[i].venue.id == placesArray[j].id) {
 						exists = true;
 						break;
@@ -130,11 +131,16 @@ addMorePLaces = function(placesArray, category, radius, center, amount, callback
 };
 
 exports.getVenuesCityCat = function(req, res) {
+	//venue coubt
+	var venueCount = 0;
+	var receiveCount = 0;
+	var venueDetails = new Array();
 	//define variables
 	var city = req.params.city;
 	var category = req.params.category;
+	var limit = req.params.limit;
 	//initialise http
-	var http = require('https');
+	var https = require('https');
 	var options = {
 		host: 'api.foursquare.com',
 		path: '/v2/venues/explore?client_id=WUH3Z4VTUYMQCD54KHR0O2BBXXSCIBIQ31I2NX2VGNL2T4AF&client_secret=S0LD0WYY11CYTJQZ01EYBBL0SGNSLUN0RXRXJOJMO0Y540WU&v=20130815%20%20%20'
@@ -146,8 +152,32 @@ exports.getVenuesCityCat = function(req, res) {
 	//set category by section
 	options.path += '&section=' + category;
 
+	//set limit
+	options.path += '&limit=' + limit;
+
 	console.log(city)
 	console.log(category);
+
+	venueCallback = function(response) {
+		var data = '';
+
+		response.on('data', function(chunk) {
+			data += chunk; //append data
+		});
+
+		response.on('end', function() {
+			receiveCount++; // received venue details
+
+			venueDetails.push(JSON.parse(data).response); // add received data to array
+
+			if(receiveCount == venueCount) // all venue details received
+				res.jsonp(venueDetails); // post all received data
+		});
+
+		response.on("error", function(e){
+			console.log(e);
+		});
+	};
 	//create callback
 	callback = function(response) {
 		var data = '';
@@ -159,8 +189,20 @@ exports.getVenuesCityCat = function(req, res) {
 		response.on('end', function() {
 			//parse json
 			var parsed = JSON.parse(data);
-			res.jsonp(parsed.response.groups[0].items);
-			return parsed.response.venues;
+
+			var options = new Array();
+
+			venueCount = parsed.response.groups[0].items.length // set venueCount;
+
+			for(var i = 0; i<venueCount; i++) {
+				var venueOption = {
+					host: 'api.foursquare.com',
+					path: '/v2/venues/'+ parsed.response.groups[0].items[i].venue.id + '?client_id=WUH3Z4VTUYMQCD54KHR0O2BBXXSCIBIQ31I2NX2VGNL2T4AF&client_secret=S0LD0WYY11CYTJQZ01EYBBL0SGNSLUN0RXRXJOJMO0Y540WU&v=20130815%20%20%20'
+				};
+				options.push(venueOption);
+				//demand venue details
+				https.request(options[i], venueCallback).end();
+			}
 		});
 
 		response.on("error", function(e){
@@ -168,7 +210,7 @@ exports.getVenuesCityCat = function(req, res) {
 		});
 	};
 
-	http.request(options, callback).end();
+	https.request(options, callback).end();
 
 
 };
@@ -287,7 +329,21 @@ exports.getBerlin = function(req, res) {
 		lon: 7
 	};
 
-	addMorePLaces([0], 'food', 800, center, 2, callback);
+	var places = [{
+		
+		id: '50d751d8e4b0b55bc64f3161'
+	},
+	{
+		id: '51741e3c498ee3a44a7c0005'
+	},
+	{
+		id: '51caec79498e8309e8177210'
+	}
+		];
+
+	addMorePlaces(places, 'food', 6000, center, 2, callback);
+
+	console.log(exports.getMiddleOfLatLongSimple([[40,6], [41,5], [45.768543, 4], [41.90876, 6.0987654], [41.023587,5], [45, 4], [41, 6], [41,5], [45, 4], [41, 6]]));
 };
 
 exports.buildItenary = function(req, res) {
