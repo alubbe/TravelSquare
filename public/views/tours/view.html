@@ -1,13 +1,34 @@
 <section ng-controller="ToursController" ng-init="setup()">
-	<div class="row">
-		<ul id="day-selection" class="col-md-3">
+	<!-- Top row containing day selection and map -->
+	<div class="row main">
+		<ul id="day-selection" class="span2">
 			<li ng-repeat="day in tour.days">
-				<button ng-click="selectDay($index)" ng-hide="day.selected">{{day.date | date:'fullDate'}}</button><span ng-hide="!day.selected">{{day.date | date:'fullDate'}}</span>
+				<div ng-click="selectDay($index)" ng-class="{selected:day.selected}">Day {{$index}}</div>
 			</li>
-		<ul>
-		<div class="row">
-			<div id="tour-map-canvas" class="col-md-9" style="height: 500px;">
-			</div>
+		</ul>
+		<div id="tour-map-canvas" class="span10" style="height: 500px;">
 		</div>
+	</div>
+	<!-- Details and weather -->
+	<div class="row details">
+		<div id="weather" class="span2">
+			WETTER
+		</div>
+		<ul id="day-details" class="span10">
+			<li ng-repeat="section in sections" ng-class="{closed:!section.selected}">
+				<titlebox></titlebox>
+				<div id="c{{$index}}" class="content">
+					<ul class="venues">
+						<li ng-repeat="venue in section.venues" class="venue">
+							<img src="{{venue.imageUrl}}">
+							<div class="info">
+								<span class="name">{{venue.name}}</span><span class="address">{{venue.address}}</span><br/>
+								<div class="blurb">{{venue.blurb}}</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</li>
+		</ul>
 	</div>
 </section>

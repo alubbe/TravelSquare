@@ -1,3 +1,117 @@
+.row.main {
+	margin-top: 15px;
+}
+
+#day-selection {
+	list-style-type: none;
+}
+
+#day-selection li {
+	margin-bottom: 10px;
+	border: 2px solid grey;
+	padding: 0.5em;
+	font-size: 1.6em;
+}
+
+#day-selection li div {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+#day-selection li div:hover {
+	font-weight: bold;
+}
+
+#day-selection li div.selected {
+	cursor: default;
+	text-decoration: none;
+	font-weight: bold;
+}
+
 #tour-map-canvas {
     height: 500px;
+}
+
+.row.details {
+	margin-top: 40px;
+	margin-bottom: 15px;
+}
+
+#weather {
+	background-color: red;
+	min-height: 200px;
+}
+
+#day-details {
+	list-style-type: none;
+}
+
+#day-details li {
+	margin-bottom: 5px;
+}
+
+#day-details li div.title {
+	padding: 5px;
+	font-size: 1.4em;
+	font-weight: bold;
+	cursor: pointer;
+	background-color: red;
+}
+
+#day-details li div.content {
+	padding: 0 5px;
+	height: 0;
+	visibility: hidden;
+	display: none;
+	margin-top: 0;
+	width: auto;
+	border-left: 2px solid grey;
+	border-right: 2px solid grey;
+	border-bottom: 2px solid grey;
+}
+
+ul.venues {
+	list-style-type: none;
+	margin: 0;
+}
+
+li.venue {
+	height: 60px;
+	margin-bottom: 5px;
+	padding: 5px;
+	border-bottom: 2px solid grey;
+}
+
+li.venue:last-child {
+	border: none;
+}
+
+li.venue img {
+	position: relative;
+	float: left;
+	max-width: 75px;
+	max-height: 50px;
+}
+
+li.venue div.info {
+	position: relative;
+	float: left;
+	width: 650px;
+	height: 45px;
+	max-height: 50px;
+	margin: 0 5px 5px 5px;
+}
+
+li.venue .info .name {
+	font-size: 16pt;
+	font-weight: bold;
+}
+
+li.venue .info .address {
+	font-size: 11pt;
+	margin-left: 15px;
+}
+
+li.venue .info .blurb {
+	font-size: 9pt;
 }
