@@ -68,7 +68,68 @@ exports.getFromFoursquare = function(req, res) {
 	res.render('foursquare/test');
 };
 
-getVenuesCityCat = function(city, category) {
+addMorePLaces = function(placesArray, category, radius, center, amount, callback) {
+	//places array constains of items which have lat long and id
+	//center has lat, long
+	var https = require('https');
+	var options = {
+		host: 'api.foursquare.com',
+		path: '/v2/venues/explore?client_id=WUH3Z4VTUYMQCD54KHR0O2BBXXSCIBIQ31I2NX2VGNL2T4AF&client_secret=S0LD0WYY11CYTJQZ01EYBBL0SGNSLUN0RXRXJOJMO0Y540WU&v=20130815%20%20%20'
+	};
+	//add center
+	options.path += '&ll=' + center.lat + ',' + center.lon;
+	//add radius in meters
+	options.path += '&radius' + radius;
+	//add category
+	options.path += '&query' + category;
+
+	async = function(response) {
+		var data = '';
+
+		response.on('data', function(chunk) {
+			data += chunk; //append data
+		});
+
+		response.on('end', function() {
+			//parse json
+			var parsed = JSON.parse(data);
+			console.log(parsed);
+			//iterate through all results
+			var items = parsed.response.groups[0].items;
+			var itemsLentgh = items.length;
+			var placesArrayLength = placesArray.length;
+
+			var result = new Array();
+			for(var i = 0; i<itemsLentgh; i++){
+				var exists = false;
+				for(var j = 0; j < placesArrayLength; j++) {
+					if(items[i].venue.id == placesArray[j].id) {
+						exists = true;
+						break;
+					}	
+				}
+				//is in list
+				if(exists == false)
+					result.push(items[i]);
+				//found enough unique results
+				if(result.length >= amount)
+					break;
+			}
+
+			callback(result);
+		});
+
+		response.on("error", function(e){
+			console.log(e);
+		});
+	};
+	https.request(options, async).end();
+};
+
+exports.getVenuesCityCat = function(req, res) {
+	//define variables
+	var city = req.params.city;
+	var category = req.params.category;
 	//initialise http
 	var http = require('https');
 	var options = {
@@ -82,6 +143,8 @@ getVenuesCityCat = function(city, category) {
 	//set category by section
 	options.path += '&section=' + category;
 
+	console.log(city)
+	console.log(category);
 	//create callback
 	callback = function(response) {
 		var data = '';
@@ -93,7 +156,7 @@ getVenuesCityCat = function(city, category) {
 		response.on('end', function() {
 			//parse json
 			var parsed = JSON.parse(data);
-			console.log(parsed.response.venues[0]);
+			res.jsonp(parsed.response.groups[0].items);
 			return parsed.response.venues;
 		});
 
@@ -212,41 +275,16 @@ exports.getBerlin = function(req, res) {
 	var location = req.params.location;
 	//query API
 
-	getVenuesCityCat('Berlin', 'food');
-
-	var http = require('https');
-
-//The url we want is: 'www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new'
-	var options = {
-		host: 'api.foursquare.com',
-		path: '/v2/venues/explore?client_id=WUH3Z4VTUYMQCD54KHR0O2BBXXSCIBIQ31I2NX2VGNL2T4AF&client_secret=S0LD0WYY11CYTJQZ01EYBBL0SGNSLUN0RXRXJOJMO0Y540WU&v=20130815%20%20%20'
-	};
-	options.path += location;
-
-	console.log(options.path);
-
-	callback = function(response) {
-		var data = '';
-
-		response.on('data', function(chunk) {
-			data += chunk; //append data
-		});
-
-		response.on('end', function() {
-			res.render('foursquare/berlin', {
-					location: location
-				});
-
-		});
+	var callback = function(json) {
+		res.jsonp(json);
 	};
 
+	var center = {
+		lat: 52,
+		lon: 7
+	};
 
-	var request = http.request(options, callback);
-
-	request.on("error", function(e){
-		console.log(e);
-	});
-	request.end();
+	addMorePLaces([0], 'food', 800, center, 2, callback);
 };
 
 exports.buildItenary = function(req, res) {
