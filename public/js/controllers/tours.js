@@ -12,7 +12,7 @@ angular.
                 mapsWrapper = new GoogleMapsWrapper();
                 mapsWrapper.initializeMap();
                 // Save tour and select first day
-                $scope.tour = tour;
+                $scope.tour = $scope.parseData(tour);
                 $scope.selectDay(0);
             });
         };
@@ -45,6 +45,9 @@ angular.
             var currentSection;
             $scope.sections = []
             for (var i in selectedDay.venues) {
+                if (typeof selectedDay.venues[i] == 'function' || !selectedDay.venues[i].location) {
+                    continue;
+                }
                 // Save location
                 locations.push(selectedDay.venues[i].location);
                 // Add venue to a section
@@ -105,8 +108,50 @@ angular.
             $scope.sections[index].selected = true;
         };
 
+        $scope.parseData = function(data) {
+            var days = [];
+            for (var i in data) {
+                var day = {
+                    date: '',
+                    venues: []
+                };
+                var stops = data[i].stops;
+                for (var j in stops) {
+                    // Determine time code
+                    var timeCode = 3;
+                    if (stops[j].timeframe.startsWith('Morning')) {
+                        timeCode = 0;
+                    } else if (stops[j].timeframe.startsWith('Lunch')) {
+                        timeCode = 1;
+                    } else if (stops[j].timeframe.startsWith('Afternoon')) {
+                        timeCode = 2;
+                    }
+                    // Build address
+                    var address = '';
+                    var name = '<unknown>';
+                    if (stops[j].venue && stops[j].venue.location) {
+                        address = stops[j].venue.location.address + ', ' + stops[j].venue.location.city + ', ' + stops[j].venue.location.country;
+                        name = stops[j].venue.name;
+                    }
+                    // Create venue
+                    day.venues.push({
+                        name: name,
+                        location: {
+                            lat: stops[j].lat || stops[j].venue.location.lat,
+                            lng: stops[j].lng || stops[j].venue.location.lng
+                        },
+                        timeCode: timeCode,
+                        address: address,
+                        imageUrl: '',
+                        blurb: ''
+                    });
+                }
+                days.push(day);
+            }
+            return days;
+        }
+
         $scope.getHeightOfSection = function(index) {
-            console.log(index);
             return $scope.sections[index].venues.length * 75;
         };
 
