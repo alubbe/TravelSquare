@@ -7,7 +7,7 @@ window.app.config(['$routeProvider',
             reloadOnSearch: false
         }).
         when('/', {
-            templateUrl: 'views/index.html'
+            templateUrl: 'views/planning.html'
         }).
         otherwise({
             redirectTo: '/'
