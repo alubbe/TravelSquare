@@ -1,5 +1,5 @@
 {
-	"city": "Barcelona",
+	"city": "New York",
 	"days": [
 		{
 			"date": "2013-10-27",
@@ -13,7 +13,7 @@
 	                "timeCode": 0,
 	                "address": "",
 	                "imageUrl": "https://irs1.4sqi.net/img/general/original/16155_r7MDKXL1q6jMP_0cXl2r-saSFVLS_yKWR8R1AggPEPM.jpg",
-	                "blurb": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonum..."
+	                "blurb": "Loved the sushi here!"
 				},{
 					"name": "Kabuki Sushi",
 					"location": {
@@ -23,7 +23,7 @@
 	                "timeCode": 1,
 	                "address": "",
 	                "imageUrl": "https://irs1.4sqi.net/img/general/original/16155_r7MDKXL1q6jMP_0cXl2r-saSFVLS_yKWR8R1AggPEPM.jpg",
-	                "blurb": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod te.."
+	                "blurb": "I keep coming back, it was amazing!"
 				},{
 					"name": "Sagano",
 					"location": {
@@ -33,7 +33,7 @@
 	                "timeCode": 2,
 	                "address": "",
 	                "imageUrl": "https://irs1.4sqi.net/img/general/original/16155_r7MDKXL1q6jMP_0cXl2r-saSFVLS_yKWR8R1AggPEPM.jpg",
-	                "blurb": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed dia..."
+	                "blurb": "Would recommend it to anyone looking for serious Japanese Cuisine in the Big Apple"
 				},{
 					"name": "Kuchi",
 					"location": {
