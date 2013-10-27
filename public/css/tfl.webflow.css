@@ -1,0 +1,246 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #333;
+  font-size: 12px;
+  line-height: 20px;
+}
+h1 {
+  margin: 10px 0px;
+  font-family: Montserrat, sans-serif;
+  font-size: 38px;
+  line-height: 44px;
+  font-weight: 400;
+}
+h2 {
+  margin: 10px 5px;
+  padding-top: 5px;
+  font-size: 32px;
+  line-height: 36px;
+  font-weight: 700;
+}
+h3 {
+  margin: 10px 0px;
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 700;
+}
+h4 {
+  margin: 10px 0px;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 700;
+}
+h5 {
+  margin: 10px 0px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+}
+h6 {
+  margin: 10px 0px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 700;
+}
+p {
+  margin-bottom: 5px;
+}
+.button {
+  display: inline-block;
+  padding: 4px 15px;
+  background-color: black;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+}
+.button.cta {
+  width: 210px;
+  height: 60px;
+  margin-top: 20px;
+  float: right;
+  background-color: rgba(252, 224, 61, 0.96);
+  background-image: none;
+  font-family: Lato, sans-serif;
+  font-size: 28px;
+  line-height: 50px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.container {
+  height: 800px;
+}
+.container.container1 {
+  height: 900px;
+}
+.wrapper_section {
+  height: 460px;
+}
+.info_window {
+  width: 220px;
+  height: 220px;
+  margin: 5px;
+  float: left;
+  border: 2px solid #a6a6a6;
+  border-radius: 0px;
+}
+.img_info_window {
+  width: 205px;
+  height: 205px;
+  margin: 5px;
+  padding: 5px;
+  float: none;
+}
+.info_window_title {
+  position: relative;
+  left: 16px;
+  top: -50px;
+  z-index: 1;
+  display: block;
+  clear: left;
+  color: white;
+}
+.category_header {
+  height: 45px;
+  margin-bottom: 2px;
+  background-color: #59ff6a;
+  color: white;
+  font-weight: 400;
+}
+.category_header.category_coffee {
+  background-color: #ffa459;
+}
+.category_header.category_sights {
+  background-color: rgba(255, 79, 43, 0.78);
+}
+.category_header.category_arts_events {
+  background-color: #47d679;
+}
+.category_header.category_shopping {
+  background-color: #549bf7;
+}
+.category_header.category_nightlife {
+  background-color: rgba(100, 98, 227, 0.81);
+}
+.category_header.category_outdoors {
+  margin-top: 10px;
+  background-color: rgba(255, 89, 156, 0.92);
+}
+.category_header.morning_spots {
+  background-color: #ff596d;
+}
+.category_header.afternoon_spots {
+  margin-top: 10px;
+  background-color: #f0b;
+}
+.category_header.evening_spots {
+  margin-top: 10px;
+  background-color: #054eed;
+}
+.category_titles.categoy_outdoors {
+  margin-top: 0px;
+}
+.arrow_right {
+  text-indent: 0px;
+}
+.text_v {
+  direction: ltr;
+  font-size: 50px;
+  text-align: center;
+}
+.arrow_left {
+  position: static;
+  display: block;
+  overflow: visible;
+  width: 10px;
+  height: 440px;
+  float: left;
+  clear: none;
+}
+.arrow_image_left {
+  margin-top: 5px;
+}
+.header_bar {
+  width: 100%;
+  height: 44px;
+  border-bottom: 0px solid #828181;
+  background-color: white;
+  box-shadow: #2e2d2d 0px 4px 5px -3px;
+  line-height: 44px;
+}
+.logo_text {
+  margin-left: 25px;
+  padding-bottom: 10px;
+  box-shadow: none;
+  font-family: Montserrat, sans-serif;
+  color: #3b3b3b;
+  font-size: 44px;
+  font-weight: 400;
+}
+.city_bar {
+  width: 260px;
+  height: 65px;
+  padding: 5px 10px;
+  float: left;
+  border: 0px solid #a6a6a6;
+  border-radius: 0px;
+  color: #3d3d3d;
+  font-size: 46px;
+  line-height: 48px;
+}
+.logo_travelsquare {
+  width: 130px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 15px;
+  border-width: 0px;
+}
+.menu_item1 {
+  position: relative;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  display: inline;
+  overflow: visible;
+  width: 48px;
+  height: 50px;
+  margin-top: 10px;
+  margin-right: 15px;
+  margin-left: 25px;
+  float: left;
+  clear: none;
+}
+.top_header {
+  border: 0px solid black;
+}
+.top_bar_bar {
+  height: 78px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border: 2px solid #a6a6a6;
+  background-color: rgba(0, 0, 0, 0);
+}
+.bloody_empty_div {
+  width: 200px;
+  float: right;
+}
+.menu_item2 {
+  margin-top: 11px;
+  margin-left: 15px;
+}
+.section_header {
+  height: 44px;
+}
+.section_main {
+  height: 1100px;
+  margin-bottom: 2px;
+}
+.link1 {
+  height: 60px;
+  float: left;
+}
+.link2 {
+  height: 60px;
+  margin-top: 0px;
+  float: left;
+}

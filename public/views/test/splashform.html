@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bootstrap 101 Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="http://code.jquery.com/jquery.js"></script>
+     
+    <!-- Bootstrap -->
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+    
+    
+    <link href="styles/glDatePicker.default.css" rel="stylesheet" type="text/css">
+    
+     
+ 
+    
+  <script src="glDatePicker.min.js"></script>
+
+    <script type="text/javascript">
+        $(window).load(function()
+        {
+            $('#mydate').glDatePicker();
+        });
+    </script>
+    
+    <style>
+    #Wherelabl {
+    width: 400px;
+    }
+    </style>
+    
+    
+  </head>
+  <body>
+    <h1>Splashform</h1>
+
+ 
+   
+    
+    
+    
+    
+<div class="panel panel-default">
+  <div class="panel-body">
+  	
+	
+
+<form class="form-inline" role="form">
+  <div class="form-group">
+    <label class="sr-only"  for="Wherelabl">Where do you want to go?</label>
+    <input type="text" class="form-control" id="Wherelabl" placeholder="Where to?">
+  </div>
+  <div class="form-group">
+    <label class="sr-only " for="whenlabl">When</label>
+    <input type="text" id="mydate" class="form-control" gldp-id="mydate" placeholder="When?" />
+    <div gldp-el="mydate"
+         style="width:300px; height:300px; position:absolute; top:70px; left:100px;">
+    </div>
+  </div>
+  
+ 
+     <button type="submit" class="btn btn-primary">
+			  <i class="icon-search icon-white"></i> Search
+	</button>
+</form>
+	
+	
+	
+	
+	
+	
+	</div>
+</div>	
+    
+    
+    
+    
+    
+  </body>
+</html>
+
+
+
