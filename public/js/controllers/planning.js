@@ -1,6 +1,5 @@
 
-angular.module('mean.system').controller('PlanningController', ['$http','$scope', 'Global', function ($http,$scope, Global) {
-    
+angular.module('mean.system').controller('PlanningController', ['$http','$scope', 'Global', function ($http, $scope, Global) {
     var _params = window.location.href.split("?")[1].split("#")[0];
     var params =  JSON.parse('{"' + _params.replace(/&/g, "\",\"").replace(/\=/g,"\":\"").replace(/%2C/g,",").replace(/\+/g," ") + '"}');
     $scope.global = Global;
@@ -14,66 +13,88 @@ angular.module('mean.system').controller('PlanningController', ['$http','$scope'
         title: 'FOOD',
         id: 'food',
         titleBarColor: 'rgb(255,225,89)',
-        selected: true
+        selected: true,
+        venues: []
       },{
         code: 1,
         title: 'COFFEE',
         id: 'coffee',
         titleBarColor: 'rgb(255,164,89)',
-        selected: false
+        selected: false,
+        venues: []
       },{
         code: 2,
         title: 'SIGHTS',
         id: 'sights',
         titleBarColor: 'rgb(254,116,88)',
-        selected: false
+        selected: false,
+        venues: []
       },{
         code: 3,
         title: 'ARTS',
         id: 'arts',
         titleBarColor: 'rgb(71,214,121)',
-        selected: false
+        selected: false,
+        venues: []
       },{
         code: 4,
         title: 'SHOPPING',
         id: 'shops',
         titleBarColor: 'rgb(84,155,247)',
-        selected: false
+        selected: false,
+        venues: []
       },{
         code: 5,
         title: 'NIGHTLIFE',
         id: 'drinks',
         titleBarColor: 'rgb(127,125,231)',
-        selected: false
+        selected: false,
+        venues: []
       },{
         code: 6,
         title: 'OUTDOORS',
         id: 'outdoors',
         titleBarColor: 'rgb(254,101,162)',
-        selected: false
+        selected: false,
+        venues: []
       }
     ];
 
+    var urlpre = "http://localhost:3000/foursquare/" + $scope.city + "/";
     $scope.init = function() {
-      var urlpre = "http://localhost:3000/foursquare/" + $scope.city + "/";
-      // $scope.catsRestname = ['food',  'coffee', 'sights', 'shops', 'arts', 'outdoors',  'drinks'];
-      // $scope.catsTitels = ['FOOD',  'COFFEE', 'SIGHTS', 'SHOPPING', 'ARTS & EVENTS', 'OUTDOORS', 'NIGHTLIFE'];
-      $scope.allvenues = [];
-      for (var i = 0; i < $scope.sections.length; i++) {
-        caturl = urlpre + $scope.sections[i].id + '/8';
-        console.log(caturl);
-        $scope.TSxhrPush($http, $scope, caturl, $scope.sections[i].id, $scope.sections[i].title, "venues");
-      }
+      $scope.makeCall(0, urlpre + $scope.sections[0].id + '/8');
+      // for (var i = 0; i < $scope.sections.length; i++) {
+      //   caturl = urlpre + $scope.sections[i].id + '/8';
+      //   console.log(caturl);
+      //   var ii = i;
+      //   $http({
+      //       method: 'GET',
+      //       url: caturl
+      //   }).success(function(data, status) {
+      //       for (var i = 0; i < data.length; i++) {
+      //           $scope.sections[ii].venues.push(data[i].venue);
+      //       }
+      //       $scope.sections[ii].venues = $scope.sections[ii].venues.slice(0, 8);
+      //       console.log($scope.sections[ii].venues);
+      //   });
+      // }
     };
 
-    $scope.TSxhrPush = function ($http, $scope, url, catsRestname, catsTitel, variablename){
-            $http.jsonp(url).success(function (data) {
-              $scope.sections[catsRestname].venues = data;
-              console.log($scope.sections[catsRestname].venues);
-            }).error(function (data, status, headers, config) {
-                 console.log('Please try again soon.');
-                 return;
-            });
+    $scope.makeCall = function(sectionIndex, url) {
+        $http({
+            method: 'GET',
+            url: url
+        }).success(function(data, status) {
+            for (var i = 0; i < data.length; i++) {
+                $scope.sections[sectionIndex].venues.push(data[i].venue);
+            }
+            $scope.sections[sectionIndex].venues = $scope.sections[sectionIndex].venues.slice(0, 8);
+            $scope['it'+sectionIndex] = data;
+            console.log($scope.sections[sectionIndex].venues);
+            if (sectionIndex < 1) {
+                $scope.makeCall(sectionIndex + 1, (urlpre + $scope.sections[sectionIndex + 1].id + '/8'));
+            }
+        });
     };
 
     $scope.openSection = function(index) {

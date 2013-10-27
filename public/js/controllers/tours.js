@@ -12,9 +12,10 @@ angular.
                 mapsWrapper = new GoogleMapsWrapper();
                 mapsWrapper.initializeMap();
                 // Save tour and select first day
-                $scope.tour = {
-                    days: $scope.parseData(tour)
-                };
+                $scope.tour = tour;
+                // $scope.tour = {
+                //     days: $scope.parseData(tour)
+                // };
                 $scope.selectDay(0);
             });
         };
