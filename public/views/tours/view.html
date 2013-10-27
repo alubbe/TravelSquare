@@ -16,11 +16,15 @@
 		</div>
 		<ul id="day-details" class="span10">
 			<li ng-repeat="section in sections" ng-class="{closed:!section.selected}">
-				<div class="title" ng-click="openSection($index)">{{section.code}}</div>
+				<titlebox></titlebox>
 				<div id="c{{$index}}" class="content">
-					<ul>
-						<li ng-repeat="venue in section.venues">
-							{{venue.name}}
+					<ul class="venues">
+						<li ng-repeat="venue in section.venues" class="venue">
+							<img src="{{venue.imageUrl}}">
+							<div class="info">
+								<span class="name">{{venue.name}}</span><span class="address">{{venue.address}}</span><br/>
+								<div class="blurb">{{venue.blurb}}</div>
+							</div>
 						</li>
 					</ul>
 				</div>
