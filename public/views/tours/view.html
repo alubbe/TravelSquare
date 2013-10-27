@@ -1,0 +1,13 @@
+<section ng-controller="ToursController" ng-init="setup()">
+	<div class="row">
+		<ul id="day-selection" class="col-md-3">
+			<li ng-repeat="day in tour.days">
+				<button ng-click="selectDay($index)" ng-hide="day.selected">{{day.date | date:'fullDate'}}</button><span ng-hide="!day.selected">{{day.date | date:'fullDate'}}</span>
+			</li>
+		<ul>
+		<div class="row">
+			<div id="tour-map-canvas" class="col-md-9" style="height: 500px;">
+			</div>
+		</div>
+	</div>
+</section>
