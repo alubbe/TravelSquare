@@ -1,0 +1,12 @@
+<section data-ng-controller="ToursController">
+	{{test}}<br/>
+	<ul class="articles unstyled">
+		<li data-ng-repeat="tour in tours">
+			<span>{{tour.created | date:'medium'}}</span> /
+			<span>{{tour.user.name}}</span>
+			<h2>{{tour.title}}</h2>
+			<div>{{tour.content}}</div>
+		</li>
+	</ul>
+	<h1 data-ng-hide="!tours || tours.length">No tours yet.</h1>
+</section>
