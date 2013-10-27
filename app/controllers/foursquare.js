@@ -373,6 +373,23 @@ exports.getBerlin = function(req, res) {
 
 };
 
+returnPhase = function(phase) {
+	if(phase == 'Morning 1 - Food or Cafe')
+		return 0;
+if(phase == 'Morning 2 - Arts or Sights')
+		return 1;
+if(phase == 'Lunch - Food')
+		return 2;
+if(phase == 'Afternoon 1 - Food or Cafe')
+		return 3;
+if(phase == 'Afternoon 2 - Shopping or Outdoors')
+		return 4;
+if(phase == 'Evening - Food')
+		return 5;
+if(phase == 'Night - Nightlife')
+		return 6;
+}
+
 exports.buildItenary = function(req, res) {
 	var tourstops = {},
 		timesOfTheDay = [9,11,13,15,17,19,21],
@@ -524,11 +541,30 @@ exports.buildItenary = function(req, res) {
 						console.log(done);
 						for(i = 0; i<done.stops.length; i++)
 							ids.push(done.stops[0].venue.id); // add id
+						//res.jsonp(done.stops[2].timeframe);
 
 						var asyncCallback = function(response) {
 							var stops = {
+								days: new Array()};
+							
+							var currentPhase = 0;
+							//add days 
+							var stopsADay = {
 								stops: new Array()};
-							stops.stops=response;
+							for(i = 0; i<done.stops.length;i++){
+								if(currentPhase <= returnPhase(done.stops[i].timeframe)) {
+									stopsADay.stops.push(response[i]);
+									currentPhase = returnPhase(done.stops[i].timeframe);
+									//console.log(returnPhase(done.stops[i].timeframe));
+								}
+								else
+								{
+									stops.days.push(stopsADay);
+									stopsADay.stops = new Array();
+									currentPhase = 0;
+								}
+							}
+							//console.log(stops.days.length);
 							res.jsonp(stops);
 						};
 						
