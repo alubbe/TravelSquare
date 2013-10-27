@@ -5,53 +5,7 @@ var mongoose = require('mongoose'),
 	async = require('async'),
 	_ = require('underscore');
 
-exports.getMiddleOfLatLong = function(coordArray) {
-	
-	//sums
-	var sumX = 0;
-	var sumY = 0;
-	var sumZ = 0;
-	console.log(coordArray);
-
-	//iteratre throught all coordinates
-	var coordCount = coordArray.length;
-	for (var i = 0; i < coordCount; i++) {
-		//Convert into cartesian coordinates
-
-		//convert into radiants
-		var radiantLat = coordArray[i][0] *Math.PI / 180;
-		var radiantLong = coordArray[i][1] * Math.PI * 180;
-		
-
-		var x = Math.cos(radiantLat) * Math.cos(radiantLong);
-		var y = Math.cos(radiantLat) * Math.sin(radiantLong);
-		var z = Math.sin(radiantLat);
-		
-		console.log(y);
-
-		sumX += x;
-		sumY += y;
-		sumZ += z;
-	}
-
-	sumX /= coordCount;
-	sumY /= coordCount;
-	sumZ /= coordCount;
-
-	
-
-	var resultLon = Math.atan2(sumY, sumX);
-		var resultHyp = Math.sqrt(sumX * sumX + sumY * sumY);
-		var resultLat = Math.atan2(sumZ, resultHyp);
-
-		resultLon *= 180 / Math.PI;
-		resultLat *= 180 /Math.PI;
-
-		return [resultLat,resultLon];
-
-};
-
-exports.distanceBetween = function(lat1, lng1, lat2, lng2){
+distanceBetween = function(lat1, lng1, lat2, lng2){
 	lat1 = lat1 * Math.PI / 180;
 	lat2 = lat2 * Math.PI / 180;
 	var R = 6371, //km
@@ -63,21 +17,18 @@ exports.distanceBetween = function(lat1, lng1, lat2, lng2){
 	return R * c;
 };
 
-exports.getMiddleOfLatLongSimple = function(coordArray) {
+getMiddleOfLatLong = function(coordArray) {
 	
 	//sums
 	var sumLat = 0;
 	var sumLong = 0;
 
-	console.log(coordArray);
-
-
-	//iteratre throught all coordinates
+	//iterate through all coordinates
 	var coordCount = coordArray.length;
 	for (var i = 0; i < coordCount; i++) {
 
-		sumLat += coordArray[i][0];
-		sumLong += coordArray[i][1];
+		sumLat += coordArray[i].lat;
+		sumLong += coordArray[i].lng;
 	}
 
 	sumLat /= coordCount;
@@ -89,7 +40,7 @@ exports.getMiddleOfLatLongSimple = function(coordArray) {
 	// for calculating the MINIMUM RADIUS TO INHERIT ALL COORDINATES
 
 	for (i = 0; i < coordCount; i++) {
-		var tmpRadius = exports.distanceBetween(sumLat, sumLong, coordArray[i][0], coordArray[i][1]);
+		var tmpRadius = distanceBetween(sumLat, sumLong, coordArray[i].lat, coordArray[i].lng);
 		if(tmpRadius > minRadius)// radius is bigger hence choose it
 			minRadius = tmpRadius;
 	}
@@ -117,7 +68,68 @@ exports.getFromFoursquare = function(req, res) {
 	res.render('foursquare/test');
 };
 
-getVenuesCityCat = function(city, category) {
+addMorePLaces = function(placesArray, category, radius, center, amount, callback) {
+	//places array constains of items which have lat long and id
+	//center has lat, long
+	var https = require('https');
+	var options = {
+		host: 'api.foursquare.com',
+		path: '/v2/venues/explore?client_id=WUH3Z4VTUYMQCD54KHR0O2BBXXSCIBIQ31I2NX2VGNL2T4AF&client_secret=S0LD0WYY11CYTJQZ01EYBBL0SGNSLUN0RXRXJOJMO0Y540WU&v=20130815%20%20%20'
+	};
+	//add center
+	options.path += '&ll=' + center.lat + ',' + center.lon;
+	//add radius in meters
+	options.path += '&radius' + radius;
+	//add category
+	options.path += '&query' + category;
+
+	async = function(response) {
+		var data = '';
+
+		response.on('data', function(chunk) {
+			data += chunk; //append data
+		});
+
+		response.on('end', function() {
+			//parse json
+			var parsed = JSON.parse(data);
+			console.log(parsed);
+			//iterate through all results
+			var items = parsed.response.groups[0].items;
+			var itemsLentgh = items.length;
+			var placesArrayLength = placesArray.length;
+
+			var result = new Array();
+			for(var i = 0; i<itemsLentgh; i++){
+				var exists = false;
+				for(var j = 0; j < placesArrayLength; j++) {
+					if(items[i].venue.id == placesArray[j].id) {
+						exists = true;
+						break;
+					}	
+				}
+				//is in list
+				if(exists == false)
+					result.push(items[i]);
+				//found enough unique results
+				if(result.length >= amount)
+					break;
+			}
+
+			callback(result);
+		});
+
+		response.on("error", function(e){
+			console.log(e);
+		});
+	};
+	https.request(options, async).end();
+};
+
+exports.getVenuesCityCat = function(req, res) {
+	//define variables
+	var city = req.params.city;
+	var category = req.params.category;
 	//initialise http
 	var http = require('https');
 	var options = {
@@ -131,6 +143,8 @@ getVenuesCityCat = function(city, category) {
 	//set category by section
 	options.path += '&section=' + category;
 
+	console.log(city)
+	console.log(category);
 	//create callback
 	callback = function(response) {
 		var data = '';
@@ -142,7 +156,7 @@ getVenuesCityCat = function(city, category) {
 		response.on('end', function() {
 			//parse json
 			var parsed = JSON.parse(data);
-			console.log(parsed.response.venues[0]);
+			res.jsonp(parsed.response.groups[0].items);
 			return parsed.response.venues;
 		});
 
@@ -261,166 +275,213 @@ exports.getBerlin = function(req, res) {
 	var location = req.params.location;
 	//query API
 
-	getVenuesCityCat('Berlin', 'food');
-
-	var http = require('https');
-
-//The url we want is: 'www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new'
-	var options = {
-		host: 'api.foursquare.com',
-		path: '/v2/venues/explore?client_id=WUH3Z4VTUYMQCD54KHR0O2BBXXSCIBIQ31I2NX2VGNL2T4AF&client_secret=S0LD0WYY11CYTJQZ01EYBBL0SGNSLUN0RXRXJOJMO0Y540WU&v=20130815%20%20%20'
-	};
-	options.path += location;
-
-	console.log(options.path);
-
-	callback = function(response) {
-		var data = '';
-
-		response.on('data', function(chunk) {
-			data += chunk; //append data
-		});
-
-		response.on('end', function() {
-			res.render('foursquare/berlin', {
-					location: location
-				});
-
-		});
+	var callback = function(json) {
+		res.jsonp(json);
 	};
 
+	var center = {
+		lat: 52,
+		lon: 7
+	};
 
-	var request = http.request(options, callback);
-
-	request.on("error", function(e){
-		console.log(e);
-	});
-	request.end();
+	addMorePLaces([0], 'food', 800, center, 2, callback);
 };
 
 exports.buildItenary = function(req, res) {
-var tourstops = {},
-	timesOfTheDay = [9,13,15,19,21],
-	tourstopsList = req.params.tourstops || {
-		arrivalTime: 7,
-		numberOfCalendarDays: 1,
-		departureTime: 22,
-		hotel: {
-			lat: 44.07,
-			lng: 18.12
-		},
-		stops: [
-			{
-				lat: 44,
-				lng: 18,
-				fixedTime: false
+	var tourstops = {},
+		timesOfTheDay = [9,11,13,15,17,19,21],
+		tourstopsList = req.params.tourstops || {
+			arrivalTime: 10,
+			numberOfCalendarDays: 3,
+			departureTime: 18,
+			hotel: {
+				lat: 44.07,
+				lng: 18.12
 			},
-			{
-				lat: 44.1,
-				lng: 18.1,
-				fixedTime: false
-			}
-		]
-	};
+			stops: [[
+					{
+						lat: 44.1,
+						lng: 18.1,
+						id: "blub",
+						fixedTime: false
+					},
+					{
+						lat: 44.2,
+						lng: 17.9,
+						fixedTime: false
+					}
+				], [
+				{
+						lat: 44.04,
+						lng: 18.01,
+						fixedTime: false
+					},
+					{
+						lat: 44.09,
+						lng: 18.12,
+						fixedTime: false
+					}
+				], [
+				{
+						lat: 44.2,
+						lng: 18.12,
+						fixedTime: false
+					},
+					{
+						lat: 44.22,
+						lng: 18.09,
+						fixedTime: false
+					}
+				], [
+				{
+						lat: 44.25,
+						lng: 18.03,
+						fixedTime: false
+					},
+					{
+						lat: 44.06,
+						lng: 18.12,
+						fixedTime: false
+					}
+				], [
+				{
+						lat: 44.22,
+						lng: 18.01,
+						fixedTime: false
+					},
+					{
+						lat: 44.17,
+						lng: 18.19,
+						fixedTime: false
+					}
+				], [
+				{
+						lat: 44.42,
+						lng: 17.81,
+						fixedTime: false
+					},
+					{
+						lat: 44.27,
+						lng: 17.99,
+						fixedTime: false
+					}
+				], [
+				{
+						lat: 43.97,
+						lng: 18.04,
+						fixedTime: false
+					},
+					{
+						lat: 43.91,
+						lng: 18.09,
+						fixedTime: false
+					}
+			]],
 
-	// add a centre to the tourstopsList and fill up the list if it wasn't full already
-	tourstopsListComplete = complete(tourstopsList);
+		};
 
-	var slotMatrix = [[
-			{
-				lat: 44.1,
-				lng: 18.1,
-				fixedTime: false
-			},
-			{
-				lat: 44.2,
-				lng: 17.9,
-				fixedTime: false
-			}
-		], [
-		{
-				lat: 44.04,
-				lng: 18.01,
-				fixedTime: false
-			},
-			{
-				lat: 44.09,
-				lng: 18.12,
-				fixedTime: false
-			}
-		], [
-		{
-				lat: 44.2,
-				lng: 18.12,
-				fixedTime: false
-			},
-			{
-				lat: 44.22,
-				lng: 18.09,
-				fixedTime: false
-			}
-		], [
-		{
-				lat: 44.25,
-				lng: 18.03,
-				fixedTime: false
-			},
-			{
-				lat: 44.06,
-				lng: 18.12,
-				fixedTime: false
-			}
-		], [
-		{
-				lat: 44.22,
-				lng: 18.01,
-				fixedTime: false
-			},
-			{
-				lat: 44.17,
-				lng: 18.19,
-				fixedTime: false
-			}
-		]];
+	tourstopsList.center = tourstopsList.hotel || getMiddleOfLatLong(tourstopsList.stops).center;
+	tourstopsList.radius = getMiddleOfLatLong(tourstopsList.stops).radius;
 
 	var beginningSlot, endingSlot;
 	for(var _i = 0; _i < timesOfTheDay.length; _i++){
 	// find out what slot will first be relevant
 		if (timesOfTheDay[_i] >= tourstopsList.arrivalTime && beginningSlot == null) beginningSlot = _i;
 	// find out which slot will be just too late for the itenary 
-		if (timesOfTheDay[_i] > tourstopsList.departureTime && endingSlot == null) endingSlot = _i-1;
+		if (timesOfTheDay[_i] > tourstopsList.departureTime && endingSlot == null) endingSlot = _i - 1;
 	}
-	if (beginningSlot == null) beginningSlot = 5;
-	if (endingSlot == null) endingSlot = 5;
+	if (beginningSlot == null) beginningSlot = timesOfTheDay.length;
+	if (endingSlot == null) endingSlot = timesOfTheDay.length;
 
 	// compute the total number of slots that will be available
-	var totalSlots = endingSlot - beginningSlot + 5 * (tourstopsList.numberOfCalendarDays - 1);
+	var totalSlots = endingSlot - beginningSlot + timesOfTheDay.length * (tourstopsList.numberOfCalendarDays - 1);
 	//console.log(beginningSlot);
 	//console.log(endingSlot);
 	//console.log(totalSlots);
 	
-	tourstops = iterativeShit(slotMatrix, beginningSlot, null, 0, totalSlots, {stops:[]}, {stops:[], sumOfSquares: 999999999});
+	// add a centre to the tourstopsList and fill up the list if it wasn't full already
+	var expectedSlots = [0,0,0,0,0,0,0], i, diff;
+
+	if (tourstopsList.numberOfCalendarDays <= 1){
+		for(i = beginningSlot; i < endingSlot; i++){
+			expectedSlots[i] = 1;
+
+			diff = expectedSlots[i] - tourstopsList.stops[i].length;
+			if(diff > 0){
+				console.log("Difference of " + diff + " at i = " + i);
+			};
+
+		}
+	}
+	else {
+		for(i = 0; i < timesOfTheDay.length; i++){
+			if(i >= beginningSlot) expectedSlots[i] += 1;
+			if(i < endingSlot) expectedSlots[i] += 1;
+			expectedSlots[i] += tourstopsList.numberOfCalendarDays - 2;
+
+			diff = expectedSlots[i] - tourstopsList.stops[i].length;
+			if(diff > 0){
+				console.log("Difference of " + diff + " at i = " + i);
+				//tourstopsList.stops[i].push(addMorePlaces(tourstopsList.stops[i], tourstopsList.center, tourstopsList.radius, diff, function(tourstops){
+					//res.jsonp(iterativeShit(tourstops.stops, tourstops.center, beginningSlot, null, 0, totalSlots, {stops:[]}, {stops:[], sumOfSquares: 999999999}));
+				//}));
+			};
+		}
+	}
+
+
+	tourstops = iterativeShit(tourstopsList.stops, tourstopsList.center, beginningSlot, null, 0, totalSlots, {stops:[]}, {stops:[], sumOfSquares: 999999999});
 	
 	res.jsonp(tourstops);
 };
 
-complete = function(tourstopsList){
-tourstopsList.centre = tourstopsList.hotel || findSmallestContainingCircle(tourstopsList.stops).center;
+/*
 
-// TODO: complete list around the center and radius
+Phase 0: Morning 1 - Food or Cafe
+Phase 1: Morning 2 - Arts or Sights
+Phase 2: Lunch - Food
+Phase 3: Afternoon 1 - Food or Cafe
+Phase 4: Afternoon 2 - Shopping or Outdoors
+Phase 5: Evening - Food
+Phase 6: Night - Nightlife
 
-return tourstopsList;
+*/
+
+complete = function(tourstopsList, beginningSlot, endingSlot, lenghtOfADay){
+	var expectedSlots = [0,0,0,0,0,0,0], i, diff;
+
+	if (tourstopsList.numberOfCalendarDays <= 1){
+		for(i = beginningSlot; i < endingSlot; i++){
+			expectedSlots[i] = 1;
+
+			diff = expectedSlots[i] - tourstopsList.stops[i].length;
+			if(diff > 0){
+				console.log("Difference of " + diff + " at i = " + i);
+			};
+
+		}
+	}
+	else {
+		for(i = 0; i < lenghtOfADay; i++){
+			if(i >= beginningSlot) expectedSlots[i] += 1;
+			if(i < endingSlot) expectedSlots[i] += 1;
+			expectedSlots[i] += tourstopsList.numberOfCalendarDays - 2;
+
+			diff = expectedSlots[i] - tourstopsList.stops[i].length;
+			if(diff > 0){
+				console.log("Difference of " + diff + " at i = " + i);
+				//tourstopsList.stops[i].push(addMorePlaces(tourstopsList.stops[i], tourstopsList.center, tourstopsList.radius, diff, ));
+			};
+		}
+	}
+
+	//console.log(expectedSlots);
+
+	return tourstopsList;
 };
  
-findSmallestContainingCircle = function(arrayOfLatLng){
-	// TODO: put the algorithm here
-	var request = http.request(options, callback);
-	
-	return {center: {lat: 44.05, lng: 18.05}, radius: 5};
-};
-
 // i denotes the current slot, j the how manyth stop is being considered within that slot and n how often deep the function is within itself
-iterativeShit = function(matrix, i, j, n, totalSlots, tourstops, optimizedTourstops){
+iterativeShit = function(matrix, center, i, j, n, totalSlots, tourstops, optimizedTourstops){
 	//the JS way of copying arrays :)
 	var _matrix = [];
 	for(var _i = 0; _i < matrix.length; _i++) _matrix[_i] = matrix[_i].slice(); 
@@ -428,9 +489,9 @@ iterativeShit = function(matrix, i, j, n, totalSlots, tourstops, optimizedTourst
 
 	//do this if it's the first time this functions gets launched
 	if(j == null) {
-		for(var _k = 0; _k < matrix[i%5].length; _k++){
+		for(var _k = 0; _k < matrix[i%7].length; _k++){
 			//console.log("need more!");
-			var result = iterativeShit(matrix, i, _k, n, totalSlots, tourstops, optimizedTourstops);
+			var result = iterativeShit(matrix, center, i, _k, n, totalSlots, tourstops, optimizedTourstops);
 			if (result !== null) {
 				optimizedTourstops.sumOfSquares = result.sumOfSquares;
 				optimizedTourstops.stops = result.stops.slice();
@@ -438,18 +499,21 @@ iterativeShit = function(matrix, i, j, n, totalSlots, tourstops, optimizedTourst
 		}
 	}
 	else {
-		tourstops.stops[n] = matrix[i%5][j];
+		tourstops.stops[n] = matrix[i%7][j];
+		tourstops.stops[n].asd = 0;
+		if(i % 7 == 0) tourstops.stops[n].asd = 1; // if it is the first stop of the day
+		if(i % 7 == 6) tourstops.stops[n].asd = 2; // if it is the last stop of the day
 		// remove matrix[i][j]
-		_matrix[i%5].splice(j, 1);
+		_matrix[i%7].splice(j, 1);
 		if (n >= totalSlots - 1) {
 			//console.log(tourstops);
 			//check if this configuration is better than the old one
-			return checkConfiguration(tourstops, optimizedTourstops);
+			return checkConfiguration(tourstops, center, optimizedTourstops);
 		}
 		else {
-			for(var _j = 0; _j < matrix[(i+1)%5].length; _j++){
+			for(var _j = 0; _j < matrix[(i+1)%7].length; _j++){
 				//console.log("need more!");
-				var _result = iterativeShit(matrix, i+1, _j, n+1, totalSlots, tourstops, optimizedTourstops);
+				var _result = iterativeShit(matrix, center, i+1, _j, n+1, totalSlots, tourstops, optimizedTourstops);
 				if (_result !== null) {
 					optimizedTourstops.sumOfSquares = _result.sumOfSquares;
 					optimizedTourstops.stops = _result.stops.slice();
@@ -461,10 +525,16 @@ iterativeShit = function(matrix, i, j, n, totalSlots, tourstops, optimizedTourst
 	return optimizedTourstops;
 };
 
-checkConfiguration = function(tourstops, optimizedTourstops){
+checkConfiguration = function(tourstops, center, optimizedTourstops){
 	tourstops.sumOfSquares = 0;
+	
 	for (var i = 0; i < tourstops.stops.length - 1; i++){
+		// add the distance between the two stops
 		tourstops.sumOfSquares += Math.pow(distanceBetween(tourstops.stops[i].lat, tourstops.stops[i].lng, tourstops.stops[i+1].lat, tourstops.stops[i+1].lng), 2);
+		// if it is the start of travel or the first stop of the day, add the distance to the center (i.e. hotel) 
+		if(i == 0 || tourstops.stops[i].asd == 1) tourstops.sumOfSquares += Math.pow(distanceBetween(tourstops.stops[i].lat, tourstops.stops[i].lng, center.lat, center.lng), 2);
+		// if it is the the last stop of the day, add the distance to the center (i.e. hotel)
+		if(tourstops.stops[i].i == 2) tourstops.sumOfSquares += Math.pow(distanceBetween(tourstops.stops[i+1].lat, tourstops.stops[i+1].lng, center.lat, center.lng), 2);
 	}
 	if (tourstops.sumOfSquares < optimizedTourstops.sumOfSquares){
 		return tourstops;

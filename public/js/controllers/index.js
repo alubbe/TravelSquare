@@ -2,7 +2,7 @@
 
 angular.module('mean.system').controller('SplashCrtl', ['$http','$scope', 'Global', function ($http,$scope, Global) {
     $scope.global = Global;
-    $scope.test = "SplashController"
+    $scope.test = "SplashController";
         
 }]);
 
