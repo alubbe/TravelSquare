@@ -1,9 +1,18 @@
     <section data-ng-controller="PlanningController" data-ng-init="findOne()">
     Test: {{test}}
     
-    
+    {{allvenues}}
    
-    <ul>
+  
+    <hr>
+    
+     <ul id="day-details" class="span10">
+                        <li ng-repeat="section in sections" ng-class="{closed:!section.selected}">
+                                <div class="title" ng-click="openSection($index)">{{section.name}}...</div>
+                                <div id="c{{$index}}" class="content">
+                                        <ul>
+                                         
+                                           <ul>
      <li ng-repeat="section in venues['FOOD']" >
      
     
@@ -16,15 +25,8 @@
      </li>
      </ul>
     
-    <hr>Sections:
-     <ul id="day-details" class="span10">
-                        <li ng-repeat="section in sections" ng-class="{closed:!section.selected}">
-                                <div class="title" ng-click="openSection($index)">{##{section}}...</div>
-                                <div id="c{{$index}}" class="content">
-                                        <ul>
-                                                <li ng-repeat="venue in section.venues">
-                                                        {{section.content}}...
-                                                </li>
+                                         
+                                         
                                         </ul>
                                 </div>
                         </li>
@@ -48,7 +50,7 @@
         }
       });
     </script>
-    <link rel="icon" type="image/x-icon" href="https://y7v4p6k4.ssl.hwcdn.net/placeholder/favicon.ico">
+  
     <script type="text/javascript" src="js/webflow.js" defer></script>
   
   
@@ -65,13 +67,19 @@
     <div class="w-container container container1">
       <div class="top_bar_bar">
         <div class="w-clearfix">
-          <h1 class="city_bar">Barcelona</h1>
+          <h1 class="city_bar">{{city}}</h1>
           <div class="w-clearfix bloody_empty_div">
-            <a class="w-clearfix w-inline-block link1" href="itinerary.html">
-              <img class="menu_item1" src="images/notepad.png" width="48" height="50" alt="notepad.png">
+            <a class="w-clearfix w-inline-block link1" href="/">
+              <img class="" src="img/notepad.png" width="60" height="50" style="padding-right:15px;" alt="notepad.png">
+            
             </a>
-            <a class="w-inline-block link2" href="itinerary.html"></a>
-            <img class="menu_item2" src="images/map.png" height="50" alt="map.png">
+          
+            <a class="w-inline-block link2" href="/tour">
+              <img class="" src="img/map.png" width="50" height="50" alt="map.png">
+            </a>
+            
+           
+           
           </div>
         </div>
       </div>

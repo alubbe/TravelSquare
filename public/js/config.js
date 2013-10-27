@@ -6,6 +6,9 @@ window.app.config(['$routeProvider',
             templateUrl: 'views/tours/view.html',
             reloadOnSearch: false
         }).
+         when('/planning', {
+            templateUrl: 'views/planning.html'
+        }).
         when('/', {
             templateUrl: 'views/index.html'
         }).
