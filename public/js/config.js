@@ -2,8 +2,11 @@
 window.app.config(['$routeProvider',
     function($routeProvider) {
         $routeProvider.
-        when('/articles', {
-            templateUrl: 'views/articles/list.html'
+        when('/list', {
+            templateUrl: 'views/list.html'
+        }).
+         when('/splash', {
+            templateUrl: 'views/splash.html'
         }).
         when('/articles/create', {
             templateUrl: 'views/articles/create.html'
@@ -18,10 +21,10 @@ window.app.config(['$routeProvider',
             templateUrl: 'views/articles/view.html'
         }).
         when('/', {
-            templateUrl: 'views/index.html'
+            templateUrl: '/views/splash.html'
         }).
         otherwise({
-            redirectTo: '/'
+            redirectTo: '/splash'
         });
     }
 ]);
