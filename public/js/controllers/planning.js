@@ -56,22 +56,28 @@ angular.module('mean.system').controller('PlanningController', ['$http','$scope'
       // $scope.catsRestname = ['food',  'coffee', 'sights', 'shops', 'arts', 'outdoors',  'drinks'];
       // $scope.catsTitels = ['FOOD',  'COFFEE', 'SIGHTS', 'SHOPPING', 'ARTS & EVENTS', 'OUTDOORS', 'NIGHTLIFE'];
       $scope.allvenues = [];
-      for (var i = 0; i < $scope.sections.length; i++) {
+      for (var i = 0; i < $scope.sections.length-1; i++) {
         caturl = urlpre + $scope.sections[i].id + '/8';
         console.log(caturl);
-        $scope.TSxhrPush($http, $scope, caturl, $scope.sections[i].id, $scope.sections[i].title, "venues");
+        
+               $http({
+                    method: 'GET',
+                    url: caturl
+                }).success(function (data, status) {
+                        $scope.sections[i].data = data;
+                        $scope.it = data;
+                        
+              console.log(data);
+                    });
+                    
+        
+        
       }
     };
 
-    $scope.TSxhrPush = function ($http, $scope, url, catsRestname, catsTitel, variablename){
-            $http.jsonp(url).success(function (data) {
-              $scope.sections[catsRestname].venues = data;
-              console.log($scope.sections[catsRestname].venues);
-            }).error(function (data, status, headers, config) {
-                 console.log('Please try again soon.');
-                 return;
-            });
-    };
+  
+            
+            
 
     $scope.openSection = function(index) {
         for (var i in $scope.sections) {
