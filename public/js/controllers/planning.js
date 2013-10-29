@@ -97,6 +97,30 @@ angular.module('mean.system').controller('PlanningController', ['$http','$scope'
         });
     };
 
+    //   var urlpre = "http://localhost:3000/foursquare/" + $scope.city + "/";
+    //   // $scope.catsRestname = ['food',  'coffee', 'sights', 'shops', 'arts', 'outdoors',  'drinks'];
+    //   // $scope.catsTitels = ['FOOD',  'COFFEE', 'SIGHTS', 'SHOPPING', 'ARTS & EVENTS', 'OUTDOORS', 'NIGHTLIFE'];
+    //   $scope.allvenues = [];
+    //   for (var i = 0; i < $scope.sections.length-1; i++) {
+    //     caturl = urlpre + $scope.sections[i].id + '/8';
+    //     console.log(caturl);
+        
+    //            $http({
+    //                 method: 'GET',
+    //                 url: caturl
+    //             }).success(function (data, status) {
+    //                     $scope.sections[i].data = data;
+    //                     $scope.it = data;
+                        
+    //           console.log(data);
+    //                 });
+                    
+        
+        
+    //   }
+    // };
+
+  
     $scope.openSection = function(index) {
         for (var i in $scope.sections) {
             if (i == index) {

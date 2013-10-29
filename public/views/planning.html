@@ -6,6 +6,8 @@
 
 
 
+<div>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
     <link rel="stylesheet" type="text/css" href="css/webflow.css">
@@ -102,6 +104,10 @@ a.next-button {
 
 
 
+
+
+
+
           </div>
         </div>
       </div>
@@ -115,6 +121,19 @@ a.next-button {
 
               </li>
             </ul> -->
+<!--           <div id="c{{$index}}" class="content">
+           
+           EVERYTHING:
+           <div style="max-height:200px;">
+<div style="clear:both;padding:5px;marging:5px;width:800px;max-height:200px;">
+<div style="float:left;" ng-repeat="i in it | limitTo:12">
+<img style="padding:5px;marging:5px;" src="{{i.venue.photos.groups[0].items[0].prefix}}110x110{{i.venue.photos.groups[0].items[0].suffix}}">
+<p ng-if $index = 5>
+<br>
+</p>
+</div>
+</div>
+ -->           
           </div>
         </li>
       </ul>
