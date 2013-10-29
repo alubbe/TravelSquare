@@ -1,0 +1,481 @@
+<html>
+<head>
+	<script src="jquery-1.10.1.min.js"></script>
+
+ 	<link rel="stylesheet" href="jquery-ui.css" />
+  	<script src="jquery-ui.js"></script>
+
+	<link rel="stylesheet" href="bootstrap.min.css">
+	<link rel="stylesheet" href="bootstrap-theme.min.css">
+	<script src="bootstrap.min.js"></script>
+
+
+
+	<script>
+  $(function() {
+    $( "#sortable" ).sortable();
+    $( "#sortable" ).disableSelection();
+
+
+
+	$( "#accordion" ).accordion({
+      event: "click hoverintent",
+      header: "div:even" 
+    });
+
+
+
+
+$( ".venueTrash" ).click(function() {
+	$(this).parents(".square").hide('fade');
+});
+
+
+$( ".venueHeart" ).click(function() {
+	$(this).parents(".square").css( "background-color", "green" );
+	
+});
+
+
+
+
+  });
+
+  </script>
+</head>
+
+<body>
+
+<style>
+ div {border: 1px solid green;}
+
+
+.containerSquares {
+    padding-left:10pt;
+    border-width: 1px;
+    border-style: solid;
+    overflow: hidden;
+    heigh: 400px;
+}
+
+
+.square {
+    float:left;
+    padding-left:10pt;
+}
+
+
+
+.venueSquare {
+	border:  1px solid #ddd;
+	width: 225px;
+	height: 225px;
+	padding: 10px;
+	margin: 10px;
+}
+
+.titlebar{
+
+}
+
+.squareImage{
+	background-color:orange;
+	width: 100%;
+	height: 100px;
+}
+
+
+
+.blocky{
+	display: block;
+	clear: block;
+	border: 10px solid gray;
+	position: relative;
+	height: 550px;
+
+
+	
+}
+
+
+.accorideonIndiHeader {
+	color: black	;
+}
+
+#accorideonIndiHeader1 {
+	background-color: green !important;
+}
+
+#accorideonIndiHeader2 {
+	background-color: red !important;
+}
+
+#accorideonIndiHeader3 {
+	background-color: brown !important;
+}
+
+#accorideonIndiHeader4 {
+	background-color: yellow !important;
+}
+
+
+.dragtip{
+	background-color: darkgray;
+	display: none;
+
+}
+
+
+</style>
+
+
+
+<b>New Planning Page Code:</b>
+<ul>
+<li>Responsive design</li>
+<li>Drag and Drop Order</li>
+<li>GetRidOfThat:
+<a class="venueTrash">
+				<img src="exampledata/delete.png" alt="trash" width="20" />
+			</a>
+
+</li>
+<li>No MEAN Stack used, with Jquery, Jquery-UI, maybe bootstrap</li>
+<span style="color:lightgrey"><li>Green color is for debugging only</li></span>
+</ul>
+
+
+<span class="ui-icon ui-icon-arrowthick-1-n"></span>
+
+Square Beispiel:
+<div class="blocky">
+	<div id="sortable" class"containerSquares">
+
+
+
+		<div id="square1" class="square venueSquare">
+			
+			<div class="titlebar">	Shake Shack</div>
+			<div>reorder with drag&amp;drop  
+			<a href=""><img src="exampledata/heart.jpg" alt="heart" width="20" class="venueHeart" /></a>
+			<a class="venueTrash">
+				<img src="exampledata/delete.png" alt="trash" width="20" />
+			</a>
+			
+			</div>
+
+							
+			<div class="squareImage">
+				<img src="exampledata/food1.jpg" width="100%" height="100%">
+			</div>
+			<div class="dragtip">
+				You can rearrange the order with drag and drop<br />
+				<span class="ui-icon ui-icon-transferthick-e-w"></span>
+			</div>
+			Like: 112				
+			Ratings: 8.8<br />
+			on <a href="http://www.foursquare.com"><img width="60" src="foursquare_com_logo_100.png"></a>
+						
+			 
+			 
+		
+		</div>
+
+
+
+<div id="square3" class="square venueSquare">
+			
+			<div class="titlebar">	Food 2</div>
+			<div>reorder with drag&amp;drop  
+		<img src="exampledata/heart.jpg" alt="heart" width="20" class="venueTrash" /></a>
+				<img src="exampledata/delete.png" alt="trash" width="20" />
+		
+			
+			</div>
+
+							
+			<div class="squareImage">
+				<img src="exampledata/food2.jpg" width="100%" height="100%">
+			</div>
+			<div class="dragtip">
+				You can rearrange the order with drag and drop<br />
+				<span class="ui-icon ui-icon-transferthick-e-w"></span>
+			</div>
+			Like: 112				
+			Ratings: 8.8<br />
+			on <a href="http://www.foursquare.com"><img width="60" src="foursquare_com_logo_100.png"></a>
+						
+			 
+			 
+		
+		</div>
+
+
+
+<div id="square3" class="square venueSquare">
+			
+			<div class="titlebar">	Food 3</div>
+			<div>reorder with drag&amp;drop  
+			<a href=""><img src="exampledata/heart.jpg" alt="heart" width="20" class="venueHeart" /></a>
+			<a class="venueTrash">
+				<img src="exampledata/delete.png" alt="trash" width="20" />
+			</a>
+			
+			</div>
+
+							
+			<div class="squareImage">
+				<img src="exampledata/food3.jpg" width="100%" height="100%">
+			</div>
+			<div class="dragtip">
+				You can rearrange the order with drag and drop<br />
+				<span class="ui-icon ui-icon-transferthick-e-w"></span>
+			</div>
+			Like: 112				
+			Ratings: 8.8<br />
+			on <a href="http://www.foursquare.com"><img width="60" src="foursquare_com_logo_100.png"></a>
+						
+			 
+			 
+		
+		</div>
+
+
+
+
+
+
+<div id="square4" class="square venueSquare">
+			
+			<div class="titlebar">	Food 4</div>
+			<div>reorder with drag&amp;drop  
+			<a href=""><img src="exampledata/heart.jpg" alt="heart" width="20" class="venueHeart" /></a>
+			<a class="venueTrash">
+				<img src="exampledata/delete.png" alt="trash" width="20" />
+			</a>
+			
+			</div>
+
+							
+			<div class="squareImage">
+				<img src="exampledata/food4.jpg" width="100%" height="100%">
+			</div>
+			<div class="dragtip">
+				You can rearrange the order with drag and drop<br />
+				<span class="ui-icon ui-icon-transferthick-e-w"></span>
+			</div>
+			Like: 112				
+			Ratings: 8.8<br />
+			on <a href="http://www.foursquare.com"><img width="60" src="foursquare_com_logo_100.png"></a>
+						
+			 
+			 
+		
+		</div>
+
+
+
+
+
+
+
+<div id="square5" class="square venueSquare">
+			
+			<div class="titlebar">	Food 5</div>
+			<div>reorder with drag&amp;drop  
+			<a href=""><img src="exampledata/heart.jpg" alt="heart" width="20" class="venueHeart" /></a>
+			<a class="venueTrash">
+				<img src="exampledata/delete.png" alt="trash" width="20" />
+			</a>
+			
+			</div>
+
+							
+			<div class="squareImage">
+				<img src="exampledata/food5.jpg" width="100%" height="100%">
+			</div>
+			<div class="dragtip">
+				You can rearrange the order with drag and drop<br />
+				<span class="ui-icon ui-icon-transferthick-e-w"></span>
+			</div>
+			Like: 112				
+			Ratings: 8.8<br />
+			on <a href="http://www.foursquare.com"><img width="60" src="foursquare_com_logo_100.png"></a>
+						
+			 
+			 
+		
+		</div>
+
+
+
+
+
+
+
+
+<div id="square6" class="square venueSquare">
+			
+			<div class="titlebar">	Food 6</div>
+			<div>reorder with drag&amp;drop  
+			<a href=""><img src="exampledata/heart.jpg" alt="heart" width="20" class="venueHeart" /></a>
+			<a class="venueTrash">
+				<img src="exampledata/delete.png" alt="trash" width="20" />
+			</a>
+			
+			</div>
+
+							
+			<div class="squareImage">
+				<img src="exampledata/food6.jpg" width="100%" height="100%">
+			</div>
+			<div class="dragtip">
+				You can rearrange the order with drag and drop<br />
+				<span class="ui-icon ui-icon-transferthick-e-w"></span>
+			</div>
+			Like: 112				
+			Ratings: 8.8<br />
+			on <a href="http://www.foursquare.com"><img width="60" src="foursquare_com_logo_100.png"></a>
+						
+			 
+			 
+		
+		</div>
+
+
+
+
+
+
+
+
+<div id="square7" class="square venueSquare">
+			
+			<div class="titlebar">	Food 7</div>
+			<div>reorder with drag&amp;drop  
+			<a href=""><img src="exampledata/heart.jpg" alt="heart" width="20" class="venueHeart" /></a>
+			<a class="venueTrash">
+				<img src="exampledata/delete.png" alt="trash" width="20" />
+			</a>
+			
+			</div>
+
+							
+			<div class="squareImage">
+				<img src="exampledata/food7.jpg" width="100%" height="100%">
+			</div>
+			<div class="dragtip">
+				You can rearrange the order with drag and drop<br />
+				<span class="ui-icon ui-icon-transferthick-e-w"></span>
+			</div>
+			Like: 112				
+			Ratings: 8.8<br />
+			on <a href="http://www.foursquare.com"><img width="60" src="foursquare_com_logo_100.png"></a>
+						
+			 
+			 
+		
+		</div>
+
+
+
+
+
+
+
+
+<div id="square8" class="square venueSquare">
+			
+			<div class="titlebar">	Food 8</div>
+			<div>reorder with drag&amp;drop  
+			<a href=""><img src="exampledata/heart.jpg" alt="heart" width="20" class="venueHeart" /></a>
+			<a class="venueTrash">
+				<img src="exampledata/delete.png" alt="trash" width="20" />
+			</a>
+			
+			</div>
+
+							
+			<div class="squareImage">
+				<img src="exampledata/food8.jpg" width="100%" height="100%">
+			</div>
+			<div class="dragtip">
+				You can rearrange the order with drag and drop<br />
+				<span class="ui-icon ui-icon-transferthick-e-w"></span>
+			</div>
+			Like: 112				
+			Ratings: 8.8<br />
+			on <a href="http://www.foursquare.com"><img width="60" src="foursquare_com_logo_100.png"></a>
+						
+			 
+			 
+		
+		</div>
+
+
+
+
+
+		
+	</div><!-- End of Squeres holder one -->
+</div><!-- End of Squeres holder two -->
+
+
+<br /><br /><br /><br /><br /><br />
+
+
+
+
+
+	<div class="blocky">
+	<div id="accordion">
+	  <div id="accorideonIndiHeader1" class="accorideonIndiHeader">FOOD</div>
+	  <div>
+	    <p>
+	    Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer
+	    ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit
+	    amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut
+	    odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.
+	    </p>
+	  </div>
+	  <div  id="accorideonIndiHeader2" class="accorideonIndiHeader">CAFE</div>
+	  <div>
+	    <p>
+	    Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet
+	    purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor
+	    velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In
+	    suscipit faucibus urna.
+	    </p>
+	  </div>
+	  <div  id="accorideonIndiHeader3"  class="accorideonIndiHeader">OUTDOORS</div>
+	  <div>
+	    <p>
+	    Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
+	    Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero
+	    ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis
+	    lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.
+	    </p>
+	    <ul>
+	      <li>List item one</li>
+	      <li>List item two</li>
+	      <li>List item three</li>
+	    </ul>
+	  </div>
+	  <div  id="accorideonIndiHeader4"  class="accorideonIndiHeader">NIGHTLIFE</div>
+	  <div>
+	    <p>
+	    Cras dictum. Pellentesque habitant morbi tristique senectus et netus
+	    et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in
+	    faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia
+	    mauris vel est.
+	    </p>
+	    <p>
+	    Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
+	    Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
+	    inceptos himenaeos.
+	    </p>
+	  </div>
+	</div>
+</div>
+
+
