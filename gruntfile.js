@@ -30,7 +30,11 @@ module.exports = function(grunt) {
             }
         },
         jshint: {
-            all: ['gruntfile.js', 'public/js/**/*.js', 'test/**/*.js', 'app/**/*.js']
+            all: ['gruntfile.js', 'public/js/**/*.js', 'test/**/*.js', 'app/**/*.js'],
+            options: {
+                jshintrc: '.jshintrc',
+                ignores: ['**/*.js']
+            }
         },
         nodemon: {
             dev: {
