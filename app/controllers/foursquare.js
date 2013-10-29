@@ -168,61 +168,14 @@ exports.buildItenary = function(req, res) {
           //console.log(result_array);
           for(var j = 0; j < result_array.length; j++) tourstopsList.stops[i].push(result_array[j]);
           if(queueLength <= numberOfReturns){
-            var done = iterativeShit(tourstopsList.stops, tourstopsList.center, tourstopsList.beginningSlot, null, 0, tourstopsList.totalSlots, {stops:[], beginningSlot: tourstopsList.beginningSlot, endingSlot: tourstopsList.endingSlot, numberOfCalendarDays: tourstopsList.numberOfCalendarDays, }, {stops:[], sumOfSquares: 999999999});
-
-            res.jsonp(done);
+            res.jsonp(iterativeShit(tourstopsList.stops, tourstopsList.center, tourstopsList.beginningSlot, null, 0, tourstopsList.totalSlots, {stops:[], beginningSlot: tourstopsList.beginningSlot, endingSlot: tourstopsList.endingSlot, numberOfCalendarDays: tourstopsList.numberOfCalendarDays, }, {stops:[], sumOfSquares: 999999999}));
           }
         });
       }
     }
   }
   console.log("Es muessen noch " + queueLength + " Kategorien aufgefuellt werden.");
-  if(queueLength == 0)  res.jsonp(iterativeShit(tourstopsList.stops, tourstopsList.center, tourstopsList.beginningSlot, null, 0, tourstopsList.totalSlots, {stops:[]}, {stops:[], sumOfSquares: 999999999}));
-};
-
-/*
-
-Phase 0: Morning 1 - Food or Cafe
-Phase 1: Morning 2 - Arts or Sights
-Phase 2: Lunch - Food
-Phase 3: Afternoon 1 - Food or Cafe
-Phase 4: Afternoon 2 - Shopping or Outdoors
-Phase 5: Evening - Food
-Phase 6: Night - Nightlife
-
-*/
-
-var complete = function(tourstopsList, beginningSlot, endingSlot, lenghtOfADay){
-  var expectedSlots = [0,0,0,0,0,0,0], i, diff;
-
-  if (tourstopsList.numberOfCalendarDays <= 1){
-    for(i = beginningSlot; i < endingSlot; i++){
-      expectedSlots[i] = 1;
-
-      diff = expectedSlots[i] - tourstopsList.stops[i].length;
-      if(diff > 0){
-        console.log("Difference of " + diff + " at i = " + i);
-      };
-
-    }
-  }
-  else {
-    for(i = 0; i < lenghtOfADay; i++){
-      if(i >= beginningSlot) expectedSlots[i] += 1;
-      if(i < endingSlot) expectedSlots[i] += 1;
-      expectedSlots[i] += tourstopsList.numberOfCalendarDays - 2;
-
-      diff = expectedSlots[i] - tourstopsList.stops[i].length;
-      if(diff > 0){
-        console.log("Difference of " + diff + " at i = " + i);
-        //tourstopsList.stops[i].push(addMorePlaces(tourstopsList.stops[i], tourstopsList.center, tourstopsList.radius, diff, ));
-      };
-    }
-  }
-
-  //console.log(expectedSlots);
-
-  return tourstopsList;
+  if(queueLength == 0) res.jsonp(iterativeShit(tourstopsList.stops, tourstopsList.center, tourstopsList.beginningSlot, null, 0, tourstopsList.totalSlots, {stops:[], beginningSlot: tourstopsList.beginningSlot, endingSlot: tourstopsList.endingSlot, numberOfCalendarDays: tourstopsList.numberOfCalendarDays, }, {stops:[], sumOfSquares: 999999999}));
 };
 
 var addMorePlaces = function(tourstopsList, i, category, amount, callback) {
@@ -300,7 +253,6 @@ var iterativeShit = function(matrix, center, i, j, n, totalSlots, tourstops, opt
   //do this if it's the first time this functions gets launched
   if(j == null) {
     for(var _k = 0; _k < tourstops.numberOfCalendarDays; _k++) tourstops.stops[_k] = [];
-    // console.log(matrix);
     for(_k = 0; _k < matrix[i%7].length; _k++){
       var result = iterativeShit(matrix, center, i, _k, n, totalSlots, tourstops, optimizedTourstops);
       if (result !== null) {
@@ -310,29 +262,17 @@ var iterativeShit = function(matrix, center, i, j, n, totalSlots, tourstops, opt
     }
   }
   else {
-    //console.log("i/7 is " + parseInt(i/7) + " and i%7 is " + i%7);
+    // enter matrix[i][j] into the tourstops object
     tourstops.stops[parseInt(i/7)][i%7] = matrix[i%7][j];
-    // tourstops.stops[n].asd = 0;
-    // if(i % 7 == 0) tourstops.stops[n].asd = 1; // if it is the first stop of the day
-    // if(i % 7 == 6) tourstops.stops[n].asd = 2; // if it is the last stop of the day
-    // if(i % 7 == 0) tourstops.stops[n].timeframe = "Morning 1 - Food or Cafe";
-    // if(i % 7 == 1) tourstops.stops[n].timeframe = "Morning 2 - Arts or Sights";
-    // if(i % 7 == 2) tourstops.stops[n].timeframe = "Lunch - Food";
-    // if(i % 7 == 3) tourstops.stops[n].timeframe = "Afternoon 1 - Food or Cafe";
-    // if(i % 7 == 4) tourstops.stops[n].timeframe = "Afternoon 2 - Shopping or Outdoors";
-    // if(i % 7 == 5) tourstops.stops[n].timeframe = "Evening - Food";
-    // if(i % 7 == 6) tourstops.stops[n].timeframe = "Night - Nightlife";
-    
-    // remove matrix[i][j]
+
+    // then remove _matrix[i][j] from _matrix so it doesn't appear again in the decisions tree
     _matrix[i%7].splice(j, 1);
     if (n >= totalSlots - 1) {
-      //console.log(tourstops);
       //check if this configuration is better than the old one
       return checkConfiguration(tourstops, center, optimizedTourstops);
     }
     else {
       for(var _j = 0; _j < matrix[(i+1)%7].length; _j++){
-          //console.log("need more!");
         var _result = iterativeShit(matrix, center, i+1, _j, n+1, totalSlots, tourstops, optimizedTourstops);
         if (_result !== null) {
           optimizedTourstops.sumOfSquares = _result.sumOfSquares;
@@ -346,8 +286,6 @@ var iterativeShit = function(matrix, center, i, j, n, totalSlots, tourstops, opt
 };
 
 var checkConfiguration = function(tourstops, center, optimizedTourstops){
-  // console.log(tourstops);
-  // console.log(tourstops.stops[0]);
   tourstops.sumOfSquares = 0;
   for (var i = 0; i < tourstops.stops.length; i++){
     var beginningSlot = i == 0 ? tourstops.beginningSlot : 0;
@@ -359,9 +297,7 @@ var checkConfiguration = function(tourstops, center, optimizedTourstops){
     tourstops.sumOfSquares += Math.pow(distanceBetween(tourstops.stops[i][beginningSlot].location.lat, tourstops.stops[i][beginningSlot].location.lng, center.lat, center.lng), 2);
     // if it is the the last stop of the day, add the distance to the center (i.e. hotel)
     tourstops.sumOfSquares += Math.pow(distanceBetween(tourstops.stops[i][endingSlot].location.lat, tourstops.stops[i][endingSlot].location.lng, center.lat, center.lng), 2);
-    // console.log(tourstops.sumOfSquares);
     for (var j = beginningSlot; j < endingSlot; j++){
-      //console.log(tourstops);
       var lat1 = tourstops.stops[i][j].location.lat,
         lng1 = tourstops.stops[i][j].location.lng,
         lat2 = tourstops.stops[i][j+1].location.lat,
@@ -371,7 +307,6 @@ var checkConfiguration = function(tourstops, center, optimizedTourstops){
       tourstops.sumOfSquares += Math.pow(distanceBetween(lat1, lng1, lat2, lng2), 2);
     }
   }
-  // console.log(tourstops.sumOfSquares);
   if (tourstops.sumOfSquares < optimizedTourstops.sumOfSquares){
     return tourstops;
   }
@@ -745,6 +680,39 @@ returnPhase = function(phase) {
     return 5;
   if(phase == 'Night - Nightlife')
     return 6;
+};
+
+var complete = function(tourstopsList, beginningSlot, endingSlot, lenghtOfADay){
+  var expectedSlots = [0,0,0,0,0,0,0], i, diff;
+
+  if (tourstopsList.numberOfCalendarDays <= 1){
+    for(i = beginningSlot; i < endingSlot; i++){
+      expectedSlots[i] = 1;
+
+      diff = expectedSlots[i] - tourstopsList.stops[i].length;
+      if(diff > 0){
+        console.log("Difference of " + diff + " at i = " + i);
+      };
+
+    }
+  }
+  else {
+    for(i = 0; i < lenghtOfADay; i++){
+      if(i >= beginningSlot) expectedSlots[i] += 1;
+      if(i < endingSlot) expectedSlots[i] += 1;
+      expectedSlots[i] += tourstopsList.numberOfCalendarDays - 2;
+
+      diff = expectedSlots[i] - tourstopsList.stops[i].length;
+      if(diff > 0){
+        console.log("Difference of " + diff + " at i = " + i);
+        //tourstopsList.stops[i].push(addMorePlaces(tourstopsList.stops[i], tourstopsList.center, tourstopsList.radius, diff, ));
+      };
+    }
+  }
+
+  //console.log(expectedSlots);
+
+  return tourstopsList;
 };
 
 */
