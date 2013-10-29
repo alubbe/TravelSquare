@@ -56,6 +56,7 @@
 	font-weight: bold;
 	cursor: pointer;
 	background-color: red;
+	color: white;
 }
 
 #day-details li div.content {

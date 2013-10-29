@@ -1,8 +1,12 @@
+<link rel='stylesheet' href='/lib/bootstrap/docs/assets/css/bootstrap.css' />
+
     <section data-ng-controller="PlanningController" data-ng-init="init()">
 
 
 
 
+
+<div>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
@@ -53,11 +57,23 @@
   border-bottom: 2px solid grey;
 }
 
-li div.venue-box {
+ul.outer-venue {
+  display: inline;
+}
+
+li div.venue-box.ng-binding {
   width: 140px;
   height: 140px;
   margin: 10px;
   background-color: green;
+}
+
+a.next-button {
+  margin-top: 20px;
+  font-size: 18pt;
+  color: white;
+  font-family: 'Helvetica Neue';
+  background-color: rgb(42,127,189);
 }
 
     </style>
@@ -88,82 +104,40 @@ li div.venue-box {
 
 
 
+
+
+
+
           </div>
         </div>
       </div>
       <ul id="planning-details" class="span12">
         <li ng-repeat="section in sections" ng-class="{closed:!section.selected}">
           <titleboxfront></titleboxfront>
-          <div id="c{{$index}}" class="content">
-            <ul>
-              <li ng-repeat="venue in section.venues">
-                <div class="venue-box">{{venue.venue.name}}</div>
+          <div id="c{{$index}}" class="content" style="position: relative;">
+            <!-- <ul class="outer-venue">
+              <li ng-repeat="venue in it0">
+                <div class="venue-box">{{venue.name}}<div class="heart" style="position: absolute; top: 20px; right: 30px; background-image:url(../img/heart_empty.png); width: 20px; height: 20px;"> </div></div>
+
               </li>
-            </ul>
+            </ul> -->
+<!--           <div id="c{{$index}}" class="content">
+           
+           EVERYTHING:
+           <div style="max-height:200px;">
+<div style="clear:both;padding:5px;marging:5px;width:800px;max-height:200px;">
+<div style="float:left;" ng-repeat="i in it | limitTo:12">
+<img style="padding:5px;marging:5px;" src="{{i.venue.photos.groups[0].items[0].prefix}}110x110{{i.venue.photos.groups[0].items[0].suffix}}">
+<p ng-if $index = 5>
+<br>
+</p>
+</div>
+</div>
+ -->           
           </div>
         </li>
       </ul>
-
-      <!-- <div class="category_header">
-        <h2 class="category_titles">FOOD</h2>
-      </div>
-      <div class="w-clearfix sub_section">
-        <div class="arrow_left">
-          <img class="arrow_image_left" src="images/arrow_left.png" height="450" alt="arrow_left.png">
-        </div>
-        <div class="w-clearfix wrapper_section">
-          <div class="info_window">
-            <img class="img_info_window" src="images/image-placeholder.svg" alt="image-placeholder.svg">
-            <h3 class="info_window_title">Restaurant A</h3>
-          </div>
-          <div class="info_window">
-            <img class="img_info_window" src="images/image-placeholder.svg" alt="image-placeholder.svg">
-            <h3 class="info_window_title">Restaurant B</h3>
-          </div>
-          <div class="info_window">
-            <img class="img_info_window" src="images/image-placeholder.svg" alt="image-placeholder.svg">
-            <h3 class="info_window_title">Restaurant C</h3>
-          </div>
-          <div class="info_window">
-            <img class="img_info_window" src="images/image-placeholder.svg" alt="image-placeholder.svg">
-            <h3 class="info_window_title">Restaurant D</h3>
-          </div>
-          <div class="info_window">
-            <img class="img_info_window" src="images/image-placeholder.svg" alt="image-placeholder.svg">
-            <h3 class="info_window_title">Restaurant E</h3>
-          </div>
-          <div class="info_window">
-            <img class="img_info_window" src="images/image-placeholder.svg" alt="image-placeholder.svg">
-            <h3 class="info_window_title">Restaurant F</h3>
-          </div>
-          <div class="info_window">
-            <img class="img_info_window" src="images/image-placeholder.svg" alt="image-placeholder.svg">
-            <h3 class="info_window_title">Restaurant G</h3>
-          </div>
-          <div class="info_window">
-            <img class="img_info_window" src="images/image-placeholder.svg" alt="image-placeholder.svg">
-            <h3 class="info_window_title">Restaurant H</h3>
-          </div>
-        </div>
-      </div>
-      <div class="category_header category_coffee">
-        <h2 class="category_titles">COFFEE</h2>
-      </div>
-      <div class="category_header category_sights">
-        <h2 class="category_titles">SIGHTS</h2>
-      </div>
-      <div class="category_header category_arts_events">
-        <h2 class="category_titles">ARTS &amp; EVENTS</h2>
-      </div>
-      <div class="category_header category_shopping">
-        <h2 class="category_titles">SHOPPING</h2>
-      </div>
-      <div class="category_header category_nightlife">
-        <h2 class="category_titles">NIGHTLIFE</h2>
-      </div>
-      <div class="w-clearfix category_header category_outdoors">
-        <h2 class="category_titles categoy_outdoors">OUTDOORS</h2><a class="button cta" href="#">Plan My Trip</a>
-      </div> -->
+      <a href="http://localhost:3000/#!/tours" class="next-button">Next</a>
     </div>
   </div>
 </body>

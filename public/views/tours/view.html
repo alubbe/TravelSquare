@@ -1,9 +1,11 @@
+<link rel='stylesheet' href='/lib/bootstrap/docs/assets/css/bootstrap.css' />
+
 <section ng-controller="ToursController" ng-init="setup()">
 	<!-- Top row containing day selection and map -->
 	<div class="row main">
 		<ul id="day-selection" class="span2">
 			<li ng-repeat="day in tour.days">
-				<div ng-click="selectDay($index)" ng-class="{selected:day.selected}">Day {{$index}}</div>
+				<div ng-click="selectDay($index)" ng-class="{selected:day.selected}">Day {{$index + 1}}</div>
 			</li>
 		</ul>
 		<div id="tour-map-canvas" class="span10" style="height: 500px;">

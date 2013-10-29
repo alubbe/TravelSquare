@@ -544,6 +544,7 @@ exports.buildItenary = function(req, res) {
 						//res.jsonp(done.stops[2].timeframe);
 
 						var asyncCallback = function(response) {
+							console.log("ich bin im callback");
 							var stops = {
 								days: new Array()};
 
@@ -553,7 +554,7 @@ exports.buildItenary = function(req, res) {
 								stops: new Array(),
 								timeframes: new Array()	};
 
-							for(i = 0; i<done.stops.length;i++){
+							for(i = 0; i < done.stops.length; i++){
 								if(currentPhase <= returnPhase(done.stops[i].timeframe)) {
 									var timef = {
 										timeframe: done.stops[i].timeframe
@@ -573,6 +574,7 @@ exports.buildItenary = function(req, res) {
 								}
 							}
 							//console.log(stops.days.length);
+							console.log("und nu is endee");
 							res.jsonp(stops);
 						};
 
