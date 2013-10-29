@@ -81,5 +81,4 @@ module.exports = function(app, passport, auth) {
     var foursquare = require('../app/controllers/foursquare');
     app.get('/itenary', foursquare.buildItenary);
     app.get('/foursquare/:city/:category/:limit', foursquare.getVenuesCityCat);
-    //app.get('/Berlin', foursquare.getBerlin);
 };
