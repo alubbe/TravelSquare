@@ -1,10 +1,9 @@
-
 angular.module('mean.system').controller('PlanningController', ['$http','$scope', 'Global', function ($http, $scope, Global) {
     var _params = window.location.href.split("?")[1].split("#")[0];
     var params =  JSON.parse('{"' + _params.replace(/&/g, "\",\"").replace(/\=/g,"\":\"").replace(/%2C/g,",").replace(/\+/g," ") + '"}');
     $scope.global = Global;
     $scope.test = "PlanningController";
-    
+
     $scope.city = params.location;
     $scope.days = params.days;
     $scope.sections = [
@@ -104,23 +103,23 @@ angular.module('mean.system').controller('PlanningController', ['$http','$scope'
     //   for (var i = 0; i < $scope.sections.length-1; i++) {
     //     caturl = urlpre + $scope.sections[i].id + '/8';
     //     console.log(caturl);
-        
+
     //            $http({
     //                 method: 'GET',
     //                 url: caturl
     //             }).success(function (data, status) {
     //                     $scope.sections[i].data = data;
     //                     $scope.it = data;
-                        
+
     //           console.log(data);
     //                 });
-                    
-        
-        
+
+
+
     //   }
     // };
 
-  
+
     $scope.openSection = function(index) {
         for (var i in $scope.sections) {
             if (i == index) {

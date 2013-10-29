@@ -1,0 +1,168 @@
+
+{
+  "stops": [
+    [
+      null,
+      {
+        "name": "Galerija Likum 76",
+        "location": {
+          "address": "Musala 4, 71300  Visoko",
+          "lat": 43.99288472736875,
+          "lng": 18.17646661241478
+        },
+        "likes": 0,
+        "picture_url": "NaNxundefinedundefined",
+        "fs_id": "51311ccbe4b090128e639918"
+      },
+      {
+        "name": "Caffe-Pizzerija \"Verdi\"",
+        "location": {
+          "address": "Branilaca, undefined  Visoko",
+          "lat": 43.99441995036063,
+          "lng": 18.173274993896484
+        },
+        "likes": 0,
+        "picture_url": "NaNxundefinedundefined",
+        "fs_id": "502f4aebe4b05159d50fb26d"
+      },
+      {
+        "name": "Ripli",
+        "location": {
+          "address": "Jalija, undefined  Visoko",
+          "lat": 43.98870588379502,
+          "lng": 18.181440055887297
+        },
+        "likes": 3,
+        "picture_url": "NaNxundefinedundefined",
+        "fs_id": "4e51748cd164978659e6a0a5"
+      },
+      {
+        "location": {
+          "lat": 44.17,
+          "lng": 18.19
+        },
+        "fixedTime": false
+      },
+      {
+        "location": {
+          "lat": 44.27,
+          "lng": 17.99
+        },
+        "fixedTime": false
+      },
+      {
+        "location": {
+          "lat": 43.91,
+          "lng": 18.09
+        },
+        "fixedTime": false
+      }
+    ],
+    [
+      {
+        "location": {
+          "lat": 44.2,
+          "lng": 17.9
+        },
+        "fixedTime": false
+      },
+      {
+        "name": "Galerija Likum 76",
+        "location": {
+          "address": "Musala 4, 71300  Visoko",
+          "lat": 43.99288472736875,
+          "lng": 18.17646661241478
+        },
+        "likes": 0,
+        "picture_url": "NaNxundefinedundefined",
+        "fs_id": "51311ccbe4b090128e639918"
+      },
+      {
+        "name": "Caffe-Pizzerija \"Verdi\"",
+        "location": {
+          "address": "Branilaca, undefined  Visoko",
+          "lat": 43.99441995036063,
+          "lng": 18.173274993896484
+        },
+        "likes": 0,
+        "picture_url": "NaNxundefinedundefined",
+        "fs_id": "502f4aebe4b05159d50fb26d"
+      },
+      {
+        "name": "Ripli",
+        "location": {
+          "address": "Jalija, undefined  Visoko",
+          "lat": 43.98870588379502,
+          "lng": 18.181440055887297
+        },
+        "likes": 3,
+        "picture_url": "NaNxundefinedundefined",
+        "fs_id": "4e51748cd164978659e6a0a5"
+      },
+      {
+        "location": {
+          "lat": 44.17,
+          "lng": 18.19
+        },
+        "fixedTime": false
+      },
+      {
+        "location": {
+          "lat": 44.27,
+          "lng": 17.99
+        },
+        "fixedTime": false
+      },
+      {
+        "location": {
+          "lat": 43.91,
+          "lng": 18.09
+        },
+        "fixedTime": false
+      }
+    ],
+    [
+      {
+        "location": {
+          "lat": 44.2,
+          "lng": 17.9
+        },
+        "fixedTime": false
+      },
+      {
+        "name": "Galerija Likum 76",
+        "location": {
+          "address": "Musala 4, 71300  Visoko",
+          "lat": 43.99288472736875,
+          "lng": 18.17646661241478
+        },
+        "likes": 0,
+        "picture_url": "NaNxundefinedundefined",
+        "fs_id": "51311ccbe4b090128e639918"
+      },
+      {
+        "name": "Caffe-Pizzerija \"Verdi\"",
+        "location": {
+          "address": "Branilaca, undefined  Visoko",
+          "lat": 43.99441995036063,
+          "lng": 18.173274993896484
+        },
+        "likes": 0,
+        "picture_url": "NaNxundefinedundefined",
+        "fs_id": "502f4aebe4b05159d50fb26d"
+      },
+      {
+        "name": "Ripli",
+        "location": {
+          "address": "Jalija, undefined  Visoko",
+          "lat": 43.98870588379502,
+          "lng": 18.181440055887297
+        },
+        "likes": 3,
+        "picture_url": "NaNxundefinedundefined",
+        "fs_id": "4e51748cd164978659e6a0a5"
+      }
+    ]
+  ],
+  "sumOfSquares": 192.25485242554146
+}

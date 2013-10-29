@@ -111,48 +111,48 @@ angular.
 
         $scope.parseData = function(data) {
             var days = [];
-            for (var i = 0; i < data.days.length; i++) {
-                var day = {
-                    date: '',
-                    venues: []
-                };
-                var stops = data.days[i].stops;
-                for (var j = 0; j < stops.length; j++) {
-                    // Determine time code
-                    var timeCode = 3;
-                    var timeFrame = data.days[i].timeframes[j];//.venue.timeframe || stops[j].timeframe;
-                    console.log(timeFrame);
-                    if (timeFrame && timeFrame.indexOf('Morning') == 0) {
-                        timeCode = 0;
-                    } else if (timeFrame && timeFrame.indexOf('Lunch') == 0) {
-                        timeCode = 1;
-                    } else if (timeFrame && timeFrame.indexOf('Afternoon') == 0) {
-                        timeCode = 2;
-                    }
-                    console.log(timeFrame);
-                    // Build address
-                    var address = '';
-                    var name = '<unknown>';
-                    if (stops[j].venue && stops[j].venue.location) {
-                        address = stops[j].venue.location.address + ', ' + stops[j].venue.location.city + ', ' + stops[j].venue.location.country;
-                        name = stops[j].venue.name;
-                    }
-                    // Create venue
-                    day.venues.push({
-                        name: name,
-                        location: {
-                            lat: stops[j].lat || stops[j].venue.location.lat,
-                            lng: stops[j].lng || stops[j].venue.location.lng
-                        },
-                        timeCode: timeCode,
-                        address: address,
-                        imageUrl: '',
-                        blurb: ''
-                    });
-                }
-                days.push(day);
-            }
-            console.log(days);
+            // for (var i = 0; i < data.days.length; i++) {
+            //     var day = {
+            //         date: '',
+            //         venues: []
+            //     };
+            //     var stops = data.days[i].stops;
+            //     for (var j = 0; j < stops.length; j++) {
+            //         // Determine time code
+            //         var timeCode = 3;
+            //         var timeFrame = data.days[i].timeframes[j];//.venue.timeframe || stops[j].timeframe;
+            //         console.log(timeFrame);
+            //         if (timeFrame && timeFrame.indexOf('Morning') == 0) {
+            //             timeCode = 0;
+            //         } else if (timeFrame && timeFrame.indexOf('Lunch') == 0) {
+            //             timeCode = 1;
+            //         } else if (timeFrame && timeFrame.indexOf('Afternoon') == 0) {
+            //             timeCode = 2;
+            //         }
+            //         console.log(timeFrame);
+            //         // Build address
+            //         var address = '';
+            //         var name = '<unknown>';
+            //         if (stops[j].venue && stops[j].venue.location) {
+            //             address = stops[j].venue.location.address + ', ' + stops[j].venue.location.city + ', ' + stops[j].venue.location.country;
+            //             name = stops[j].venue.name;
+            //         }
+            //         // Create venue
+            //         day.venues.push({
+            //             name: name,
+            //             location: {
+            //                 lat: stops[j].lat || stops[j].venue.location.lat,
+            //                 lng: stops[j].lng || stops[j].venue.location.lng
+            //             },
+            //             timeCode: timeCode,
+            //             address: address,
+            //             imageUrl: '',
+            //             blurb: ''
+            //         });
+            //     }
+            //     days.push(day);
+            // }
+            console.log(data);
             return days;
         }
 
