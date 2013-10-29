@@ -1,7 +1,7 @@
 {
-    "db": "mongodb://localhost/mean-dev",
+    "db": "mongodb://localhost/travel-square-dev",
     "app": {
-        "name": "MEAN - A Modern Stack - Development"
+        "name": "TravelSquare"
     },
     "facebook": {
         "clientID": "APP_ID",
