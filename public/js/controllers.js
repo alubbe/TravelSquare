@@ -2,9 +2,10 @@ var travelSquareControllers = angular.module('travelSquareControllers', []);
 
 travelSquareControllers.controller('IndexCtrl', [
 	'$scope',
+	'$rootScope',
 	'$http',
 	'$location',
-	function ($scope, $http, $location) {
+	function ($scope, $rootScope, $http, $location) {
 		console.log('Index controller loaded');
 
 		// Called when loading the index.html
@@ -24,10 +25,11 @@ travelSquareControllers.controller('IndexCtrl', [
 
 travelSquareControllers.controller('PlanningCtrl', [
 	'$scope',
+	'$rootScope',
 	'$http',
 	'$location',
 	'$routeParams',
-	function ($scope, $http, $location, $routeParams) {
+	function ($scope, $rootScope, $http, $location, $routeParams) {
 		console.log('Planning controller loaded');
 		$scope.test = 'planning OK';
 
@@ -49,9 +51,10 @@ travelSquareControllers.controller('PlanningCtrl', [
 
 travelSquareControllers.controller('ToursCtrl', [
 	'$scope',
+	'$rootScope',
 	'$http',
 	'$routeParams',
-	function ($scope, $http, $routeParams) {
+	function ($scope, $rootScope, $http, $routeParams) {
 		console.log('Tours controller loaded');
 		$scope.test = 'tours OK';
 
