@@ -1,0 +1,150 @@
+<html ng-app>
+<head>
+	<Title>TravelSquare Planning Site Layout</Title>
+	<script src="../js/jquery-1.10.1.min.js"></script>
+ 	<link rel="stylesheet" href="../css/jquery-ui-1.10.3.custom.css" />
+  	<script src="../js/jquery-ui-1.10.3.custom.min.js"></script>
+
+<!-- unused:
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/angular120beta.js"></script>
+	<script src="js/mustache.js"></script>
+
+-->
+
+	<script src="../js/handlebars.js"></script>
+
+
+	<link rel="stylesheet" href="../css/travelsquare_box.css">
+	<script src="../js/travelsquare_box.js"></script>
+
+	<!-- For testing ONLY -->
+	<script src="../exampledata/sampledataold.js"></script>
+
+
+
+</head>
+
+<body>
+
+
+
+<b>New Planning Page Code in progress:</b>
+<ul>
+<li>Responsive squares design</li>
+<li>Drag and Drop Order <span style="color:lightgrey">Did only work until template engine used ... tbc</span></li>
+<li>Get Rid Of That: <img src="../exampledata/delete.png" alt="trash" width="20" /> and like function</li>
+<li>create next page URL</li>
+<li>better quality code</li>
+<li>No MEAN Stack used. using Jquery, Jquery-UI,  Handlebars</li>
+ 
+</ul>
+
+
+
+Squares Beispiel:
+<div class="blocky">
+	<div id="sortable" class"containerSquares">
+
+
+
+
+
+
+    <div id="placeholder">This will get replaced by handlebars.js</div>
+    <script id="myTemplate" type="text/x-handlebars-template">
+        {{#venuesdata}}
+		<div id="square-{{id}}" class="square venueSquare">
+			
+			<div class="titlebar">{{name}}</div>
+			<div>reorder with drag&amp;drop  
+				<a><img src="../exampledata/heart.jpg" alt="heart" width="20" class="venueHeart imgoff" /></a>
+				<a class="venueTrash">
+					<img src="../exampledata/delete.png" alt="trash" width="20" />
+				</a>
+			</div>
+		
+			<div class="squareImage">
+				<img src="../exampledata/{{img}}" width="100%" height="100%">
+			</div>
+			<div class="dragtip">
+				You can rearrange the order with drag and drop<br />
+				<span class="ui-icon ui-icon-transferthick-e-w"></span>
+			</div>
+			Like: {{likes}}				
+			Ratings: {{rating}}<br />
+			on <a href="{{fsurl}}"><img width="60" src="../img/foursquare_com_logo_100.png"></a>
+						
+			
+		</div>
+        {{/venuesdata}}
+    </script>
+    <script type="text/javascript">
+        var source = document.getElementById("myTemplate").innerHTML;
+        var template = Handlebars.compile(source);
+		 document.getElementById("placeholder").innerHTML = template(sampledata);
+    </script>
+ 
+
+
+
+
+
+		
+	</div><!-- End of Squeres holder one -->
+</div><!-- End of Squeres holder two -->
+
+
+<br /><br />
+<input type="submit" id="calculatetrip" value="Calculate best trip route now" />
+<div id="debugnexturl">debug url</div>
+<br /><br /><br /><br />
+
+
+
+	<div class="blocky">
+	<div id="accordion">
+	  <div id="accorideonIndiHeader1" class="accorideonIndiHeader">FOOD</div>
+	  <div>
+	   	<div id="square-{{id}}" class="square venueSquare"></div>
+	   	<div id="square-{{id}}" class="square venueSquare"></div>
+	  </div>
+	  <div  id="accorideonIndiHeader2" class="accorideonIndiHeader">CAFE</div>
+	  <div>
+	    	<div id="square-{{id}}" class="square venueSquare"></div>
+	   		<div id="square-{{id}}" class="square venueSquare"></div>
+	  </div>
+	  <div  id="accorideonIndiHeader3"  class="accorideonIndiHeader">OUTDOORS</div>
+	  <div>
+	    <p>
+	    Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
+	    Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero
+	    ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis
+	    lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.
+	    </p>
+	    <ul>
+	      <li>List item one</li>
+	      <li>List item two</li>
+	      <li>List item three</li>
+	    </ul>
+	  </div>
+	  <div  id="accorideonIndiHeader4"  class="accorideonIndiHeader">NIGHTLIFE</div>
+	  <div>
+	    <p>
+	    Cras dictum. Pellentesque habitant morbi tristique senectus et netus
+	    et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in
+	    faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia
+	    mauris vel est.
+	    </p>
+	    <p>
+	    Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
+	    Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
+	    inceptos himenaeos.
+	    </p>
+	  </div>
+	</div>
+</div>
+
+
