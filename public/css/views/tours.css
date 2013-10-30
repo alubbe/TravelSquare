@@ -71,34 +71,47 @@ li.venue {
 
 li.venue:last-child {
 	border: none;
+	margin: 0;
+}
+
+li.venue .hidden {
+	visibility: hidden;
+	display: none;
 }
 
 li.venue img {
 	position: relative;
 	float: left;
-	max-width: 75px;
+	max-width: 50px;
 	max-height: 50px;
+}
+
+li.venue div.image-placeholder {
+	position: relative;
+	float: left;
+	width: 50px;
+	height: 50px;
 }
 
 li.venue div.info {
 	position: relative;
 	float: left;
 	width: 650px;
-	height: 45px;
+	height: 50px;
 	max-height: 50px;
 	margin: 0 5px 5px 5px;
 }
 
 li.venue .info .name {
+	float: left;
+	width: 100%;
 	font-size: 16pt;
 	font-weight: bold;
 }
 
 li.venue .info .address {
-	font-size: 11pt;
-	margin-left: 15px;
-}
-
-li.venue .info .blurb {
-	font-size: 9pt;
+	float: left;
+	width: 100%;
+	font-size: 12pt;
+	margin-top: -8px;
 }

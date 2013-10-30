@@ -5,12 +5,13 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 	'$location',
 	'$routeParams',
 	function ($scope, $rootScope, $http, $location, $routeParams) {
-		console.log('Tours controller loaded');
+		// console.log('Tours controller loaded');
 
 		// Load all tours
 		$http({
 			method: 'GET',
-			url: 'tours2.json'
+			// url: 'tours2.json'
+			url: '/itenary'
 		}).success(function(data, status) {
 			$scope.days = $scope.parseData(data);
 			$scope.selectedDay = null;
@@ -22,7 +23,7 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 		// Called when loading the tours.html
 		var mapsWrapper;
 		$scope.setup = function() {
-			console.log('Tours view loaded');
+			// console.log('Tours view loaded');
 			// Add map
 			mapsWrapper = new GoogleMapsWrapper();
 			mapsWrapper.initializeMap();
@@ -47,31 +48,39 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 				}
 			];
 			// Iterate over all stop groups (days)
-			for (var i = 0; i < data.stops.length; i++) {
+			for (var i = 0; i < data.length; i++) {
 				var day = {
 					spots: []
 				};
 				var spotCategory = -1;
+				var currentSpot = null;
 				// Iterate over all stop in this group (day)
-				for (var j = 0; j < data.stops[i].length; j++) {
+				for (var j = 0; j < data[i].length; j++) {
 					if (j == 0 || j === 2 || j === 3 || j === 5) {
 						// Select next spot category
 						spotCategory++;
-						day.spots.push({
+						if (currentSpot !== null && currentSpot.venues.length > 0) {
+							day.spots.push(currentSpot);
+						}
+						currentSpot = {
 							title: spotCategoryFeatures[spotCategory].title + ' Spots',
 							titleClass: spotCategoryFeatures[spotCategory].titleClass,
 							id: 'd' + i + '-s' + j,
 							venues: []
-						});
+						};
 					}
-					if (data.stops[i][j] !== null) {
+					if (data[i][j] !== null) {
 						// Add venue to current category
-						var venue = data.stops[i][j];
+						var venue = data[i][j];
 						if (!venue.name) {
 							venue.name = 'unkown';
 						}
-						day.spots[spotCategory].venues.push(venue);
+						venue.location.address = 'asjdhakjsdhakjshdjka, dasjdad ,s ajdashd ';
+						currentSpot.venues.push(venue);
 					}
+				}
+				if (currentSpot !== null && currentSpot.venues.length > 0) {
+					day.spots.push(currentSpot);
 				}
 				// Save day
 				days.push(day);
@@ -134,8 +143,7 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 						$('#modalbox-' + spots[i].id + '-c').css({
 							visibility: 'hidden',
 							display: 'none',
-							height: 0,
-							padding: 0
+							height: 0
 						});
 					}
 				} else {
@@ -145,15 +153,13 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 							visibility: 'visible',
 							display: 'block'
 						}).animate({
-							height: spots[i].contentHeight + 'px',
-							padding: '0 5px'
+							height: spots[i].contentHeight + 'px'
 						}, 300);
 					} else {
 						$('#modalbox-' + spots[i].id + '-c').css({
 							visibility: 'visible',
 							display: 'block',
-							height: spots[i].contentHeight + 'px',
-							padding: '0 5px'
+							height: spots[i].contentHeight + 'px'
 						});
 					}
 				}

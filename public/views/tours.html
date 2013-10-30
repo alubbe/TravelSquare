@@ -17,10 +17,12 @@
 		<modalbox class="large-offset-2 large-10 columns" ng-repeat="modalBox in selectedDay.spots">
 			<ul class="venues">
 				<li ng-repeat="venue in modalBox.venues" class="venue">
-					<img src="{{venue.imageUrl}}">
+					<img src="{{venue.picture_url}}" ng-class="{hidden: !venue.picture_url}" />
+					<div class="image-placeholder"  ng-class="{hidden: venue.picture_url}"></div>
 					<div class="info">
-						<span class="name">{{venue.name}}</span><span class="address">{{venue.location.address}}</span><br/>
-						<div class="blurb">{{venue.blurb}}</div>
+						<a href="http://foursquare.com/v/{{venue.fs_id}}" class="name" ng-class="{hidden: !venue.fs_id}">{{venue.name}}</a>
+						<span class="name" ng-class="{hidden: venue.fs_id}">{{venue.name}}</span>
+						<span class="address">{{venue.location.address}}</span>
 					</div>
 				</li>
 			</ul>
