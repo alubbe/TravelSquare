@@ -13,14 +13,18 @@
   </div>
 
 
+     
+
     
     <div id="accordion">
-      <h3 id="accorideonIndiHeader1" class="accorideonIndiHeader">FOOD</h3>
-    <div>
-       
-       <div class="blocky"><!-- Begin of Squeres holder two -->
+<div ng-repeat="sectiontitle in sectiontitles">
+     
+
+    <h3 id="accordion-{{sectiontitle.id}}" class="accorideonIndiHeader">{{sectiontitle.name}}</h3>
+    <div>    
+        <div class="blocky"><!-- Begin of Squeres holder two -->
         <div id="sortable" class"containerSquares">
-          <div ng-repeat="venue in sections.restaurants">
+          <div ng-repeat="venue in sections[sectiontitle.id]">
             <div id="{{venue.fs_id}}" class="square venueSquare">
         
               <div class="titlebar">{{venue.name}}</div>
@@ -31,7 +35,7 @@
                 </a>
               </div>
             
-              <div class="squareImagediv">
+               <div class="squareImagediv">
                 <img class="squareImage" src="{{venue.picture_url}}" >
               </div>
               <div class="dragtip">
@@ -45,268 +49,10 @@
           </div>
         </div><!-- End of Squeres holder one -->
       </div><!-- End of Squeres holder two -->
-
-      </div>
-    
-    
-
-
-    
-    <div id="accordion">
-
-
-    <h3 id="accorideonIndiHeader2" class="accorideonIndiHeader">COFFEE</h3>
-    <div>    
-        <div class="blocky"><!-- Begin of Squeres holder two -->
-        <div id="sortable" class"containerSquares">
-          <div ng-repeat="venue in sections.coffee">
-            <div id="{{venue.fs_id}}" class="square venueSquare">
-        
-              <div class="titlebar">{{venue.name}}</div>
-              <div>reorder with drag&amp;drop  
-                <a><img src="../exampledata/heart.jpg" alt="heart" width="20" class="venueHeart imgoff" /></a>
-                <a class="venueTrash">
-                  <img src="../exampledata/delete.png" alt="trash" width="20" />
-                </a>
-              </div>
-            
-              <div class="squareImage">
-                <img src="{{venue.picture_url}}" width="100%" height="100%">
-              </div>
-              <div class="dragtip">
-                You can rearrange the order with drag and drop<br />
-                <span class="ui-icon ui-icon-transferthick-e-w"></span>
-              </div>
-              Like: {{venue.likes}}   
-              Ratings: {{venue.rating}}<br />
-              on <a href="{{venue.fs_url}}"><img width="60" src="../img/foursquare_com_logo_100.png"></a>
-            </div>
-          </div>
-        </div><!-- End of Squeres holder one -->
-      </div><!-- End of Squeres holder two -->
-    </div>
-    
-
-
-
-
-    <h3 id="accorideonIndiHeader3" class="accorideonIndiHeader">SIGHTS</h3>
-    <div>    
-        <div class="blocky"><!-- Begin of Squeres holder two -->
-        <div id="sortable" class"containerSquares">
-          <div ng-repeat="venue in sections.sights">
-            <div id="{{venue.fs_id}}" class="square venueSquare">
-        
-              <div class="titlebar">{{venue.name}}</div>
-              <div>reorder with drag&amp;drop  
-                <a><img src="../exampledata/heart.jpg" alt="heart" width="20" class="venueHeart imgoff" /></a>
-                <a class="venueTrash">
-                  <img src="../exampledata/delete.png" alt="trash" width="20" />
-                </a>
-              </div>
-            
-              <div class="squareImage">
-                <img src="{{venue.picture_url}}" width="100%" height="100%">
-              </div>
-              <div class="dragtip">
-                You can rearrange the order with drag and drop<br />
-                <span class="ui-icon ui-icon-transferthick-e-w"></span>
-              </div>
-              Like: {{venue.likes}}   
-              Ratings: {{venue.rating}}<br />
-              on <a href="{{venue.fs_url}}"><img width="60" src="../img/foursquare_com_logo_100.png"></a>
-            </div>
-          </div>
-        </div><!-- End of Squeres holder one -->
-      </div><!-- End of Squeres holder two -->
     </div>
 
 
-
-
-
-
-
-
-
-    <h3 id="accorideonIndiHeader4" class="accorideonIndiHeader">ARTS</h3>
-    <div>    
-        <div class="blocky"><!-- Begin of Squeres holder two -->
-        <div id="sortable" class"containerSquares">
-          <div ng-repeat="venue in sections.arts">
-            <div id="{{venue.fs_id}}" class="square venueSquare">
-        
-              <div class="titlebar">{{venue.name}}</div>
-              <div>reorder with drag&amp;drop  
-                <a><img src="../exampledata/heart.jpg" alt="heart" width="20" class="venueHeart imgoff" /></a>
-                <a class="venueTrash">
-                  <img src="../exampledata/delete.png" alt="trash" width="20" />
-                </a>
-              </div>
-            
-              <div class="squareImage">
-                <img src="{{venue.picture_url}}" width="100%" height="100%">
-              </div>
-              <div class="dragtip">
-                You can rearrange the order with drag and drop<br />
-                <span class="ui-icon ui-icon-transferthick-e-w"></span>
-              </div>
-              Like: {{venue.likes}}   
-              Ratings: {{venue.rating}}<br />
-              on <a href="{{venue.fs_url}}"><img width="60" src="../img/foursquare_com_logo_100.png"></a>
-            </div>
-          </div>
-        </div><!-- End of Squeres holder one -->
-      </div><!-- End of Squeres holder two -->
-    </div>
-
-
-
-
-
-
-    <h3 id="accorideonIndiHeader5" class="accorideonIndiHeader">SHOPPING</h3>
-    <div>    
-        <div class="blocky"><!-- Begin of Squeres holder two -->
-        <div id="sortable" class"containerSquares">
-          <div ng-repeat="venue in sections.shops">
-            <div id="{{venue.fs_id}}" class="square venueSquare">
-        
-              <div class="titlebar">{{venue.name}}</div>
-              <div>reorder with drag&amp;drop  
-                <a><img src="../exampledata/heart.jpg" alt="heart" width="20" class="venueHeart imgoff" /></a>
-                <a class="venueTrash">
-                  <img src="../exampledata/delete.png" alt="trash" width="20" />
-                </a>
-              </div>
-            
-              <div class="squareImage">
-                <img src="{{venue.picture_url}}" width="100%" height="100%">
-              </div>
-              <div class="dragtip">
-                You can rearrange the order with drag and drop<br />
-                <span class="ui-icon ui-icon-transferthick-e-w"></span>
-              </div>
-              Like: {{venue.likes}}   
-              Ratings: {{venue.rating}}<br />
-              on <a href="{{venue.fs_url}}"><img width="60" src="../img/foursquare_com_logo_100.png"></a>
-            </div>
-          </div>
-        </div><!-- End of Squeres holder one -->
-      </div><!-- End of Squeres holder two -->
-    </div>
-
-
-
-
-
-
-    <h3 id="accorideonIndiHeader6" class="accorideonIndiHeader">NIGHTLIFE</h3>
-    <div>    
-        <div class="blocky"><!-- Begin of Squeres holder two -->
-        <div id="sortable" class"containerSquares">
-          <div ng-repeat="venue in sections.drinks">
-            <div id="{{venue.fs_id}}" class="square venueSquare">
-        
-              <div class="titlebar">{{venue.name}}</div>
-              <div>reorder with drag&amp;drop  
-                <a><img src="../exampledata/heart.jpg" alt="heart" width="20" class="venueHeart imgoff" /></a>
-                <a class="venueTrash">
-                  <img src="../exampledata/delete.png" alt="trash" width="20" />
-                </a>
-              </div>
-            
-              <div class="squareImage">
-                <img src="{{venue.picture_url}}" width="100%" height="100%">
-              </div>
-              <div class="dragtip">
-                You can rearrange the order with drag and drop<br />
-                <span class="ui-icon ui-icon-transferthick-e-w"></span>
-              </div>
-              Like: {{venue.likes}}   
-              Ratings: {{venue.rating}}<br />
-              on <a href="{{venue.fs_url}}"><img width="60" src="../img/foursquare_com_logo_100.png"></a>
-            </div>
-          </div>
-        </div><!-- End of Squeres holder one -->
-      </div><!-- End of Squeres holder two -->
-    </div>
-
-
-
-
-
-
-
-    <h3 id="accorideonIndiHeader7" class="accorideonIndiHeader">OUTDOORS</h3>
-    <div>    
-        <div class="blocky"><!-- Begin of Squeres holder two -->
-        <div id="sortable" class"containerSquares">
-          <div ng-repeat="venue in sections.outdoors">
-            <div id="{{venue.fs_id}}" class="square venueSquare">
-        
-              <div class="titlebar">{{venue.name}}</div>
-              <div>reorder with drag&amp;drop  
-                <a><img src="../exampledata/heart.jpg" alt="heart" width="20" class="venueHeart imgoff" /></a>
-                <a class="venueTrash">
-                  <img src="../exampledata/delete.png" alt="trash" width="20" />
-                </a>
-              </div>
-            
-              <div class="squareImage">
-                <img src="{{venue.picture_url}}" width="100%" height="100%">
-              </div>
-              <div class="dragtip">
-                You can rearrange the order with drag and drop<br />
-                <span class="ui-icon ui-icon-transferthick-e-w"></span>
-              </div>
-              Like: {{venue.likes}}   
-              Ratings: {{venue.rating}}<br />
-              on <a href="{{venue.fs_url}}"><img width="60" src="../img/foursquare_com_logo_100.png"></a>
-            </div>
-          </div>
-        </div><!-- End of Squeres holder one -->
-      </div><!-- End of Squeres holder two -->
-    </div>
-
-
-
-
-
-
-
-    <h3 id="accorideonIndiHeader8" class="accorideonIndiHeader">FOOD</h3>
-    <div>    
-        <div class="blocky"><!-- Begin of Squeres holder two -->
-        <div id="sortable" class"containerSquares">
-          <div ng-repeat="venue in sections.restaurants">
-            <div id="{{venue.fs_id}}" class="square venueSquare">
-        
-              <div class="titlebar">{{venue.name}}</div>
-              <div>reorder with drag&amp;drop  
-                <a><img src="../exampledata/heart.jpg" alt="heart" width="20" class="venueHeart imgoff" /></a>
-                <a class="venueTrash">
-                  <img src="../exampledata/delete.png" alt="trash" width="20" />
-                </a>
-              </div>
-            
-              <div class="squareImage">
-                <img src="{{venue.picture_url}}" width="100%" height="100%">
-              </div>
-              <div class="dragtip">
-                You can rearrange the order with drag and drop<br />
-                <span class="ui-icon ui-icon-transferthick-e-w"></span>
-              </div>
-              Like: {{venue.likes}}   
-              Ratings: {{venue.rating}}<br />
-              on <a href="{{venue.fs_url}}"><img width="60" src="../img/foursquare_com_logo_100.png"></a>
-            </div>
-          </div>
-        </div><!-- End of Squeres holder one -->
-      </div><!-- End of Squeres holder two -->
-    </div>
-
-
+      </div><!-- ng-repeat sectiontitles-->
 
       </div><!-- end of accordeon -->
     
