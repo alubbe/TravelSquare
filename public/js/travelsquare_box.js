@@ -16,7 +16,7 @@ $(function() {
 
 	$( "#accordion" ).accordion({
       event: "click hoverintent",
-      header: "div:even" 
+      header: "h3" 
     });
 
 
