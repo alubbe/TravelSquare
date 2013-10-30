@@ -1,87 +1,65 @@
 <header>
-	<a href="/" id="logo"><img height="25" src="../img/travelsquare_Mini.png"/></a>
+<a href="/" id="logo"><img height="25" src="../img/travelsquare_Mini.png"/></a>
 </header>
 <section ng-init="setup()">
-
-
-<br />
-<div class="row" style="border: 1px solid black;">
-  <div class="large-8 columns" id="lblcity">
-    {{city}}
-  </div>
-  <div class="large-2 columns">
-    <a href="/">
-      <img class="navigationtopbuttons" src="../img/notepad.png" alt="oerview"></div>
-    </a>
-  <div class="large-2 columns">
-    <img class="navigationtopbuttons" src="../img/map.png" alt="map" ng-click="submit(planningModel)">
-  </div>
-
-</div>
-<br />     
-
-    
-    <div id="accordion">
-<div ng-repeat="sectiontitle in sectiontitles">
-     
-
-    <h3 id="accordion-{{sectiontitle.id}}" class="accorideonIndiHeader">{{sectiontitle.name}}</h3>
-    <div>    
-        <div class="blocky"><!-- Begin of Squeres holder two -->
-       <!-- <div id="sortable" class"containerSquares">-->
-          
-          <div class="row" >
-          <div ng-repeat="venue in sections[sectiontitle.id]">
-          <div class="large-3 columns">
-            <div id="{{venue.fs_id}}" class="square venueSquare">
-
-
-
-              <div class="titlebar">{{venue.name}}</div>
-              <div>reorder with drag&amp;drop  
-                <a><img src="../exampledata/heart.jpg" alt="heart" width="20" class="venueHeart imgoff" /></a>
-                <a class="venueTrash">
-                  <img src="../exampledata/delete.png" alt="trash" width="20" />
-                </a>
-              </div>
-            
-               <div class="squareImagediv">
-                <img class="squareImage" src="{{venue.picture_url}}" >
-              </div>
-              <div class="dragtip">
-                You can rearrange the order with drag and drop<br />
-                <span class="ui-icon ui-icon-transferthick-e-w"></span>
-              </div>
-              Like: {{venue.likes}}   
-              Ratings: {{venue.rating}}<br />
-              on <a href="{{venue.fs_url}}"><img width="60" src="../img/foursquare_com_logo_100.png"></a>
-            </div>
-          </div>
-        </div><!-- End of Squeres holder one -->
-      </div><!-- End of Squeres holder two -->
+  <br/>
+  <div class="row">
+    <div class="large-8 columns" id="lblcity">
+       {{city}}
     </div>
-</div>
-
-      </div><!-- ng-repeat sectiontitles-->
-
-      </div><!-- end of accordeon -->
-    
-    
-
-
-
-
- <!--  <br /><br />
-  <input type="submit" id="calculatetrip" value="Calculate best trip route now" />
-  <div id="debugnexturl">debug url</div>
-  <br /><br /><br /><br />
-
- -->
-
-
-
-  PLANNNING -- {{test}}
-	<div>
-		<button ng-click="submit(planningModel)">Weiter zu tours</a>
-	</div>
+    <div class="large-4 columns">
+      <a href="/">
+      <img class="navigationtopbuttons" src="../img/notepad.png" alt="oerview">
+      </a>
+      <img class="navigationtopbuttons" src="../img/map.png" alt="map" ng-click="submit(planningModel)">
+    </div>
+  </div>
+  <br/>
+  <div id="accordion" class="stdwidth">
+    <div ng-repeat="sectiontitle in sectiontitles">
+      <h3 id="accordion-{{sectiontitle.id}}" class="accorideonIndiHeader">{{sectiontitle.name}}</h3>
+      <div>
+        <div class="blocky">
+          <!-- Begin of Squeres holder two -->
+          <!-- <div id="sortable" class"containerSquares">-->
+          <div class="row">
+            <div ng-repeat="venue in sections[sectiontitle.id]">
+              <div class="large-3 columns">
+                <div id="{{venue.fs_id}}" class="venueSquare">
+                  <div class="squareImageHolder">
+                    <img class="squareImage" src="{{venue.picture_url}}">
+                  </div>
+                  <div class="squareHeart">
+                    <img src="../img/heart_empty.png" alt="loveit"/>
+                  </div>
+                  <div class="squareVenuename textopaquefilter">
+                     {{venue.name}}
+                  </div>
+                  <div class="squareVenueinfo textopaquefilter">
+                    <center>
+                    Rating {{venue.rating}} - Likes {{venue.likes}} - <a href="{{venue.fs_url}}" target="_blank">more</a>
+                    </center>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End of Squeres holder one -->
+          </div>
+          <!-- End of Squeres holder two -->
+        </div>
+      </div>
+    </div>
+    <!-- ng-repeat sectiontitles-->
+  </div>
+  <!-- end of accordeon -->
+  <!--  <br /><br />
+    <input type="submit" id="calculatetrip" value="Calculate best trip route now" />
+    <div id="debugnexturl">debug url</div>
+    <br /><br /><br /><br />
+   -->
+  <div class="stdwidth">
+    <div>
+      <button ng-click="submit(planningModel)">Plan my tour</a>
+    </div>
+  </div>
 </section>
