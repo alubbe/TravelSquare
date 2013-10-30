@@ -74,25 +74,44 @@ filter:alpha(opacity=80); /* For IE8 and earlier */
 	color: black	;
 }
 
-#accorideonIndiHeader1 {
-	background-color: green !important;
-}
-
-#accorideonIndiHeader2 {
-	background-color: red !important;
-}
-
-#accorideonIndiHeader3 {
-	background-color: brown !important;
-}
-
-#accorideonIndiHeader4 {
-	background-color: yellow !important;
-}
-
 
 .dragtip{
 	background-color: darkgray;
 	display: none;
 
 }
+
+
+
+        	.ui-accordion-header {
+        	    color: white;}
+        	    #accorideonIndiHeader1 {
+        	        background: none;
+        	        background-color: rgb(255,225,89);
+        	    }
+        	    #accorideonIndiHeader2 {
+        	        background: none;
+        	         background-color: rgb(255,164,89);
+        	    }
+        	    #accorideonIndiHeader3 {
+        	        background: none;
+        	        background-color:rgb(254,116,88);
+        	    }
+        	    #accorideonIndiHeader4 {
+        	        background: none;
+        	        background-color: rgb(71,214,121);
+        	    }
+        	    #accorideonIndiHeader5 {
+        	        background: none;
+        	        background-color: rgb(84,155,247);
+        	    }
+        	    #accorideonIndiHeader6 {
+        	        background: none;
+        	        background-color:rgb(127,125,231);
+        	    }
+        	    #accorideonIndiHeader7 {
+        	        background: none;
+        	        background-color: rgb(254,100,162);
+        	    }
+
+        
