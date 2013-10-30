@@ -1,12 +1,18 @@
-angular.
-    module('mean.tours').
-    controller('ToursController', ['$scope', '$routeParams', '$location', 'Global', 'Tours', function ($scope, $routeParams, $location, Global, Tours) {
+angular.module('travelSquare.tours', []).controller('ToursController', [
+    '$scope', 
+    '$routeParams', 
+    '$location', 
+    'Global', 
+    'Tours', 
+    function ($scope, $routeParams, $location, Global, Tours) {
+        console.log('Tours controller loaded');
         $scope.global = Global;
 
         $scope.test = 'OK';
 
         var mapsWrapper = null;
         $scope.setup = function() {
+            console.log('Tours view loaded');
             Tours.get({}, function(tour) {
                 // Add map
                 mapsWrapper = new GoogleMapsWrapper();
