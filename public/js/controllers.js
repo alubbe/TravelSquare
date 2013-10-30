@@ -35,7 +35,6 @@ travelSquareControllers.controller('PlanningCtrl', [
 		console.log('Planning controller loaded');
 		$scope.test = 'planning OK';
 		var $ = $window.jQuery;
-		console.log($);
 
 		// TODO
 		console.log('TODO: Load the planning data...')
@@ -46,7 +45,6 @@ travelSquareControllers.controller('PlanningCtrl', [
 	    $scope.test = "Controller ok";
 	    // $scope.city =  $scope.$location.search().location ;
 	    // $scope.days =  $scope.$location.search().location ;   
-	    $scope.city = TSglobal_city;
 	    
 	    var urlparams, param_city = "Amsterdam", param_days = "2";
 	    if($window.location.href.split("?")[1] != null) {
@@ -66,6 +64,18 @@ travelSquareControllers.controller('PlanningCtrl', [
 				  // this callback will be called asynchronously
 				  // when the response is available
 				  $scope.sections[name] = data;
+				  $( ".venueHeart" ).off("click").click(function() {
+				  	$(this).removeClass( "imgoff" );
+				    TSglobal_likes.push("idkommtnoch");
+				    console.log("like id 123");
+				    /*retrieve id, toggle on/off*/
+				  });
+				  $( ".venueTrash" ).off("click").click(function() {
+				  	$(this).parents(".square").hide('fade');
+				    TSglobal_dislikes.push("idkommtnoch");
+				    console.log("dislike id 123");
+				    /*retrieve id, toggle on/off*/
+				  });
 			  }).
 			  error(function(data, status, headers, config) {
 			    // called asynchronously if an error occurs
@@ -86,7 +96,6 @@ travelSquareControllers.controller('PlanningCtrl', [
 			$timeout(function(){TCget(getUrl("shops" ,6), "shops"      )}, 1200);
 			$timeout(function(){TCget(getUrl("drinks" ,6), "drinks"    )}, 1500);
 			$timeout(function(){TCget(getUrl("outdoors",6), "outdoors" )}, 1800);
-
 
 			TSglobal_likes = [];
 			TSglobal_dislikes = [];
@@ -110,20 +119,6 @@ travelSquareControllers.controller('PlanningCtrl', [
 		      .click(function( event ) {
 		        event.preventDefault();
 		      }); 
-
-		  $( ".venueTrash" ).click(function() {
-		  	$(this).parents(".square").hide('fade');
-		    TSglobal_dislikes.push("idkommtnoch");
-		    console.log("dislike id 123");
-		    /*retrieve id, toggle on/off*/
-		  });
-
-		  $( ".venueHeart" ).click(function() {
-		  	$(this).removeClass( "imgoff" );
-		    TSglobal_likes.push("idkommtnoch");
-		    console.log("like id 123");
-		    /*retrieve id, toggle on/off*/
-		  });
 
 		  $("#calculatetrip").click(function(){
 		      prefix = "prefix";
