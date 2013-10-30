@@ -67,9 +67,7 @@ travelSquareControllers.controller('PlanningCtrl', [
         $scope.setup = function () {
             console.log('Planning view loaded');
             $scope.test = "Controller ok";
-            // $scope.city =  $scope.$location.search().location ;
-            // $scope.days =  $scope.$location.search().location ;   
-            //$scope.city = TSglobal_city;
+
 
             var urlparams, param_city = "Amsterdam",
                 param_days = "2";
@@ -106,28 +104,20 @@ travelSquareControllers.controller('PlanningCtrl', [
                 return "/foursquare/" + $scope.city + "/" + section + "/" + amount;
             };
 
-            TCget(getUrl("restaurants", 6), "restaurants");
+           
 
 
             function loadOnDemand(sectiontitle) {
                 console.log("Gettting sectiontitle data for section: " + sectiontitle);
                 console.log(sectiontitle);
-                TCget(getUrl(sectiontitle, 6), sectiontitle);
+                TCget(getUrl(sectiontitle, 8), sectiontitle);
             };
 
+
+             TCget(getUrl("restaurants", 6), "restaurants");
             $timeout(function () {
-                TCget(getUrl("coffee", 6), "coffee")
-            }, 300);
-
-            TSglobal_likes = [];
-            TSglobal_dislikes = [];
-            TSglobal_visibles = [];
-            TSglobal_city = "Barcelona";
-            TSglobal_hotel = "JetPack Alternative";
-            TSglobal_startdate = "01.12.2013";
-            TSglobal_daysofstay = 5;
-
-
+                TCget(getUrl("coffee", 8), "coffee")
+            }, 800); // preloding second section as well
 
             // JQueries of ng-created elements
             $timeout(function () {
