@@ -1,0 +1,7 @@
+<div id="modalbox-{{modalBox.id}}" class="modalbox">
+	<div id="modalbox-{{modalBox.id}}-h" class="modalbox-title {{modalBox.titleClass}}" ng-click="selectModalBox($index, true)">
+		{{modalBox.title}}
+	</div>
+	<div id="modalbox-{{modalBox.id}}-c" class="modalbox-content {{modalBox.contentClass}}" ng-transclude>
+	</div>
+</div>

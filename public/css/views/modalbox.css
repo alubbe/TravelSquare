@@ -1,0 +1,21 @@
+.modalbox {
+	margin-bottom: 5px;
+}
+
+.modalbox .modalbox-title {
+	padding: 5px;
+	font-size: 1.4em;
+	font-weight: bold;
+	cursor: pointer;
+	color: white;
+}
+
+.modalbox .modalbox-content {
+	padding: 0 5px;
+	height: auto;
+	margin-top: 0;
+	width: auto;
+	border-left: 2px solid grey;
+	border-right: 2px solid grey;
+	border-bottom: 2px solid grey;
+}

@@ -1,5 +1,6 @@
 var travelSquareApp = angular.module('travelSquareApp', [
 	'ui.route',
+	'travelSquare.directives',
 	'travelSquare.index',
 	'travelSquare.planning',
 	'travelSquare.tours'
