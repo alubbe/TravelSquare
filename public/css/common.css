@@ -1,235 +1,3 @@
-/*
- * HTML5 Boilerplate
- *
- * What follows is the result of much research on cross-browser styling.
- * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
- * Kroc Camen, and the H5BP dev community and team.
- */
-/* ==========================================================================
-   Base styles: opinionated defaults
-   ========================================================================== */
-/* Box Model Hack */
-* {
-  -moz-box-sizing: border-box;
-  /* Firexfox */
-  -webkit-box-sizing: border-box;
-  /* Safari/Chrome/iOS/Android */
-  box-sizing: border-box;
-  /* IE */ }
-
-html,
-button,
-input,
-select,
-textarea {
-  color: #222; }
-
-/*
- * Remove text-shadow in selection highlight: h5bp.com/i
- * These selection declarations have to be separate.
- * Customize the background color to match your design.
- */
-::-moz-selection {
-  background: #b3d4fc;
-  text-shadow: none; }
-
-::selection {
-  background: #b3d4fc;
-  text-shadow: none; }
-
-/*
- * A better looking default horizontal rule
- */
-hr {
-  display: block;
-  height: 1px;
-  border: 0;
-  border-top: 1px solid #ccc;
-  margin: 1em 0;
-  padding: 0; }
-
-/*
- * Remove the gap between images and the bottom of their containers: h5bp.com/i/440
- */
-img {
-  vertical-align: middle; }
-
-/*
- * Remove default fieldset styles.
- */
-fieldset {
-  border: 0;
-  margin: 0;
-  padding: 0; }
-
-/*
- * Allow only vertical resizing of textareas.
- */
-textarea {
-  resize: vertical; }
-
-/* ==========================================================================
-   Chrome Frame prompt
-   ========================================================================== */
-.chromeframe {
-  margin: 0.2em 0;
-  background: #ccc;
-  color: #000;
-  padding: 0.2em 0; }
-
-/* ==========================================================================
-   Helper classes
-   ========================================================================== */
-/*
- * Image replacement
- */
-.ir {
-  background-color: transparent;
-  border: 0;
-  overflow: hidden;
-  /* IE 6/7 fallback */
-  *text-indent: -9999px; }
-
-.ir:before {
-  content: "";
-  display: block;
-  width: 0;
-  height: 150%; }
-
-/*
- * Hide from both screenreaders and browsers: h5bp.com/u
- */
-.hidden {
-  display: none !important;
-  visibility: hidden; }
-
-/*
- * Hide only visually, but have it available for screenreaders: h5bp.com/v
- */
-.visuallyhidden {
-  border: 0;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px; }
-
-/*
- * Extends the .visuallyhidden class to allow the element to be focusable
- * when navigated to via the keyboard: h5bp.com/p
- */
-.visuallyhidden.focusable:active,
-.visuallyhidden.focusable:focus {
-  clip: auto;
-  height: auto;
-  margin: 0;
-  overflow: visible;
-  position: static;
-  width: auto; }
-
-/*
- * Hide visually and from screenreaders, but maintain layout
- */
-.invisible {
-  visibility: hidden; }
-
-/*
- * Clearfix: contain floats
- *
- * For modern browsers
- * 1. The space content is one way to avoid an Opera bug when the
- *    `contenteditable` attribute is included anywhere else in the document.
- *    Otherwise it causes space to appear at the top and bottom of elements
- *    that receive the `clearfix` class.
- * 2. The use of `table` rather than `block` is only necessary if using
- *    `:before` to contain the top-margins of child elements.
- */
-.clearfix:before,
-.clearfix:after {
-  content: " ";
-  /* 1 */
-  display: table;
-  /* 2 */ }
-
-.clearfix:after {
-  clear: both; }
-
-/*
- * For IE 6/7 only
- * Include this rule to trigger hasLayout and contain floats.
- */
-.clearfix {
-  *zoom: 1; }
-
-/* ==========================================================================
-   EXAMPLE Media Queries for Responsive Design.
-   Theses examples override the primary ('mobile first') styles.
-   Modify as content requires.
-   ========================================================================== */
-@media only screen and (min-width: 35em) {
-  /* Style adjustments for viewports that meet the condition */ }
-@media print, (-o-min-device-pixel-ratio: 5 / 4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
-  /* Style adjustments for high resolution devices */ }
-/* ==========================================================================
-   Print styles.
-   Inlined to avoid required HTTP connection: h5bp.com/r
-   ========================================================================== */
-@media print {
-  * {
-    background: transparent !important;
-    color: #000 !important;
-    /* Black prints faster: h5bp.com/s */
-    box-shadow: none !important;
-    text-shadow: none !important; }
-
-  a,
-  a:visited {
-    text-decoration: underline; }
-
-  a[href]:after {
-    content: " (" attr(href) ")"; }
-
-  abbr[title]:after {
-    content: " (" attr(title) ")"; }
-
-  /*
-   * Don't show links for images, or javascript/internal links
-   */
-  .ir a:after,
-  a[href^="javascript:"]:after,
-  a[href^="#"]:after {
-    content: ""; }
-
-  pre,
-  blockquote {
-    border: 1px solid #999;
-    page-break-inside: avoid; }
-
-  thead {
-    display: table-header-group;
-    /* h5bp.com/t */ }
-
-  tr,
-  img {
-    page-break-inside: avoid; }
-
-  img {
-    max-width: 100% !important; }
-
-  @page {
-    margin: 0.5cm; }
-
-  p,
-  h2,
-  h3 {
-    orphans: 3;
-    widows: 3; }
-
-  h2,
-  h3 {
-    page-break-after: avoid; } }
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
@@ -264,78 +32,8 @@ header * {
 #logo img {
   height: 25px; }
 
-#search_left {
-  margin: 10px 10px 0 10px;
-  position: absolute;
-  top: 45px;
-  left: 65px;
-  z-index: 1; }
-
-#search_left .icon-search {
-  position: absolute;
-  top: 6px;
-  left: 9px;
-  font-size: 13px;
-  color: #aaa; }
-
-#header-search {
-  width: 220px;
-  height: 25px;
-  color: #333;
-  font-size: 13px;
-  padding-left: 25px;
-  margin: 0; }
-
-#navbar_rechts {
-  float: right;
-  font-size: 14px;
-  margin-bottom: 0px; }
-
-#navbar_rechts li {
-  float: left;
-  margin-right: 10px; }
-
-#navbar_rechts a {
-  text-decoration: none;
-  text-shadow: white 0 1px 0;
-  text-transform: uppercase;
-  color: #5a5a5a;
-  padding-top: 10px;
-  display: block; }
-
-.navBarLinks {
-  margin-top: 3px;
-  margin-right: 20px; }
-
-#favoritebutton {
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(49%, #f5f5f5), color-stop(50%, #e8e8e8), color-stop(100%, #d2d2d2));
-  background-image: -webkit-linear-gradient(center top, #ffffff 0%, #f5f5f5 49%, #e8e8e8 50%, #d2d2d2 100%);
-  background-image: -moz-linear-gradient(center top, #ffffff 0%, #f5f5f5 49%, #e8e8e8 50%, #d2d2d2 100%);
-  background-image: -o-linear-gradient(center top, #ffffff 0%, #f5f5f5 49%, #e8e8e8 50%, #d2d2d2 100%);
-  background-image: linear-gradient(center top, #ffffff 0%, #f5f5f5 49%, #e8e8e8 50%, #d2d2d2 100%);
-  color: #CD3278;
-  margin: -3px 0 0 0;
-  font-size: 15px;
-  padding: 7px;
-  font-weight: normal;
-  border-color: #cacaca; }
-
-#favoritebutton:before {
-  content: 'Meine '; }
-
-#favoritebutton:after {
-  content: ' Wohnungen'; }
-
-#favoritebutton.on:before {
-  content: 'Zurück zur Suche'; }
-
-#favoritebutton.on:after {
-  content: ''; }
-
 #background_main_image {
-  background-image: url(../img/paris.jpg); }
-
-.background_main_image {
+  background-image: url(../img/paris.jpg); 
   height: 550px;
   background-size: cover;
   background-position: center 85%;
@@ -355,18 +53,18 @@ header * {
 #spacer2 {
   height: 60px; }
 
-.background_main_image h1 {
+#background_main_image h1 {
   color: white;
   font-size: 48px;
   line-height: 48px;
   margin: 100px 0 20px 0;
   font-family: Montserrat, Verdana; }
 
-.background_main_image h1.show-for-small {
+#background_main_image h1.show-for-small {
   font-size: 36px;
   margin-top: 40px; }
 
-.background_main_image h2 {
+#background_main_image h2 {
   color: white;
   font-size: 20px;
   line-height: 24px;
@@ -400,11 +98,11 @@ header * {
 
 input.input_elements, select.input_elements {
   background-color: white;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  border-radius: 5px;
+  -webkit-border-radius: 5px !important;
+  -moz-border-radius: 5px !important;
+  -ms-border-radius: 5px !important;
+  -o-border-radius: 5px !important;
+  border-radius: 5px !important;
   border: 1px solid black;
   -webkit-box-shadow: inset rgba(0, 0, 0, 0.5) 0 0 5px;
   -moz-box-shadow: inset rgba(0, 0, 0, 0.5) 0 0 5px;
@@ -419,7 +117,7 @@ input.input_elements, select.input_elements {
 
 #submit_location_button {
   height: 41px;
-  font-size: 20px;
+  font-size: 16px;
   color: white;
   border: 1px solid #008080;
   -webkit-box-shadow: inset #f0f0f0 0 0 4px;
@@ -428,7 +126,6 @@ input.input_elements, select.input_elements {
   margin: 0;
   width: 100%;
   padding: 4px 5px 0 5px;
-  font-weight: bold;
   background-color: rgb(255,225,89); }
 
 #rooms_min {
@@ -520,55 +217,3 @@ h4.about {
   color: white;
   text-align: center;
   font-weight: normal; }
-
-#social_bar {
-  z-index: 2;
-  position: fixed;
-  top: 55px;
-  left: 10px;
-  border: 1px solid #a1a1a1;
-  background: #FFF;
-  padding: 2px 2px 0 2px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  border-radius: 5px; }
-
-footer {
-  background-color: black;
-  z-index: 1;
-  padding-bottom: 15px; }
-
-footer .columns {
-  text-align: center;
-  margin-top: 15px; }
-
-#mixp {
-  width: 50px; }
-
-.navbar .nav>li>a.brand {
-    padding-left:20px;
-    margin-left:0
-}
-
-.content {
-    margin-top:50px;
-    width:100%
-}
-
-footer {
-    position:fixed;
-    left:0px;
-    bottom:0px;
-    height:30px;
-    width:100%;
-    background:#ddd;
-    -webkit-box-shadow:0 8px 6px 6px black;
-    -moz-box-shadow:0 8px 6px 6px black;
-    box-shadow:0 8px 6px 6px black
-}
-
-footer p {
-    padding:5px 0 12px 10px
-}
