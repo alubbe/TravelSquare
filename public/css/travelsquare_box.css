@@ -1,117 +1,198 @@
 body, html {
-
-	 font-family:Helvetica,Arial,sans-serif;
+    font-family: Helvetica,Arial,sans-serif;
 }
 
-
- div {/*border: 1px solid green;
+div {
+/*border: 1px solid green;
 darklue: #000066;
-orange:; #FFBF2A */}
+orange:; #FFBF2A */;
+}
 
+#lblcity {
+    color: rgb(61, 61, 61);
+    font-size: 46px;
+    line-height: 48px;
+    margin: 10px 0px;
+    font-family: Montserrat,sans-serif;
+}
 
 .containerSquares {
-    padding-left:10pt;
+    padding-left: 10pt;
     border-width: 1px;
     border-style: solid;
     overflow: hidden;
     heigh: 400px;
 }
 
+.navigationtopbuttons {
+    width: 48px;
+    height: 50px;
+    margin-top: 10px;
+    margin-right: 15px;
+    margin-left: 25px;
+}
 
-.square {
-    float:left;
-    padding-left:10pt;
+.stdwidth{
+    width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.titlebar {
 }
 
 
 
-.venueSquare {
-	border:  1px solid black;
-	width: 225px;
-	height: 225px;
-	padding: 10px;
-	margin: 10px;
+.blocky {
+    display: block;
+    clear: block;
+    /*border: 1px solid gray;*/
+    position: relative;
+    height: 550px;
 }
 
-.titlebar{
-
+.titlebar {
+    font-weight: bold;
 }
 
-.squareImage{
-	background-color:orange;
-	width: 100%;
-	height: 100px;
+.imgoff {
+    opacity: 0.3;
+    filter: alpha(opacity=30);
+ /* For IE8 and earlier */;
 }
 
-
-
-.blocky{
-	display: block;
-	clear: block;
-	border: 1px solid gray;
-	position: relative;
-	height: 550px;
-
-
-	
-}
-
-.titlebar{
-	font-weight: bold;
-}
-
-.imgoff{
- opacity:0.3;
-filter:alpha(opacity=30); /* For IE8 and earlier */
-}
-
-.imgoff:hover{
- opacity:0.8;
-filter:alpha(opacity=80); /* For IE8 and earlier */
+.imgoff:hover {
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+ /* For IE8 and earlier */;
 }
 
 .accorideonIndiHeader {
-	color: black	;
+    color: black;
+}
+
+.dragtip {
+    background-color: darkgray;
+    display: none;
+}
+
+.ui-accordion-header {
+    color: white;
+}
+
+#accordion-restaurants {
+    background: none;
+    padding-left: 10px;
+    background-color: rgb(255,225,89);
+}
+
+#accordion-coffee {
+    background: none;
+    padding-left: 10px;
+    background-color: rgb(255,164,89);
+}
+
+#accordion-sights {
+    background: none;
+    padding-left: 10px;
+    background-color: rgb(254,116,88);
+}
+
+#accordion-arts {
+    background: none;
+    padding-left: 10px;
+    background-color: rgb(71,214,121);
+}
+
+#accordion-shops {
+    background: none;
+    padding-left: 10px;
+    background-color: rgb(84,155,247);
+}
+
+#accordion-drinks {
+    background: none;
+    padding-left: 10px;
+    background-color: rgb(127,125,231);
+}
+
+#accordion-outdoors {
+    background: none;
+    padding-left: 10px;
+    background-color: rgb(254,100,162);
 }
 
 
-.dragtip{
-	background-color: darkgray;
-	display: none;
 
+
+/* square formatting */
+
+
+.venueSquare {
+    position: relative;
+    border: 2px solid rgb(166, 166, 166);
+    width: 220px;
+    height: 220px;
+    padding: 10px;
+    margin: 5px;
+}
+
+.squareImageHolder {
+    position: absolute;
+    width: 205px;
+    height: 205px;
+    top: 5px;
+    left: 5px;
+    z-index: 3;
+}   
+    
+.squareImage {
+    height: 205px;
+    width; 505px;
+}
+
+.squareHeart {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 10px;
+    right: 10px;
+    z-index: 20;
+    text-align: right;
+}
+
+.squareVenuename {
+    position: absolute;
+    width: 195px;
+    bottom: 35px;
+    left: 10px;
+    z-index: 5;
+    vertical-align: baseline;
+    text-rendering: optimizeLegibility;
+    margin: 10px 0px;
+    font-size: 24px;
+    line-height: 30px;
+    font-weight: 700;
+}
+
+.squareVenueinfo {
+    position: absolute;
+    width: 195px;
+    height: 16px;
+    bottom: 10px;
+    left: 10px;
+    z-index: 5;
+    font-size: 14px;
+    color: black;
+    text-align: center;
+}
+
+.textopaquefilter {
+    background-color: #fff;
+    -moz-opacity: 0.50;
+    opacity: 0.50;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha"(Opacity=50);
 }
 
 
-
-        	.ui-accordion-header {
-        	    color: white;}
-        	    #accorideonIndiHeader1 {
-        	        background: none;
-        	        background-color: rgb(255,225,89);
-        	    }
-        	    #accorideonIndiHeader2 {
-        	        background: none;
-        	         background-color: rgb(255,164,89);
-        	    }
-        	    #accorideonIndiHeader3 {
-        	        background: none;
-        	        background-color:rgb(254,116,88);
-        	    }
-        	    #accorideonIndiHeader4 {
-        	        background: none;
-        	        background-color: rgb(71,214,121);
-        	    }
-        	    #accorideonIndiHeader5 {
-        	        background: none;
-        	        background-color: rgb(84,155,247);
-        	    }
-        	    #accorideonIndiHeader6 {
-        	        background: none;
-        	        background-color:rgb(127,125,231);
-        	    }
-        	    #accorideonIndiHeader7 {
-        	        background: none;
-        	        background-color: rgb(254,100,162);
-        	    }
-
-        
+/* End of Square CSS */        
