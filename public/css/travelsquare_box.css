@@ -85,31 +85,31 @@ filter:alpha(opacity=80); /* For IE8 and earlier */
 
         	.ui-accordion-header {
         	    color: white;}
-        	    #accorideonIndiHeader1 {
+        	    #accordion-restaurants {
         	        background: none;
         	        background-color: rgb(255,225,89);
         	    }
-        	    #accorideonIndiHeader2 {
+        	    #accordion-coffee {
         	        background: none;
         	         background-color: rgb(255,164,89);
         	    }
-        	    #accorideonIndiHeader3 {
+        	    #accordion-sights {
         	        background: none;
         	        background-color:rgb(254,116,88);
         	    }
-        	    #accorideonIndiHeader4 {
+        	    #accordion-arts {
         	        background: none;
         	        background-color: rgb(71,214,121);
         	    }
-        	    #accorideonIndiHeader5 {
+        	    #accordion-shops {
         	        background: none;
         	        background-color: rgb(84,155,247);
         	    }
-        	    #accorideonIndiHeader6 {
+        	    #accordion-drinks {
         	        background: none;
         	        background-color:rgb(127,125,231);
         	    }
-        	    #accorideonIndiHeader7 {
+        	    #accordion-outdoors {
         	        background: none;
         	        background-color: rgb(254,100,162);
         	    }
