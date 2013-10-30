@@ -13,16 +13,21 @@ exports.getVenuesCityCat = function(req, res) {
   var city = req.params.city;
   var category = req.params.category;
   var limit = req.params.limit;
+  exploreCityCat(city, category, limit, function(json_data) {
+      res.jsonp(json_data); 
+  });
+};
+
+var exploreCityCat = function(location, category, limit, callback) {
   //initialise getJSON options
   var options = {
     host: 'api.foursquare.com',
     port: 443,
-    path: '/v2/venues/explore?client_id=WUH3Z4VTUYMQCD54KHR0O2BBXXSCIBIQ31I2NX2VGNL2T4AF&client_secret=S0LD0WYY11CYTJQZ01EYBBL0SGNSLUN0RXRXJOJMO0Y540WU&v=20130815%20%20%20'
+    path: '/v2/venues/explore?client_id=WUH3Z4VTUYMQCD54KHR0O2BBXXSCIBIQ31I2NX2VGNL2T4AF&client_secret=S0LD0WYY11CYTJQZ01EYBBL0SGNSLUN0RXRXJOJMO0Y540WU&v=20130815%20%20%20&section=' + category + '&limit=' + limit
   };
-  //set add city, category and limit
-  options.path += '&near=' + city;
-  options.path += '&section=' + category;
-  options.path += '&limit=' + limit;
+  if(typeof location === "string") options.path += '&near=' + location;
+  else options.path += "&ll=" + location.lat + "," + location.lng + "&radius=" + options.radius;
+
 
   getJSON(options, function(statusCode, result){
     //collect the ids of all returned stores
@@ -30,10 +35,8 @@ exports.getVenuesCityCat = function(req, res) {
     for(var i = 0; i < result.response.groups[0].items.length; i++)
       ids.push( result.response.groups[0].items[i].venue.id);
 
-    //get further venue details for the collected ids and return them to the client
-    getVenueDetails(ids, function(json_data) {
-      res.jsonp(json_data); 
-    });
+    //get further venue details for the collected ids and return them to the callback
+    getVenueDetails(ids, callback);
   });
 };
 
@@ -122,12 +125,13 @@ exports.buildItenary = function(req, res) {
   var requiredTourstops = req.params.itenaryRequest || mock_requiredTourstops;
   var tourstops = [], centerIDs = [], i, j;
   var priorities = ["sights", "arts", "outdoors", "dinner", "nightlife", "shopping", "lunch", "cafe", "breakfast"]; 
+  var numberOfCalendarDays = 3; // requiredTourstops.numberOfCalendarDays
 
-  for(i = 0; i < priorities.length && tourstops.length < requiredTourstops.numberOfCalendarDays; i++) {
+  for(i = 0; i < priorities.length && tourstops.length < numberOfCalendarDays; i++) {
     var priority = priorities[i];
     var venues = requiredTourstops[priority];
     // console.log("i = " + i + " & priority = " + priority + " & venues = " + venues);
-    for(j = 0; j < venues.length && tourstops.length < requiredTourstops.numberOfCalendarDays; j++){
+    for(j = 0; j < venues.length && tourstops.length < numberOfCalendarDays; j++){
       var newEntry = [null, null, null, null, null, null, null];
       var new_centerID = categoryToIndex(priority);
       // console.log("the new centerID is " + new_centerID);
@@ -138,18 +142,38 @@ exports.buildItenary = function(req, res) {
   }
 
   // if there are not enough centers, find more sights to fill the remaining days
-  if (tourstops.length < requiredTourstops.numberOfCalendarDays) {
+  if (tourstops.length < numberOfCalendarDays) {
     console.log("Too few centers!");
+    exploreCityCat(requiredTourstops.city, "sights", numberOfCalendarDays, function(additionalVenues){
+      for(var k = 0; k < additionalVenues.length && tourstops.length < numberOfCalendarDays; k++){
+        var additionalVenue = additionalVenues[k];
+        // ensure that the new venue hasnt been used already
+        var venueIsNew = true;
+        for(var l = 0; l < tourstops.length; l++) {
+          if(additionalVenue.fs_id === tourstops[l][centerIDs[l]]) venueIsNew = false;
+        }
+        if(venueIsNew){
+          var newEntry = [null, null, null, null, null, null, null];
+          var new_centerID = categoryToIndex("sights");
+          // console.log("the new centerID is " + new_centerID);
+          centerIDs.push(new_centerID);
+          newEntry[new_centerID] = additionalVenue;
+          tourstops.push(newEntry);
+        }
+      }
+      completeTheTour(tourstops, centerIDs, numberOfCalendarDays, res);
+    });
   } 
 
   // if there were enough centers, distribute the remaining venues by proximity
   else {
     console.log("need to distribute the remaining venues");
-    j++;
+    i--;
+    var numberOfAlreadyIncludedVenues = numberOfCalendarDays;
     for (i; i < priorities.length; i++) {
       var priority = priorities[i];
       var venues = requiredTourstops[priority];
-      console.log("i = " + i + " & priority = " + priority + " & venues = " + venues);
+      // console.log("i = " + i + " & priority = " + priority + " & venues = " + venues);
       for(j; j < venues.length; j++){
         var venue = venues[j], min_distance = 999999999, day, timeslot;
         // iterate through each day and find the distance to the center
@@ -171,13 +195,442 @@ exports.buildItenary = function(req, res) {
         // finally, put the venue into its best day & timeslot
         // console.log("day is " + day + " and timeslot is " + timeslot);
         tourstops[day][timeslot] = venue;
+        numberOfAlreadyIncludedVenues++;
       }
     j = 0;
     }
+    completeTheTour(tourstops, centerIDs, numberOfAlreadyIncludedVenues, res);
+  }
+};
+
+var completeTheTour = function(tourstops, centerIDs, numberOfAlreadyIncludedVenues, res) {
+  console.log("I see " + numberOfAlreadyIncludedVenues + " already included venues");
+  var queueLength = 0, receiveCount = 0;
+  for(var i = 0; i < tourstops.length; i++){
+    var center = getMiddleOfLatLongMatrix([tourstops[i]]);
+    for(var j = 0; j < tourstops[i].length; j++){
+      if(tourstops[i][j] == null) {
+        queueLength++;
+        var location = tourstops[i][centerIDs[i]].location;
+        location.radius = 2000; // 2km
+        exploreCityCat(location, indexToCategory(j), numberOfAlreadyIncludedVenues, function(additionalVenues){
+          for(var k = 0; k < additionalVenues.length && tourstops.length < numberOfCalendarDays; k++){
+            var additionalVenue = additionalVenues[k];
+            // ensure that the new venue hasnt been used already
+            var venueIsNew = true;
+            for(var l = 0; l < tourstops.length; l++) {
+              if(additionalVenue.fs_id === tourstops[l][centerIDs[l]]) venueIsNew = false;
+            }
+            if(venueIsNew){
+              var newEntry = [null, null, null, null, null, null, null];
+              var new_centerID = categoryToIndex("sights");
+              // console.log("the new centerID is " + new_centerID);
+              centerIDs.push(new_centerID);
+              newEntry[new_centerID] = additionalVenue;
+              tourstops.push(newEntry);
+            }
+          }
+          if(receiveCount >= queueLength) res.jsonp(tourstops);
+        });
+      }
+    }
+  }
+  if(queueLength == 0) res.jsonp(tourstops);
+}
+
+var categoryToIndex = function(category, asAnArray) {
+  var result = "N/A";
+  switch(category) {
+    case "cafe":
+    case "breakfast": {result = 0; break;} // Morning 1
+    case "lunch":     {result = 2; break;} // Lunch
+    case "shopping":
+    case "outdoors":  {result = 4; break;} // Afternoon 2
+    case "dinner":    {result = 5; break;} // Evening
+    case "nightlife": {result = 6; break;} // Night
+    case "arts":
+    case "sights": {
+      if (asAnArray) return [1,3];
+      result = chooseOneAtRandom([1,3]); // Morning 2 or Afternoon 1
+    }
   }
 
-  return res.jsonp(tourstops);
+  if(asAnArray) return [result];
+  else return result;
+};
 
+var indexToCategory = function(index) {
+  switch(index) {
+    case 0: return chooseOneAtRandom("breakfast", "cafe");    // Morning 1
+    case 1: return chooseOneAtRandom("arts", "sights");       // Morning 2
+    case 2: return "lunch";                                   // Lunch
+    case 3: return chooseOneAtRandom("arts", "sights");       // Afternoon 1
+    case 4: return chooseOneAtRandom("outdoors", "shopping"); // Afternoon 2
+    case 5: return "dinner";                                  // Evening
+    case 6: return "nightlife";                               // Night
+  }
+  return "N/A";
+};
+
+var chooseOneAtRandom = function(array) {
+  return array[ Math.floor( Math.random() * array.length)] ;
+}
+
+var getJSON = function(options, onResult) {
+  var prot, req;
+  prot = options.port === 443 ? https : http;
+  req = prot.request(options, function(res) {
+    var output;
+    output = "";
+    res.setEncoding("utf8");
+    res.on("data", function(chunk) {
+      return output += chunk;
+    });
+    return res.on("end", function() {
+      var obj;
+      if (res.headers["content-type"].indexOf("json") === -1) {
+        return onResult(res.statusCode, {
+          error: "response is not JSON"
+        });
+      } else {
+        obj = JSON.parse(output);
+        return onResult(res.statusCode, obj);
+      }
+    });
+  });
+  req.on("error", function(e) {
+    console.log(e);
+    return onResult("Unknown error code", {
+      error: e.message
+    });
+  });
+  return req.end();
+};
+
+var distanceBetweenLatLng = function(lat1, lng1, lat2, lng2){
+  //console.log(lat1 + ", " + lng1 + ", " + lat2 + ", " + lng2);
+  lat1 = lat1 * Math.PI / 180;
+  lat2 = lat2 * Math.PI / 180;
+  var R = 6371, //km
+    dLat = (lat2-lat1) * Math.PI / 180,
+    dLon = (lng2-lng1) * Math.PI / 180,
+    a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2),
+    c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+  return R * c;
+};
+
+var distanceBetween = function(venue1, venue2){
+  // console.log(venue1);
+  // console.log(venue2);
+  return distanceBetweenLatLng(venue1.location.lat, venue1.location.lng, venue2.location.lat, venue2.location.lng);
+};
+
+var getMiddleOfLatLongMatrix = function(coordArray) {
+  //sums
+  var sumLat = 0, sumLong = 0, minRadius = 0;
+
+  //iterate through all coordinates
+  var coordCount = 0;
+  for (var i = 0; i < coordArray.length; i++) {
+    for (var j = 0; j < coordArray[i].length; j++){
+      if(coordArray[i][j] != null){
+        sumLat += coordArray[i][j].location.lat;
+        sumLong += coordArray[i][j].location.lng;
+        coordCount++;        
+      }
+    }
+  }
+  sumLat /= coordCount;
+  sumLong /= coordCount;
+
+  // go through all coordinates and find maximum distance to center
+  // for calculating the MINIMUM RADIUS TO INHERIT ALL COORDINATES
+  for (var _i = 0; _i < coordArray.length; _i++) {
+    for (var _j = 0; _j < coordArray[_i].length; _j++){
+      if(coordArray[_i][_j] != null){
+        var tmpRadius = distanceBetweenLatLng(sumLat, sumLong, coordArray[_i][_j].location.lat, coordArray[_i][_j].location.lng);
+        if(tmpRadius > minRadius)// radius is bigger hence choose it
+          minRadius = tmpRadius;
+      }
+    }
+  }
+
+  return {
+    center: {
+      lat: sumLat,
+      lng: sumLong
+    },
+    radius: minRadius * 1000
+  };
+};
+
+
+// for debugging
+var mock_requiredTourstops = {
+  city: "Barcelona",
+  numberOfCalendarDays: 3,
+  sights: [
+      {
+        name: 'Dummy 1',
+        location: {
+          address: "Olot, 13, 08024  Barcelona",
+          lat: 44.1,
+          lng: 18.1
+        },
+        rating: 8.2,
+        likes: 10,
+        picture_url: 'kitten.jpg',
+        fs_url: 'https://foursquare.com/v/...',
+        fs_id: 'abc123'
+      }
+    ],
+  arts: [
+    {
+        name: 'Dummy 2',
+        location: {
+          address: "Olot, 13, 08024  Barcelona",
+          lat: 44.04,
+          lng: 18.01
+        },
+        rating: 8.2,
+        likes: 10,
+        picture_url: 'kitten.jpg',
+        fs_url: 'https://foursquare.com/v/...',
+        fs_id: 'def456'
+      },
+      {
+        name: 'Dummy 3',
+        location: {
+          address: "Olot, 13, 08024  Barcelona",
+          lat: 44.09,
+          lng: 18.12
+        },
+        rating: 8.2,
+        likes: 10,
+        picture_url: 'kitten.jpg',
+        fs_url: 'https://foursquare.com/v/...',
+        fs_id: 'ghi789'
+      }
+    ],
+  outdoors: [
+    ],
+  dinner: [
+    {
+        name: 'Dummy 4',
+        location: {
+          address: "Olot, 13, 08024  Barcelona",
+          lat: 44.25,
+          lng: 18.03
+        },
+        rating: 8.2,
+        likes: 10,
+        picture_url: 'kitten.jpg',
+        fs_url: 'https://foursquare.com/v/...',
+        fs_id: 'peter'
+      },
+    ],
+  nightlife: [
+    ],
+  shopping: [
+    ],
+  lunch: [
+    ],
+  cafe: [
+    ],
+  breakfast: [
+    ]
+};
+
+
+// LEGACY CODE
+
+/*
+
+
+isMorningActivity = function(id) {
+  if(id == "4bf58dd8d48988d1bc941735") //cupcake - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d1d0941735") //dessert - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d148941735") //donuts - only afternoon
+    return false;
+  if(id == "512e7cae91d4cbb4e5efe0af") //frozen yoghurt - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d1c9941735") //ice cream - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d112941735") //juice bar - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d1dc931735") //tea room - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d155941735") //gastrobup - only evening
+    return false;
+  if(id == "4e0e22f5a56208c4ea9a85a0") //distilery - only evening
+    return false;
+  if(id == "4bf58dd8d48988d14b941735") //winery - only evening
+    return false;
+  if(id == "4bf58dd8d48988d179941735") //bagelshop - only noon
+    return false;
+  if(id == "4bf58dd8d48988d128941735") //cafeteria - only noon
+    return false;
+
+
+  return true;
+};
+
+isNoonActivity = function(id) {
+  if(id == "4bf58dd8d48988d16a941735") //bakery - only morning
+    return false;
+  if(id == "4bf58dd8d48988d143941735") //breakfast - only morning
+    return false;
+  if(id == "4bf58dd8d48988d1bc941735") //cupcake - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d1d0941735") //dessert - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d148941735") //donuts - only afternoon
+    return false;
+  if(id == "512e7cae91d4cbb4e5efe0af") //frozen yoghurt - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d1c9941735") //ice cream - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d112941735") //juice bar - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d1dc931735") //tea room - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d155941735") //gastrobup - only evening
+    return false;
+  if(id == "4e0e22f5a56208c4ea9a85a0") //distilery - only evening
+    return false;
+  if(id == "4bf58dd8d48988d14b941735") //winery - only evening
+    return false;
+};
+
+isAfternoonActivity = function(id) {
+  if(id == "4bf58dd8d48988d16a941735") //bakery - only morning
+    return false;
+  if(id == "4bf58dd8d48988d143941735") //breakfast - only morning
+    return false;
+  if(id == "4bf58dd8d48988d155941735") //gastrobup - only evening
+    return false;
+  if(id == "4e0e22f5a56208c4ea9a85a0") //distilery - only evening
+    return false;
+  if(id == "4bf58dd8d48988d14b941735") //winery - only evening
+    return false;
+  if(id == "4bf58dd8d48988d179941735") //bagelshop - only noon
+    return false;
+  if(id == "4bf58dd8d48988d128941735") //cafeteria - only noon
+    return false;
+};
+
+isEveningActivity = function(id) {
+  if(id == "4bf58dd8d48988d16a941735") //bakery - only morning
+    return false;
+  if(id == "4bf58dd8d48988d143941735") //breakfast - only morning
+    return false;
+  if(id == "4bf58dd8d48988d1bc941735") //cupcake - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d1d0941735") //dessert - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d148941735") //donuts - only afternoon
+    return false;
+  if(id == "512e7cae91d4cbb4e5efe0af") //frozen yoghurt - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d1c9941735") //ice cream - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d112941735") //juice bar - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d1dc931735") //tea room - only afternoon
+    return false;
+  if(id == "4bf58dd8d48988d179941735") //bagelshop - only noon
+    return false;
+  if(id == "4bf58dd8d48988d128941735") //cafeteria - only noon
+    return false;
+};
+
+exports.getBerlin = function(req, res) {
+  var location = req.params.location;
+  //query API
+
+  var callback = function(json) {
+    res.jsonp(json);
+  };
+
+  var center = {
+    lat: 52,
+    lon: 7
+  };
+
+  var places = [{
+
+    id: '50d751d8e4b0b55bc64f3161'
+  },
+  {
+    id: '51741e3c498ee3a44a7c0005'
+  },
+  {
+    id: '51caec79498e8309e8177210'
+  }
+    ];
+
+  addMorePlaces(places, 'food', 6000, center, 2, callback);
+
+  console.log(exports.getMiddleOfLatLongSimple([[40,6], [41,5], [45.768543, 4], [41.90876, 6.0987654], [41.023587,5], [45, 4], [41, 6], [41,5], [45, 4], [41, 6]]));
+
+};
+
+returnPhase = function(phase) {
+  if(phase == 'Morning 1 - Food or Cafe')
+    return 0;
+  if(phase == 'Morning 2 - Arts or Sights')
+    return 1;
+  if(phase == 'Lunch - Food')
+    return 2;
+  if(phase == 'Afternoon 1 - Food or Cafe')
+    return 3;
+  if(phase == 'Afternoon 2 - Shopping or Outdoors')
+    return 4;
+  if(phase == 'Evening - Food')
+    return 5;
+  if(phase == 'Night - Nightlife')
+    return 6;
+};
+
+var complete = function(tourstopsList, beginningSlot, endingSlot, lenghtOfADay){
+  var expectedSlots = [0,0,0,0,0,0,0], i, diff;
+
+  if (tourstopsList.numberOfCalendarDays <= 1){
+    for(i = beginningSlot; i < endingSlot; i++){
+      expectedSlots[i] = 1;
+
+      diff = expectedSlots[i] - tourstopsList.stops[i].length;
+      if(diff > 0){
+        console.log("Difference of " + diff + " at i = " + i);
+      };
+
+    }
+  }
+  else {
+    for(i = 0; i < lenghtOfADay; i++){
+      if(i >= beginningSlot) expectedSlots[i] += 1;
+      if(i < endingSlot) expectedSlots[i] += 1;
+      expectedSlots[i] += tourstopsList.numberOfCalendarDays - 2;
+
+      diff = expectedSlots[i] - tourstopsList.stops[i].length;
+      if(diff > 0){
+        console.log("Difference of " + diff + " at i = " + i);
+        //tourstopsList.stops[i].push(addMorePlaces(tourstopsList.stops[i], tourstopsList.center, tourstopsList.radius, diff, ));
+      };
+    }
+  }
+
+  //console.log(expectedSlots);
+
+  return tourstopsList;
+};
+
+BRUTE FORCE ALGORITHM BELOW
+
+exports.buildItenary = function(req, res) {
   var timesOfTheDay = [9,11,13,15,17,19,21],
     tourstopsList = req.params.itenaryRequest || mock_itenaryRequest;
 
@@ -387,170 +840,6 @@ var category = function(i) {
   return "N/A";
 };
 
-var categoryToIndex = function(category, asAnArray) {
-  var result = "N/A";
-  switch(category) {
-    case "cafe":
-    case "breakfast": {result = 0; break;} // Morning 1
-    case "lunch":     {result = 2; break;} // Lunch
-    case "shopping":
-    case "outdoors":  {result = 4; break;} // Afternoon 2
-    case "dinner":    {result = 5; break;} // Evening
-    case "nightlife": {result = 6; break;} // Night
-    case "arts":
-    case "sights": {
-      if (asAnArray) return [1,3];
-      result = Math.round(Math.random()) * 2 + 1; // Morning 2 or Afternoon 1
-    }
-  }
-
-  if(asAnArray) return [result];
-  else return result;
-};
-
-var getJSON = function(options, onResult) {
-  var prot, req;
-  prot = options.port === 443 ? https : http;
-  req = prot.request(options, function(res) {
-    var output;
-    output = "";
-    res.setEncoding("utf8");
-    res.on("data", function(chunk) {
-      return output += chunk;
-    });
-    return res.on("end", function() {
-      var obj;
-      if (res.headers["content-type"].indexOf("json") === -1) {
-        return onResult(res.statusCode, {
-          error: "response is not JSON"
-        });
-      } else {
-        obj = JSON.parse(output);
-        return onResult(res.statusCode, obj);
-      }
-    });
-  });
-  req.on("error", function(e) {
-    console.log(e);
-    return onResult("Unknown error code", {
-      error: e.message
-    });
-  });
-  return req.end();
-};
-
-var distanceBetweenLatLng = function(lat1, lng1, lat2, lng2){
-  //console.log(lat1 + ", " + lng1 + ", " + lat2 + ", " + lng2);
-  lat1 = lat1 * Math.PI / 180;
-  lat2 = lat2 * Math.PI / 180;
-  var R = 6371, //km
-    dLat = (lat2-lat1) * Math.PI / 180,
-    dLon = (lng2-lng1) * Math.PI / 180,
-    a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2),
-    c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-  return R * c;
-};
-
-var distanceBetween = function(venue1, venue2){
-  // console.log(venue1);
-  // console.log(venue2);
-  return distanceBetweenLatLng(venue1.location.lat, venue1.location.lng, venue2.location.lat, venue2.location.lng);
-};
-
-var getMiddleOfLatLongMatrix = function(coordArray) {
-  //sums
-  var sumLat = 0, sumLong = 0, minRadius = 0;
-
-  //iterate through all coordinates
-  var coordCount = 0;
-  for (var i = 0; i < coordArray.length; i++) {
-    for (var j = 0; j < coordArray[i].length; j++){
-    sumLat += coordArray[i][j].location.lat;
-    sumLong += coordArray[i][j].location.lng;
-    coordCount++;
-    }
-  }
-  sumLat /= coordCount;
-  sumLong /= coordCount;
-
-  // go through all coordinates and find maximum distance to center
-  // for calculating the MINIMUM RADIUS TO INHERIT ALL COORDINATES
-  for (var _i = 0; _i < coordArray.length; _i++) {
-    for (var _j = 0; _j < coordArray[_i].length; _j++){
-      var tmpRadius = distanceBetweenLatLng(sumLat, sumLong, coordArray[_i][_j].location.lat, coordArray[_i][_j].location.lng);
-      if(tmpRadius > minRadius)// radius is bigger hence choose it
-        minRadius = tmpRadius;
-    }
-  }
-
-  return {
-    center: {
-      lat: sumLat,
-      lng: sumLong
-    },
-    radius: minRadius * 1000
-  };
-};
-
-
-// for debugging
-var mock_requiredTourstops = {
-  arrivalTime: 10,
-  numberOfCalendarDays: 3,
-  departureTime: 18,
-  hotel: {
-    lat: 44.07,
-    lng: 18.12
-  },
-  sights: [
-      {
-        location: {
-          lat: 44.1,
-          lng: 18.1
-        },
-        fixedTime: false
-      }
-    ],
-  arts: [
-    {
-        location: {
-          lat: 44.04,
-          lng: 18.01
-        },
-        fixedTime: false
-      },
-      {
-        location: {
-          lat: 44.09,
-          lng: 18.12
-        },
-        fixedTime: false
-      }
-    ],
-  outdoors: [
-    ],
-  dinner: [
-    {
-        location: {
-          lat: 44.25,
-          lng: 18.03
-        },
-        fixedTime: false
-      },
-    ],
-  nightlife: [
-    ],
-  shopping: [
-    ],
-  lunch: [
-    ],
-  cafe: [
-    ],
-  breakfast: [
-    ]
-};
-
 
 var mock_itenaryRequest = {
   arrivalTime: 10,
@@ -667,191 +956,6 @@ var mock_itenaryRequest = {
       }
   ]]
 
-};
-
-// LEGACY CODE
-
-/*
-
-
-isMorningActivity = function(id) {
-  if(id == "4bf58dd8d48988d1bc941735") //cupcake - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d1d0941735") //dessert - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d148941735") //donuts - only afternoon
-    return false;
-  if(id == "512e7cae91d4cbb4e5efe0af") //frozen yoghurt - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d1c9941735") //ice cream - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d112941735") //juice bar - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d1dc931735") //tea room - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d155941735") //gastrobup - only evening
-    return false;
-  if(id == "4e0e22f5a56208c4ea9a85a0") //distilery - only evening
-    return false;
-  if(id == "4bf58dd8d48988d14b941735") //winery - only evening
-    return false;
-  if(id == "4bf58dd8d48988d179941735") //bagelshop - only noon
-    return false;
-  if(id == "4bf58dd8d48988d128941735") //cafeteria - only noon
-    return false;
-
-
-  return true;
-};
-
-isNoonActivity = function(id) {
-  if(id == "4bf58dd8d48988d16a941735") //bakery - only morning
-    return false;
-  if(id == "4bf58dd8d48988d143941735") //breakfast - only morning
-    return false;
-  if(id == "4bf58dd8d48988d1bc941735") //cupcake - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d1d0941735") //dessert - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d148941735") //donuts - only afternoon
-    return false;
-  if(id == "512e7cae91d4cbb4e5efe0af") //frozen yoghurt - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d1c9941735") //ice cream - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d112941735") //juice bar - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d1dc931735") //tea room - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d155941735") //gastrobup - only evening
-    return false;
-  if(id == "4e0e22f5a56208c4ea9a85a0") //distilery - only evening
-    return false;
-  if(id == "4bf58dd8d48988d14b941735") //winery - only evening
-    return false;
-};
-
-isAfternoonActivity = function(id) {
-  if(id == "4bf58dd8d48988d16a941735") //bakery - only morning
-    return false;
-  if(id == "4bf58dd8d48988d143941735") //breakfast - only morning
-    return false;
-  if(id == "4bf58dd8d48988d155941735") //gastrobup - only evening
-    return false;
-  if(id == "4e0e22f5a56208c4ea9a85a0") //distilery - only evening
-    return false;
-  if(id == "4bf58dd8d48988d14b941735") //winery - only evening
-    return false;
-  if(id == "4bf58dd8d48988d179941735") //bagelshop - only noon
-    return false;
-  if(id == "4bf58dd8d48988d128941735") //cafeteria - only noon
-    return false;
-};
-
-isEveningActivity = function(id) {
-  if(id == "4bf58dd8d48988d16a941735") //bakery - only morning
-    return false;
-  if(id == "4bf58dd8d48988d143941735") //breakfast - only morning
-    return false;
-  if(id == "4bf58dd8d48988d1bc941735") //cupcake - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d1d0941735") //dessert - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d148941735") //donuts - only afternoon
-    return false;
-  if(id == "512e7cae91d4cbb4e5efe0af") //frozen yoghurt - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d1c9941735") //ice cream - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d112941735") //juice bar - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d1dc931735") //tea room - only afternoon
-    return false;
-  if(id == "4bf58dd8d48988d179941735") //bagelshop - only noon
-    return false;
-  if(id == "4bf58dd8d48988d128941735") //cafeteria - only noon
-    return false;
-};
-
-exports.getBerlin = function(req, res) {
-  var location = req.params.location;
-  //query API
-
-  var callback = function(json) {
-    res.jsonp(json);
-  };
-
-  var center = {
-    lat: 52,
-    lon: 7
-  };
-
-  var places = [{
-
-    id: '50d751d8e4b0b55bc64f3161'
-  },
-  {
-    id: '51741e3c498ee3a44a7c0005'
-  },
-  {
-    id: '51caec79498e8309e8177210'
-  }
-    ];
-
-  addMorePlaces(places, 'food', 6000, center, 2, callback);
-
-  console.log(exports.getMiddleOfLatLongSimple([[40,6], [41,5], [45.768543, 4], [41.90876, 6.0987654], [41.023587,5], [45, 4], [41, 6], [41,5], [45, 4], [41, 6]]));
-
-};
-
-returnPhase = function(phase) {
-  if(phase == 'Morning 1 - Food or Cafe')
-    return 0;
-  if(phase == 'Morning 2 - Arts or Sights')
-    return 1;
-  if(phase == 'Lunch - Food')
-    return 2;
-  if(phase == 'Afternoon 1 - Food or Cafe')
-    return 3;
-  if(phase == 'Afternoon 2 - Shopping or Outdoors')
-    return 4;
-  if(phase == 'Evening - Food')
-    return 5;
-  if(phase == 'Night - Nightlife')
-    return 6;
-};
-
-var complete = function(tourstopsList, beginningSlot, endingSlot, lenghtOfADay){
-  var expectedSlots = [0,0,0,0,0,0,0], i, diff;
-
-  if (tourstopsList.numberOfCalendarDays <= 1){
-    for(i = beginningSlot; i < endingSlot; i++){
-      expectedSlots[i] = 1;
-
-      diff = expectedSlots[i] - tourstopsList.stops[i].length;
-      if(diff > 0){
-        console.log("Difference of " + diff + " at i = " + i);
-      };
-
-    }
-  }
-  else {
-    for(i = 0; i < lenghtOfADay; i++){
-      if(i >= beginningSlot) expectedSlots[i] += 1;
-      if(i < endingSlot) expectedSlots[i] += 1;
-      expectedSlots[i] += tourstopsList.numberOfCalendarDays - 2;
-
-      diff = expectedSlots[i] - tourstopsList.stops[i].length;
-      if(diff > 0){
-        console.log("Difference of " + diff + " at i = " + i);
-        //tourstopsList.stops[i].push(addMorePlaces(tourstopsList.stops[i], tourstopsList.center, tourstopsList.radius, diff, ));
-      };
-    }
-  }
-
-  //console.log(expectedSlots);
-
-  return tourstopsList;
 };
 
 */
