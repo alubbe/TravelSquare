@@ -23,6 +23,7 @@ travelSquareControllers.controller('IndexCtrl', [
 	}
 ]);
 
+
 travelSquareControllers.controller('PlanningCtrl', [
 	'$scope',
 	'$rootScope',
@@ -32,8 +33,19 @@ travelSquareControllers.controller('PlanningCtrl', [
 	'$window',
 	'$timeout',
 	function ($scope, $rootScope, $http, $location, $routeParams, $window, $timeout) {
+
+
 		console.log('Planning controller loaded');
 		$scope.test = 'planning OK';
+		
+		$scope.sectiontitles = [
+							{id :"restaurants", name : "FOOD"},
+							{id : "coffee", name : "COFFEE"},
+							{id : "arts", name : "ARTS"},
+							{id : "shops", name : "SHOPPING"},
+							{id : "drinks", name : "NIGHTLIFE"},
+							{id : "outdoors", name : "OUTDOORS"},
+							];	
 		var $ = $window.jQuery;
 		console.log($);
 
@@ -46,7 +58,7 @@ travelSquareControllers.controller('PlanningCtrl', [
 	    $scope.test = "Controller ok";
 	    // $scope.city =  $scope.$location.search().location ;
 	    // $scope.days =  $scope.$location.search().location ;   
-	    $scope.city = TSglobal_city;
+	    //$scope.city = TSglobal_city;
 	    
 	    var urlparams, param_city = "Amsterdam", param_days = "2";
 	    if($window.location.href.split("?")[1] != null) {
@@ -76,17 +88,19 @@ travelSquareControllers.controller('PlanningCtrl', [
 			};
 
 			function getUrl(section, amount) {
-			  return "http://localhost:3000/foursquare/" + $scope.city +  "/" + section + "/" + amount;
+			  return "/foursquare/" + $scope.city +  "/" + section + "/" + amount;
 			};
 
 			TCget(getUrl("restaurants"    ,6), "restaurants");
-			$timeout(function(){TCget(getUrl("coffee",6), "coffee"     )}, 300);
-			$timeout(function(){TCget(getUrl("sights",6), "sights"     )}, 600);
-			$timeout(function(){TCget(getUrl("arts"  ,6), "arts"       )}, 900);
-			$timeout(function(){TCget(getUrl("shops" ,6), "shops"      )}, 1200);
-			$timeout(function(){TCget(getUrl("drinks" ,6), "drinks"    )}, 1500);
-			$timeout(function(){TCget(getUrl("outdoors",6), "outdoors" )}, 1800);
+			
 
+			function loadOnDemand(sectiontitle){
+				console.log("Gettting sectiontitle data for section: " + sectiontitle);
+				console.log(sectiontitle);
+				TCget(getUrl(sectiontitle,6), sectiontitle);
+			};
+
+			$timeout(function(){TCget(getUrl("coffee",6), "coffee"     )}, 300);
 
 			TSglobal_likes = [];
 			TSglobal_dislikes = [];
@@ -95,11 +109,21 @@ travelSquareControllers.controller('PlanningCtrl', [
 			TSglobal_hotel = "JetPack Alternative";
 			TSglobal_startdate = "01.12.2013";
 			TSglobal_daysofstay = 5;
-			    
-			$( "#accordion" ).accordion({
-		      event: "click hoverintent",
-		      header: "h3" 
-		    });
+			  
+
+
+			// JQueries of ng-created elements
+			$timeout(function() {
+				$( "#accordion" ).accordion({
+		      		event: "click hoverintent",
+		      		header: "h3" ,
+		     		// activate: function( event, ui ) {console.log(ui.newHeader[0].id);}
+		    	});	
+
+				$(".accorideonIndiHeader").click(function(event){loadOnDemand((event.currentTarget.id).substring(10))});
+
+			}, 10);    
+			
 
 		  $( "input[type=submit]" )
 		      .button({
