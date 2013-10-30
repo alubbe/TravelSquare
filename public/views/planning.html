@@ -3,17 +3,22 @@
 </header>
 <section ng-init="setup()">
 
-<!-- 
-    <script src="../js/angular108.min.js"></script>
-    <script src="../js/controllers/plan.js"></script>
- -->
 
-  <div id="lblcity">
-  <h1>{{city}}</h1>
+<br />
+<div class="row" style="border: 1px solid black;">
+  <div class="large-8 columns" id="lblcity">
+    {{city}}
+  </div>
+  <div class="large-2 columns">
+    <a href="/">
+      <img class="navigationtopbuttons" src="../img/notepad.png" alt="oerview"></div>
+    </a>
+  <div class="large-2 columns">
+    <img class="navigationtopbuttons" src="../img/map.png" alt="map" ng-click="submit(planningModel)">
   </div>
 
-
-     
+</div>
+<br />     
 
     
     <div id="accordion">
@@ -23,10 +28,15 @@
     <h3 id="accordion-{{sectiontitle.id}}" class="accorideonIndiHeader">{{sectiontitle.name}}</h3>
     <div>    
         <div class="blocky"><!-- Begin of Squeres holder two -->
-        <div id="sortable" class"containerSquares">
+       <!-- <div id="sortable" class"containerSquares">-->
+          
+          <div class="row" >
           <div ng-repeat="venue in sections[sectiontitle.id]">
+          <div class="large-3 columns">
             <div id="{{venue.fs_id}}" class="square venueSquare">
-        
+
+
+
               <div class="titlebar">{{venue.name}}</div>
               <div>reorder with drag&amp;drop  
                 <a><img src="../exampledata/heart.jpg" alt="heart" width="20" class="venueHeart imgoff" /></a>
@@ -50,7 +60,7 @@
         </div><!-- End of Squeres holder one -->
       </div><!-- End of Squeres holder two -->
     </div>
-
+</div>
 
       </div><!-- ng-repeat sectiontitles-->
 
