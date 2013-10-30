@@ -119,6 +119,65 @@ var convertToTravelSquareFormat = function(foursquare_item){
 };
 
 exports.buildItenary = function(req, res) {
+  var requiredTourstops = req.params.itenaryRequest || mock_requiredTourstops;
+  var tourstops = [], centerIDs = [], i, j;
+  var priorities = ["sights", "arts", "outdoors", "dinner", "nightlife", "shopping", "lunch", "cafe", "breakfast"]; 
+
+  for(i = 0; i < priorities.length && tourstops.length < requiredTourstops.numberOfCalendarDays; i++) {
+    var priority = priorities[i];
+    var venues = requiredTourstops[priority];
+    // console.log("i = " + i + " & priority = " + priority + " & venues = " + venues);
+    for(j = 0; j < venues.length && tourstops.length < requiredTourstops.numberOfCalendarDays; j++){
+      var newEntry = [null, null, null, null, null, null, null];
+      var new_centerID = categoryToIndex(priority);
+      // console.log("the new centerID is " + new_centerID);
+      centerIDs.push(new_centerID);
+      newEntry[new_centerID] = venues[j];
+      tourstops.push(newEntry);
+    }
+  }
+
+  // if there are not enough centers, find more sights to fill the remaining days
+  if (tourstops.length < requiredTourstops.numberOfCalendarDays) {
+    console.log("Too few centers!");
+  } 
+
+  // if there were enough centers, distribute the remaining venues by proximity
+  else {
+    console.log("need to distribute the remaining venues");
+    j++;
+    for (i; i < priorities.length; i++) {
+      var priority = priorities[i];
+      var venues = requiredTourstops[priority];
+      console.log("i = " + i + " & priority = " + priority + " & venues = " + venues);
+      for(j; j < venues.length; j++){
+        var venue = venues[j], min_distance = 999999999, day, timeslot;
+        // iterate through each day and find the distance to the center
+        for(var k = 0; k < tourstops.length; k++){
+          // make sure there is still room in the day for this venue
+          var venueIndex = categoryToIndex(priority, true);
+          for(var l = 0; l < venueIndex.length; l++){
+            // console.log("venueIndex[l] is " + venueIndex[l] + " & tourstops[k][venueIndex[l]] is " + tourstops[k][venueIndex[l]]);
+            if(tourstops[k][venueIndex[l]] == null){
+              var distance = distanceBetween(venue, tourstops[k][centerIDs[k]]);
+              if(distance < min_distance) {
+                min_distance = distance;
+                day = k;
+                timeslot = venueIndex[l];
+              }
+            }
+          }
+        }
+        // finally, put the venue into its best day & timeslot
+        // console.log("day is " + day + " and timeslot is " + timeslot);
+        tourstops[day][timeslot] = venue;
+      }
+    j = 0;
+    }
+  }
+
+  return res.jsonp(tourstops);
+
   var timesOfTheDay = [9,11,13,15,17,19,21],
     tourstopsList = req.params.itenaryRequest || mock_itenaryRequest;
 
@@ -294,17 +353,12 @@ var checkConfiguration = function(tourstops, center, optimizedTourstops){
 
     // if it is the start of travel or the first stop of the day, add the distance to the center (i.e. hotel)
     //console.log(tourstops.stops[i][beginningSlot]);
-    tourstops.sumOfSquares += Math.pow(distanceBetween(tourstops.stops[i][beginningSlot].location.lat, tourstops.stops[i][beginningSlot].location.lng, center.lat, center.lng), 2);
+    tourstops.sumOfSquares += Math.pow(distanceBetweenLatLng(tourstops.stops[i][beginningSlot].location.lat, tourstops.stops[i][beginningSlot].location.lng, center.lat, center.lng), 2);
     // if it is the the last stop of the day, add the distance to the center (i.e. hotel)
-    tourstops.sumOfSquares += Math.pow(distanceBetween(tourstops.stops[i][endingSlot].location.lat, tourstops.stops[i][endingSlot].location.lng, center.lat, center.lng), 2);
+    tourstops.sumOfSquares += Math.pow(distanceBetweenLatLng(tourstops.stops[i][endingSlot].location.lat, tourstops.stops[i][endingSlot].location.lng, center.lat, center.lng), 2);
     for (var j = beginningSlot; j < endingSlot; j++){
-      var lat1 = tourstops.stops[i][j].location.lat,
-        lng1 = tourstops.stops[i][j].location.lng,
-        lat2 = tourstops.stops[i][j+1].location.lat,
-        lng2 = tourstops.stops[i][j+1].location.lng;
-
       // add the distance between the two stops
-      tourstops.sumOfSquares += Math.pow(distanceBetween(lat1, lng1, lat2, lng2), 2);
+      tourstops.sumOfSquares += Math.pow(distanceBetween(tourstops.stops[i][j], tourstops.stops[i][j+1]), 2);
     }
   }
   if (tourstops.sumOfSquares < optimizedTourstops.sumOfSquares){
@@ -321,7 +375,7 @@ var category = function(i) {
       return "arts";
     case 2: // 'Lunch - Food'
       return "food";
-    case 3: // 'Afternoon 1 - Food or Cafe'
+    case 3: // 'Afternoon 1 - Arts or Sights'
       return "food";
     case 4: // 'Afternoon 2 - Shopping or Outdoors'
       return "shopping";
@@ -331,6 +385,27 @@ var category = function(i) {
       return "nightlife";
   }
   return "N/A";
+};
+
+var categoryToIndex = function(category, asAnArray) {
+  var result = "N/A";
+  switch(category) {
+    case "cafe":
+    case "breakfast": {result = 0; break;} // Morning 1
+    case "lunch":     {result = 2; break;} // Lunch
+    case "shopping":
+    case "outdoors":  {result = 4; break;} // Afternoon 2
+    case "dinner":    {result = 5; break;} // Evening
+    case "nightlife": {result = 6; break;} // Night
+    case "arts":
+    case "sights": {
+      if (asAnArray) return [1,3];
+      result = Math.round(Math.random()) * 2 + 1; // Morning 2 or Afternoon 1
+    }
+  }
+
+  if(asAnArray) return [result];
+  else return result;
 };
 
 var getJSON = function(options, onResult) {
@@ -364,7 +439,8 @@ var getJSON = function(options, onResult) {
   return req.end();
 };
 
-var distanceBetween = function(lat1, lng1, lat2, lng2){
+var distanceBetweenLatLng = function(lat1, lng1, lat2, lng2){
+  //console.log(lat1 + ", " + lng1 + ", " + lat2 + ", " + lng2);
   lat1 = lat1 * Math.PI / 180;
   lat2 = lat2 * Math.PI / 180;
   var R = 6371, //km
@@ -374,6 +450,12 @@ var distanceBetween = function(lat1, lng1, lat2, lng2){
     c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
   return R * c;
+};
+
+var distanceBetween = function(venue1, venue2){
+  // console.log(venue1);
+  // console.log(venue2);
+  return distanceBetweenLatLng(venue1.location.lat, venue1.location.lng, venue2.location.lat, venue2.location.lng);
 };
 
 var getMiddleOfLatLongMatrix = function(coordArray) {
@@ -396,7 +478,7 @@ var getMiddleOfLatLongMatrix = function(coordArray) {
   // for calculating the MINIMUM RADIUS TO INHERIT ALL COORDINATES
   for (var _i = 0; _i < coordArray.length; _i++) {
     for (var _j = 0; _j < coordArray[_i].length; _j++){
-      var tmpRadius = distanceBetween(sumLat, sumLong, coordArray[_i][_j].location.lat, coordArray[_i][_j].location.lng);
+      var tmpRadius = distanceBetweenLatLng(sumLat, sumLong, coordArray[_i][_j].location.lat, coordArray[_i][_j].location.lng);
       if(tmpRadius > minRadius)// radius is bigger hence choose it
         minRadius = tmpRadius;
     }
@@ -413,6 +495,63 @@ var getMiddleOfLatLongMatrix = function(coordArray) {
 
 
 // for debugging
+var mock_requiredTourstops = {
+  arrivalTime: 10,
+  numberOfCalendarDays: 3,
+  departureTime: 18,
+  hotel: {
+    lat: 44.07,
+    lng: 18.12
+  },
+  sights: [
+      {
+        location: {
+          lat: 44.1,
+          lng: 18.1
+        },
+        fixedTime: false
+      }
+    ],
+  arts: [
+    {
+        location: {
+          lat: 44.04,
+          lng: 18.01
+        },
+        fixedTime: false
+      },
+      {
+        location: {
+          lat: 44.09,
+          lng: 18.12
+        },
+        fixedTime: false
+      }
+    ],
+  outdoors: [
+    ],
+  dinner: [
+    {
+        location: {
+          lat: 44.25,
+          lng: 18.03
+        },
+        fixedTime: false
+      },
+    ],
+  nightlife: [
+    ],
+  shopping: [
+    ],
+  lunch: [
+    ],
+  cafe: [
+    ],
+  breakfast: [
+    ]
+};
+
+
 var mock_itenaryRequest = {
   arrivalTime: 10,
   numberOfCalendarDays: 3,
@@ -526,7 +665,7 @@ var mock_itenaryRequest = {
         },
         fixedTime: false
       }
-  ]],
+  ]]
 
 };
 
