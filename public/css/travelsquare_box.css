@@ -1,12 +1,22 @@
 body, html {
 
-	 font-family:Helvetica,Arial,sans-serif;
+     font-family:Helvetica,Arial,sans-serif;
 }
 
 
  div {/*border: 1px solid green;
 darklue: #000066;
 orange:; #FFBF2A */}
+ 
+
+#lblcity{
+
+    color: rgb(61, 61, 61);
+    font-size: 46px;
+    line-height: 48px;
+    margin: 10px 0px;
+    font-family: Montserrat,sans-serif;
+    }
 
 
 .containerSquares {
@@ -18,6 +28,14 @@ orange:; #FFBF2A */}
 }
 
 
+.navigationtopbuttons{
+    width: 48px;
+    height: 50px;
+    margin-top: 10px;
+    margin-right: 15px;
+    margin-left: 25px;
+}
+
 .square {
     float:left;
     padding-left:10pt;
@@ -26,11 +44,11 @@ orange:; #FFBF2A */}
 
 
 .venueSquare {
-	border:  1px solid black;
-	width: 225px;
-	height: 225px;
-	padding: 10px;
-	margin: 10px;
+    border:  1px solid black;
+    width: 225px;
+    height: 225px;
+    padding: 10px;
+    margin: 10px;
 }
 
 .titlebar{
@@ -38,26 +56,26 @@ orange:; #FFBF2A */}
 }
 
 .squareImage{
-	background-color:orange;
-	width: 225px;
-	height: 100px;
+    background-color:orange;
+    width: 225px;
+    height: 100px;
 }
 
 
 
 .blocky{
-	display: block;
-	clear: block;
-	border: 1px solid gray;
-	position: relative;
-	height: 550px;
+    display: block;
+    clear: block;
+    border: 1px solid gray;
+    position: relative;
+    height: 550px;
 
 
-	
+    
 }
 
 .titlebar{
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .imgoff{
@@ -71,47 +89,45 @@ filter:alpha(opacity=80); /* For IE8 and earlier */
 }
 
 .accorideonIndiHeader {
-	color: black	;
+    color: black    ;
 }
 
 
 .dragtip{
-	background-color: darkgray;
-	display: none;
+    background-color: darkgray;
+    display: none;
 
 }
 
 
 
-        	.ui-accordion-header {
-        	    color: white;}
-        	    #accordion-restaurants {
-        	        background: none;
-        	        background-color: rgb(255,225,89);
-        	    }
-        	    #accordion-coffee {
-        	        background: none;
-        	         background-color: rgb(255,164,89);
-        	    }
-        	    #accordion-sights {
-        	        background: none;
-        	        background-color:rgb(254,116,88);
-        	    }
-        	    #accordion-arts {
-        	        background: none;
-        	        background-color: rgb(71,214,121);
-        	    }
-        	    #accordion-shops {
-        	        background: none;
-        	        background-color: rgb(84,155,247);
-        	    }
-        	    #accordion-drinks {
-        	        background: none;
-        	        background-color:rgb(127,125,231);
-        	    }
-        	    #accordion-outdoors {
-        	        background: none;
-        	        background-color: rgb(254,100,162);
-        	    }
-
-        
+            .ui-accordion-header {
+                color: white;}
+                #accordion-restaurants {
+                    background: none;
+                    background-color: rgb(255,225,89);
+                }
+                #accordion-coffee {
+                    background: none;
+                     background-color: rgb(255,164,89);
+                }
+                #accordion-sights {
+                    background: none;
+                    background-color:rgb(254,116,88);
+                }
+                #accordion-arts {
+                    background: none;
+                    background-color: rgb(71,214,121);
+                }
+                #accordion-shops {
+                    background: none;
+                    background-color: rgb(84,155,247);
+                }
+                #accordion-drinks {
+                    background: none;
+                    background-color:rgb(127,125,231);
+                }
+                #accordion-outdoors {
+                    background: none;
+                    background-color: rgb(254,100,162);
+                }
