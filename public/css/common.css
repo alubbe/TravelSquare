@@ -261,6 +261,9 @@ header * {
   height: 35px;
   margin: 9px 5px 0 10px; }
 
+#logo img {
+  height: 25px; }
+
 #search_left {
   margin: 10px 10px 0 10px;
   position: absolute;
