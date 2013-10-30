@@ -1,5 +1,23 @@
+/* Header colors */
+.head-color-red {
+	background-color: rgb(242,77,96);
+}
+
+.head-color-yellow {
+	background-color: rgb(250,202,10);
+}
+
+.head-color-purple {
+	background-color: rgb(181,60,94);
+}
+
+.head-color-green {
+	background-color: rgb(69,130,94);
+}
+
+/* Day selection */
 .row.main {
-	margin-top: 15px;
+	margin-top: 10px;
 }
 
 #day-selection {
@@ -28,47 +46,15 @@
 	font-weight: bold;
 }
 
+/* Map */
 #tour-map-canvas {
-    height: 500px;
+	height: 500px;
 }
 
-.row.details {
+/* Venues */
+.row.spots {
 	margin-top: 40px;
 	margin-bottom: 15px;
-}
-
-#weather {
-	background-color: red;
-	min-height: 200px;
-}
-
-#day-details {
-	list-style-type: none;
-}
-
-#day-details li {
-	margin-bottom: 5px;
-}
-
-#day-details li div.title {
-	padding: 5px;
-	font-size: 1.4em;
-	font-weight: bold;
-	cursor: pointer;
-	background-color: red;
-	color: white;
-}
-
-#day-details li div.content {
-	padding: 0 5px;
-	height: 0;
-	visibility: hidden;
-	display: none;
-	margin-top: 0;
-	width: auto;
-	border-left: 2px solid grey;
-	border-right: 2px solid grey;
-	border-bottom: 2px solid grey;
 }
 
 ul.venues {

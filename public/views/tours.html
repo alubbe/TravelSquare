@@ -2,40 +2,28 @@
 	<a href="/" id="logo"><img height="25" src="../img/travelsquare_Mini.png"/></a>
 </header>
 <section ng-init="setup()">
-	TOURS -- {{test}}
-</section>
-
-<!-- <section ng-controller="ToursCtrl" ng-init="setup()">
-	<!-- Top row containing day selection and map --
+	<!-- Top row containing day selection and map -->
 	<div class="row main">
-		<ul id="day-selection" class="span2">
-			<li ng-repeat="day in tour.days">
+		<ul id="day-selection" class="large-2 columns">
+			<li ng-repeat="day in days">
 				<div ng-click="selectDay($index)" ng-class="{selected:day.selected}">Day {{$index + 1}}</div>
 			</li>
 		</ul>
-		<div id="tour-map-canvas" class="span10" style="height: 500px;">
+		<div id="tour-map-canvas" class="large-10 columns">
 		</div>
 	</div>
-	<!-- Details and weather --
-	<div class="row details">
-		<div class="span2">
-
-		</div>
-		<ul id="day-details" class="span10">
-			<li ng-repeat="section in sections" ng-class="{closed:!section.selected}">
-				<titlebox></titlebox>
-				<div id="c{{$index}}" class="content">
-					<ul class="venues">
-						<li ng-repeat="venue in section.venues" class="venue">
-							<img src="{{venue.imageUrl}}">
-							<div class="info">
-								<span class="name">{{venue.name}}</span><span class="address">{{venue.address}}</span><br/>
-								<div class="blurb">{{venue.blurb}}</div>
-							</div>
-						</li>
-					</ul>
-				</div>
-			</li>
-		</ul>
+	<!-- Spots for each day -->
+	<div class="row spots">
+		<modalbox class="large-offset-2 large-10 columns" ng-repeat="modalBox in selectedDay.spots">
+			<ul class="venues">
+				<li ng-repeat="venue in modalBox.venues" class="venue">
+					<img src="{{venue.imageUrl}}">
+					<div class="info">
+						<span class="name">{{venue.name}}</span><span class="address">{{venue.location.address}}</span><br/>
+						<div class="blurb">{{venue.blurb}}</div>
+					</div>
+				</li>
+			</ul>
+		</modalbox>
 	</div>
-</section> -->
+</section>
