@@ -40,8 +40,18 @@ header * {
   background-repeat: no-repeat;
   margin: auto;
   position: relative;
-  margin-top: -100px;
+  margin-top: 0;
   text-shadow: rgba(0, 0, 0, 0.6) 0 0 15px, rgba(0, 0, 0, 0.6) 0 -1px 1px; }
+
+#background_cloud {
+  opacity: 0.8;
+  position: absolute;
+  left: 50%;
+  margin-left: -550px;
+  width: 600px;
+  height: 180px;
+  background-image: url(../img/background_spray_blur.png);
+}
 
 #main_unit {
   position: relative;
@@ -58,7 +68,7 @@ header * {
   font-size: 48px;
   line-height: 48px;
   margin: 100px 0 20px 0;
-  font-family: Montserrat, Verdana; }
+  font-family: Montserrat, "Helvetica Neue", "Helvetica", Helvetica, Verdana, sans-serif; }
 
 #background_main_image h1.show-for-small {
   font-size: 36px;
@@ -178,7 +188,6 @@ input.input_elements, select.input_elements {
   color: white;
   margin: auto;
   font-size: 45px;
-  font-family: Helvetica, Arial, sans-serif;
   font-weight: normal;
   padding-top: 120px; }
 
