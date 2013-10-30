@@ -112,7 +112,7 @@ var convertToTravelSquareFormat = function(foursquare_item){
     category:venue.categories.name, 
     rating:venue.rating,
     likes:venue.likes.count,
-    picture_url:photo.prefix + photo.width + "x" + photo.height + photo.suffix,
+    picture_url:photo.prefix + "205x205" + photo.suffix, // photo.width + "x" + photo.height
     fs_url:venue.canonicalUrl,
     fs_id:venue.id
   }; 
