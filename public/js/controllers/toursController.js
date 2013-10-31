@@ -7,17 +7,118 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 	function ($scope, $rootScope, $http, $location, $routeParams) {
 		// console.log('Tours controller loaded');
 
+		// TODO: REMOVE DUMMY DATA
+		$rootScope.selectedvenues = {
+			sights: [
+				{
+					name: 'Dummy 1',
+					location: {
+						address: "Olot, 13, 08024  Barcelona",
+						lat: 44.1,
+						lng: 18.1
+					},
+					rating: 8.2,
+					likes: 10,
+					picture_url: 'kitten.jpg',
+					fs_url: 'https://foursquare.com/v/...',
+					fs_id: 'abc123'
+				}
+			],
+			arts: [
+				{
+					name: 'Dummy 2',
+					location: {
+						address: "Olot, 13, 08024  Barcelona",
+						lat: 44.04,
+						lng: 18.01
+					},
+					rating: 8.2,
+					likes: 10,
+					picture_url: 'kitten.jpg',
+					fs_url: 'https://foursquare.com/v/...',
+					fs_id: 'def456'
+				},
+				{
+					name: 'Dummy 3',
+					location: {
+						address: "Olot, 13, 08024  Barcelona",
+						lat: 44.09,
+						lng: 18.12
+					},
+					rating: 8.2,
+					likes: 10,
+					picture_url: 'kitten.jpg',
+					fs_url: 'https://foursquare.com/v/...',
+					fs_id: 'ghi789'
+				}
+			],
+			outdoors: [
+			],
+			dinner: [
+				{
+					name: 'Dummy 4',
+					location: {
+						address: "Olot, 13, 08024  Barcelona",
+						lat: 44.25,
+						lng: 18.03
+					},
+					rating: 8.2,
+					likes: 10,
+					picture_url: 'kitten.jpg',
+					fs_url: 'https://foursquare.com/v/...',
+					fs_id: 'peter'
+				},
+			],
+			nightlife: [
+			],
+			shopping: [
+			],
+			lunch: [
+			],
+			cafe: [
+			],
+			breakfast: [
+			]
+		};
+		$routeParams.location = 'Berlin';
+		$routeParams.days = '2';
+		// END TODO
+
+		// Check parameters
+		if (!$routeParams.location || $routeParams.location.length == 0
+			|| !$routeParams.days || $routeParams.days.length == 0
+			|| !$rootScope.selectedvenues) {
+			// Invalid parameters -> redirect to index
+			$location.path('/');
+			return;
+		}
+
+		// Prepare payload
+		var payload = {
+			city: ($routeParams.location) ? $routeParams.location : '',
+			numberOfCalendarDays: ($routeParams.days) ? parseInt($routeParams.days) : ''
+		};
+		for (var key in $rootScope.selectedvenues) {
+			payload[key] = $rootScope.selectedvenues[key];
+		};
+		// console.log(payload);
+
 		// Load all tours
 		$http({
-			method: 'GET',
-			// url: 'tours2.json'
-			url: '/itenary'
+			url: '/itenary',
+			method: 'POST',
+			data: payload
 		}).success(function(data, status) {
+			console.log(status);
+			console.log(data);
 			$scope.days = $scope.parseData(data);
 			$scope.selectedDay = null;
 			// Try to get the selected day from the URL
 			var selectedDayIndex = ($routeParams.selectedDay) ? parseInt($routeParams.selectedDay) : 0;
 			$scope.selectDay(selectedDayIndex);
+		}).error(function(data, status) {
+			console.log('ERROR: Failed to generate tours...');
+			$location.path('/');
 		});
 
 		// Called when loading the tours.html

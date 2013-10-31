@@ -158,19 +158,12 @@ angular.module('travelSquare.planning', []).controller('PlanningCtrl', [
 
         // Called by the form in the planning.html
         $scope.submit = function (planningModel) {
-        $rootScope.selectedvenues = {
-            city : $scope.city,
-            numberOfCalendarDays : $scope.days,
-            sights : $scope.requiredvenues
-        };
+            $rootScope.selectedvenues = {
+                sights: $scope.requiredvenues
+            };
 
             // Update the URL
-            //$rootScope.selectedvenues = $scope.
-//            $location.path('/tours');
-
-
-
-
+            $location.path('/tours');
         };
     }
 ]);
