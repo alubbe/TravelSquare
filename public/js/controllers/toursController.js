@@ -33,7 +33,6 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 		// Get the tours
 		var payload = $rootScope.selectedvenues;
 		Tours.get(payload, function(response) {
-			console.log(response);
 			// Remove the loading overlad
 			$('#loading-overlay').remove();
 			if (!response.data) {
@@ -102,7 +101,7 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 							venues: []
 						};
 					}
-					if (data[i][j] !== null) {
+					if (data[i][j] != null) {
 						// Add venue to current category
 						var venue = data[i][j];
 						if (!venue.name) {
