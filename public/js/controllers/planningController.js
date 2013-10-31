@@ -32,6 +32,35 @@ angular.module('travelSquare.planning', []).controller('PlanningCtrl', [
         var $ = $window.jQuery;
         console.log($);
 
+        $scope.requiredvenues = [];
+
+        $scope.addVenue = function(venue){
+          //  $scope.requiredvenues.push(venue);
+           // console.log("addVenue");
+            console.log(venue.required);
+         //   console.log(event.target);
+           
+
+            if (venue.required === true){
+                //deactivate heart
+                  venue.required = false;
+                  var i = $scope.requiredvenues.indexOf(venue);
+                  if(i != -1) {
+                    $scope.requiredvenues.splice(i, 1);
+                    console.log($scope.requiredvenues);
+
+                    } 
+                }
+                 else {
+                // activate heart
+                venue.required = true;
+                $scope.requiredvenues.push(venue);
+                console.log($scope.requiredvenues);
+               
+                };
+            };
+
+
 
         // TODO
         console.log('TODO: Load the planning data...')
@@ -63,13 +92,21 @@ angular.module('travelSquare.planning', []).controller('PlanningCtrl', [
                 success(function (data, status) {
                     // this callback will be called asynchronously
                     // when the response is available
+                   //console.log(data);
+                   for (var i=0;i<data.length;i++)
+                    {
+                        data[i].section = name;
+                        data[i].required = false;
+                        }
+                
                     $scope.sections[name] = data;
+                    //console.log($scope.sections[name] );
                 }).
                 error(function (data, status, headers, config) {
                     // called asynchronously if an error occurs
                     // or server returns response with an error status.
                     console.log('TCget returned an error');
-                    console.log(data);
+                    
                 });
             };
 
@@ -87,7 +124,7 @@ angular.module('travelSquare.planning', []).controller('PlanningCtrl', [
             };
 
 
-             TCget(getUrl("restaurants", 6), "restaurants");
+             TCget(getUrl("restaurants", 8), "restaurants");
             $timeout(function () {
                 TCget(getUrl("coffee", 8), "coffee")
             }, 800); // preloding second section as well
@@ -117,49 +154,23 @@ angular.module('travelSquare.planning', []).controller('PlanningCtrl', [
                     event.preventDefault();
                 });
 
-            $(".venueTrash").click(function () {
-                $(this).parents(".square").hide('fade');
-                TSglobal_dislikes.push("idkommtnoch");
-                console.log("dislike id 123");
-                /*retrieve id, toggle on/off*/
-            });
-
-            $(".venueHeart").click(function () {
-                $(this).removeClass("imgoff");
-                TSglobal_likes.push("idkommtnoch");
-                console.log("like id 123");
-                /*retrieve id, toggle on/off*/
-            });
-
-            $("#calculatetrip").click(function () {
-                prefix = "prefix";
-                llikes = "";
-                ldislikes = "";
-                lothers = "";
-                var nexturl = prefix + "&city=" + TSglobal_city + "&hotel=" + TSglobal_hotel + "&startdate=" + TSglobal_startdate + "&daysofstay=" + TSglobal_daysofstay + "&likes=" + TSglobal_likes + "&dislikes=" + TSglobal_dislikes + "&visibles=" + TSglobal_visibles;
-                $("#debugnexturl").html(nexturl);
-                $("#debugnexturl").dialog("open");
-
-            });
-
-            $("#debugnexturl").dialog({
-                autoOpen: false,
-                show: {
-                    effect: "blind",
-                    duration: 1000
-                },
-                hide: {
-                    effect: "explode",
-                    duration: 1000
-                }
-            });
-
         }
 
         // Called by the form in the planning.html
         $scope.submit = function (planningModel) {
+        $rootScope.selectedvenues = {
+            city : $scope.city,
+            numberOfCalendarDays : $scope.days,
+            sights : $scope.requiredvenues
+        };
+
             // Update the URL
-            $location.path('/tours');
+            //$rootScope.selectedvenues = $scope.
+//            $location.path('/tours');
+
+
+
+
         };
     }
 ]);

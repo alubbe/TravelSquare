@@ -24,13 +24,12 @@
           <!-- <div id="sortable" class"containerSquares">-->
           <div class="row">
             <div ng-repeat="venue in sections[sectiontitle.id]">
-              <div class="large-3 columns">
+              <div class="large-3 columns" ng-click="addVenue(venue)">
                 <div id="{{venue.fs_id}}" class="venueSquare">
-                  <div class="squareImageHolder">
+                  <div class="squareImageHolder" >
                     <img class="squareImage" src="{{venue.picture_url}}">
                   </div>
-                  <div class="squareHeart">
-                    <img src="../img/heart_empty.png" alt="loveit"/>
+                  <div class="squareHeart"  ng-class="{ notclickedHeart : venue.required == false,  clickedHeart : venue.required == true}">
                   </div>
                   <div class="squareVenuename textopaquefilter">
                      {{venue.name}}
