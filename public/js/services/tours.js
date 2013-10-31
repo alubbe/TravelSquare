@@ -3,8 +3,15 @@ angular.module('travelSquare.services', []).factory('Tours', [
 	function ($resource) {
 		return $resource('/itenary', {}, {
 			get: {
-				method: 'POST'
+				method: 'POST',
+				isArray: false
 			}
 		});
+		// return $resource('tours2.json', {}, {
+		// 	get: {
+		// 		method: 'GET',
+		// 		isArray: false
+		// 	}
+		// });
 	}
 ]);

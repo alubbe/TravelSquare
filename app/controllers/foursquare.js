@@ -259,13 +259,17 @@ var completeTheTour = function(tourstops, centerIDs, numberOfAlreadyIncludedVenu
               break;
             }
           }
-          if(receivedCount >= queueLength) res.jsonp(tourstops);
+          if(receivedCount >= queueLength) res.jsonp({
+            data: tourstops
+          });
         };
         exploreCityCat(location, indexToCategory(j), numberOfAlreadyIncludedVenues + 1, false, onResult);
       }
     }
   }
-  if(queueLength == 0) res.jsonp(tourstops);
+  if(queueLength == 0) res.jsonp({
+    data: null
+  });
 }
 
 var categoryToIndex = function(category, asAnArray) {
