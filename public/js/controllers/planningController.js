@@ -28,10 +28,8 @@ angular.module('travelSquare.planning', []).controller('PlanningCtrl', [
         }, {
             id: "outdoors",
             name: "OUTDOORS"
-        }, ];
+        }];
         var $ = $window.jQuery;
-        console.log($);
-
         $scope.requiredvenues = [];
 
         $scope.addVenue = function(venue){
@@ -71,7 +69,7 @@ angular.module('travelSquare.planning', []).controller('PlanningCtrl', [
             $scope.test = "Controller ok";
 
 
-            var urlparams, param_city = "Amsterdam",
+            var urlparams, param_city = "Barcelona",
                 param_days = "2";
             if ($window.location.href.split("?")[1] != null) {
                 urlparams = $window.location.href.split("?")[1].split("&");
@@ -181,7 +179,7 @@ angular.module('travelSquare.planning', []).controller('PlanningCtrl', [
         $scope.submit = function (planningModel) {
             $rootScope.selectedvenues = {
                 city : $scope.city,
-                numberOfCalendarDays : $scope.days,
+                numberOfCalendarDays : parseInt($scope.days),
             };
 
             var requiredvenues = $scope.requiredvenues;    

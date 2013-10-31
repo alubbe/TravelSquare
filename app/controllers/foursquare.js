@@ -70,7 +70,7 @@ var getVenueDetails = function(arrayId, callback) {
       if (result.response != null) venueDetails.push(convertToTravelSquareFormat(result.response)); 
       else venueDetails.push({});
 
-      console.log("receivedCount is " + receivedCount + " and venueCount is " + venueCount);
+      // console.log("receivedCount is " + receivedCount + " and venueCount is " + venueCount);
       // console.log(venueDetails);
       // finish if all venue details have been received
       if(receivedCount == venueCount) 
@@ -141,29 +141,31 @@ var convertToTravelSquareFormat = function(foursquare_item){
 };
 
 exports.buildItenary = function(req, res) {
-  var requiredTourstops = req.body.requiredTourstops || mock_requiredTourstops;
+  var requiredTourstops = req.body || mock_requiredTourstops;
   var tourstops = [], centerIDs = [], i, j;
   var priorities = ["sights", "arts", "outdoors", "dinner", "nightlife", "shopping", "lunch", "cafe", "breakfast"]; 
-  var numberOfCalendarDays = 2; // requiredTourstops.numberOfCalendarDays
+  var numberOfCalendarDays = requiredTourstops.numberOfCalendarDays;
 
   for(i = 0; i < priorities.length && tourstops.length < numberOfCalendarDays; i++) {
     var priority = priorities[i];
     var venues = requiredTourstops[priority];
     // console.log("i = " + i + " & priority = " + priority + " & venues = " + venues);
-    for(j = 0; j < venues.length && tourstops.length < numberOfCalendarDays; j++){
-      var newEntry = [null, null, null, null, null, null, null];
-      var new_centerID = categoryToIndex(priority);
-      // console.log("the new centerID is " + new_centerID);
-      centerIDs.push(new_centerID);
-      newEntry[new_centerID] = venues[j];
-      tourstops.push(newEntry);
+    if(venue != null) {
+      for(j = 0; j < venues.length && tourstops.length < numberOfCalendarDays; j++){
+        var newEntry = [null, null, null, null, null, null, null];
+        var new_centerID = categoryToIndex(priority);
+        // console.log("the new centerID is " + new_centerID);
+        centerIDs.push(new_centerID);
+        newEntry[new_centerID] = venues[j];
+        tourstops.push(newEntry);
+      }
     }
   }
 
   // if there are not enough centers, find more sights to fill the remaining days
   if (tourstops.length < numberOfCalendarDays) {
     console.log("Too few centers!");
-    exploreCityCat(requiredTourstops.city, "sights", numberOfCalendarDays, false, function(additionalVenues){
+    exploreCityCat(requiredTourstops.city, "sights", numberOfCalendarDays, false, function(statusCode, additionalVenues){
       for(var k = 0; k < additionalVenues.length && tourstops.length < numberOfCalendarDays; k++){
         var additionalVenue = additionalVenues[k];
         // ensure that the new venue hasnt been used already
@@ -293,7 +295,6 @@ var findAdditionalVenues = function(location, category, i, j, n, callback) {
 
 var getAllDetails = function(tourstops, callback){
   var queueLength = 0, receivedCount = 0;
-  console.log(tourstops);
 
   for(var i = 0; i < tourstops.length; i++){
     for(var j = 0; j < tourstops[i].length; j++){
@@ -312,7 +313,7 @@ var getAllDetails = function(tourstops, callback){
           if (venue != null) tourstops[_i][_j] = venue; 
           else tourstops[_i][_j] = {};
 
-          console.log("receivedCount is " + receivedCount + " and queueLength is " + queueLength);
+          // console.log("receivedCount is " + receivedCount + " and queueLength is " + queueLength);
           // console.log(venue);
           // finish if all venue details have been received
           if(receivedCount == queueLength) 
