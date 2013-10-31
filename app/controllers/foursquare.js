@@ -134,7 +134,7 @@ var convertToTravelSquareFormat = function(foursquare_item){
 };
 
 exports.buildItenary = function(req, res) {
-  var requiredTourstops = req.params.itenaryRequest || mock_requiredTourstops;
+  var requiredTourstops = req.body || mock_requiredTourstops;
   var tourstops = [], centerIDs = [], i, j;
   var priorities = ["sights", "arts", "outdoors", "dinner", "nightlife", "shopping", "lunch", "cafe", "breakfast"]; 
   var numberOfCalendarDays = 3; // requiredTourstops.numberOfCalendarDays

@@ -5,9 +5,9 @@ function GoogleMapsWrapper() {
 	this.directionsService = new google.maps.DirectionsService()
 	this.bounds = null;
 
-	this.initializeMap = function() {
+	this.initializeMap = function(canvasId) {
 		// Create map
-		this.map = new google.maps.Map(document.getElementById("tour-map-canvas"), {
+		this.map = new google.maps.Map(document.getElementById(canvasId), {
 			zoom: 4,
 			center: new google.maps.LatLng(45, 0),
 			mapTypeId: google.maps.MapTypeId.ROADMAP
