@@ -13,12 +13,12 @@
 					<form action="" class="position-left" id="search_form" ng-submit="submit(indexModel)">
 						<div class="row collapse">
 							<div class="large-5 columns styled">
-								<input autocomplete="on" class="input_elements" id="location" name="location" placeholder="Where are you headed?" type="text" ng-model="indexModel.location"/>
+								<input autocomplete="on" class="input_elements" id="location" name="location" placeholder="Where are you headed?" type="text" ng-model="indexModel.location" required />
 							</div>
 							<div class="large-7 columns">
 								<div class="row collapse">
 									<div class="large-7 columns styled">
-										<input autocomplete="off" class="input_elements" id="days" name="days" placeholder="For how many days?" type="text" ng-model="indexModel.days"/>
+										<input autocomplete="off" class="input_elements" id="days" name="days" placeholder="For how many days?" type="text" ng-model="indexModel.days" required />
 									</div>
 									<div class="large-5 columns">
 										<div class="row collapse">
