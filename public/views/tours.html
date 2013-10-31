@@ -9,23 +9,25 @@
 				<div ng-click="selectDay($index)" ng-class="{selected:day.selected}">Day {{$index + 1}}</div>
 			</li>
 		</ul>
-		<div id="tour-map-canvas" class="large-10 columns">
+		<div class="large-10 columns">
+			<div id="tour-map-canvas" class="row">
+			</div>
+			<!-- Spots for each day -->
+			<div class="row spots">
+				<modalbox ng-repeat="modalBox in selectedDay.spots">
+					<ul class="venues">
+						<li ng-repeat="venue in modalBox.venues" class="venue">
+							<img src="{{venue.picture_url}}" ng-class="{hidden: !venue.picture_url}" />
+							<div class="image-placeholder"  ng-class="{hidden: venue.picture_url}"></div>
+							<div class="info">
+								<a href="http://foursquare.com/v/{{venue.fs_id}}" target="_blank" class="name" ng-class="{hidden: !venue.fs_id}">{{venue.name}}</a>
+								<span class="name" ng-class="{hidden: venue.fs_id}">{{venue.name}}</span>
+								<span class="address">{{venue.location.address}}</span>
+							</div>
+						</li>
+					</ul>
+				</modalbox>
+			</div>
 		</div>
-	</div>
-	<!-- Spots for each day -->
-	<div class="row spots">
-		<modalbox class="large-offset-2 large-10 columns" ng-repeat="modalBox in selectedDay.spots">
-			<ul class="venues">
-				<li ng-repeat="venue in modalBox.venues" class="venue">
-					<img src="{{venue.picture_url}}" ng-class="{hidden: !venue.picture_url}" />
-					<div class="image-placeholder"  ng-class="{hidden: venue.picture_url}"></div>
-					<div class="info">
-						<a href="http://foursquare.com/v/{{venue.fs_id}}" target="_blank" class="name" ng-class="{hidden: !venue.fs_id}">{{venue.name}}</a>
-						<span class="name" ng-class="{hidden: venue.fs_id}">{{venue.name}}</span>
-						<span class="address">{{venue.location.address}}</span>
-					</div>
-				</li>
-			</ul>
-		</modalbox>
 	</div>
 </section>

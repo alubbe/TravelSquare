@@ -153,7 +153,7 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 			window.setTimeout(function() {
 				$scope.selectedModalBox = -1;
 				$scope.selectModalBox(0, false);
-			}, 15);
+			}, 100);
 		};
 
 		// Switches the opened spots box
