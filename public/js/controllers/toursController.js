@@ -107,7 +107,6 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 						if (!venue.name) {
 							venue.name = 'unkown';
 						}
-						venue.location.address = 'asjdhakjsdhakjshdjka, dasjdad ,s ajdashd ';
 						currentSpot.venues.push(venue);
 					}
 				}
