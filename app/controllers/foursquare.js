@@ -293,11 +293,11 @@ var indexToCategory = function(index) {
   switch(index) {
     case 0: return chooseOneAtRandom(["breakfast", "cafe"]);    // Morning 1
     case 1: return chooseOneAtRandom(["arts", "sights"]);       // Morning 2
-    case 2: return "lunch";                                   // Lunch
+    case 2: return "lunch";                                     // Lunch
     case 3: return chooseOneAtRandom(["arts", "sights"]);       // Afternoon 1
     case 4: return chooseOneAtRandom(["outdoors", "shopping"]); // Afternoon 2
-    case 5: return "dinner";                                  // Evening
-    case 6: return "nightlife";                               // Night
+    case 5: return "dinner";                                    // Evening
+    case 6: return "nightlife";                                 // Night
   }
   return "N/A";
 };
@@ -402,63 +402,63 @@ var mock_requiredTourstops = {
   numberOfCalendarDays: 3,
   sights: [
       {
-        name: 'Dummy 1',
-        location: {
-          address: "Olot, 13, 08024  Barcelona",
-          lat: 44.1,
-          lng: 18.1
-        },
-        rating: 8.2,
-        likes: 10,
-        picture_url: 'kitten.jpg',
-        fs_url: 'https://foursquare.com/v/...',
-        fs_id: 'abc123'
+          "name": "Parc Güell",
+          "location": {
+              "address": "Olot, 13, 08024  Barcelona",
+              "lat": 41.414072578586115,
+              "lng": 2.152376174926758
+          },
+          "rating": 9.52,
+          "likes": 669,
+          "picture_url": "https://irs3.4sqi.net/img/general/205x205/28035207_iuSfaLOnUBLVYZyS8XwZj4p8ze2S9ea84u-ahcHc_lM.jpg",
+          "fs_url": "https://foursquare.com/v/parc-g%C3%BCell/4b76bca2f964a520975b2ee3",
+          "fs_id": "4b76bca2f964a520975b2ee3"
       }
     ],
   arts: [
-    {
-        name: 'Dummy 2',
-        location: {
-          address: "Olot, 13, 08024  Barcelona",
-          lat: 44.04,
-          lng: 18.01
-        },
-        rating: 8.2,
-        likes: 10,
-        picture_url: 'kitten.jpg',
-        fs_url: 'https://foursquare.com/v/...',
-        fs_id: 'def456'
+      {
+          "name": "Museu Nacional d'Art de Catalunya (MNAC)",
+          "location": {
+              "address": "Parc de Montjuïc, s/n (Palau Nacional), 08038  Barcelona",
+              "lat": 41.368532,
+              "lng": 2.153567
+          },
+          "rating": 9.46,
+          "likes": 159,
+          "picture_url": "https://irs0.4sqi.net/img/general/205x205/36576684_9XVGzhoCXuXVyT6WOC4kjloOtujH-4xlfwnG_ZlNiO8.jpg",
+          "fs_url": "https://foursquare.com/v/museu-nacional-dart-de-catalunya-mnac/4adcda52f964a520e14121e3",
+          "fs_id": "4adcda52f964a520e14121e3"
       },
       {
-        name: 'Dummy 3',
-        location: {
-          address: "Olot, 13, 08024  Barcelona",
-          lat: 44.09,
-          lng: 18.12
-        },
-        rating: 8.2,
-        likes: 10,
-        picture_url: 'kitten.jpg',
-        fs_url: 'https://foursquare.com/v/...',
-        fs_id: 'ghi789'
+          "name": "Hotel Arts Ritz Club Lounge",
+          "location": {
+              "address": "undefined, undefined  Barcelona",
+              "lat": 41.38696971372335,
+              "lng": 2.1966395920461257
+          },
+          "rating": 7.47,
+          "likes": 5,
+          "picture_url": "https://irs0.4sqi.net/img/general/205x205/936832_I1g_9QOZOy77xS8P2TPfxBN9sLaGZVK_2gLXMYaPvjE.jpg",
+          "fs_url": "https://foursquare.com/v/hotel-arts-ritz-club-lounge/4e5a88af18388cd5cbb1f5b9",
+          "fs_id": "4e5a88af18388cd5cbb1f5b9"
       }
     ],
   outdoors: [
     ],
   dinner: [
-    {
-        name: 'Dummy 4',
-        location: {
-          address: "Olot, 13, 08024  Barcelona",
-          lat: 44.25,
-          lng: 18.03
-        },
-        rating: 8.2,
-        likes: 10,
-        picture_url: 'kitten.jpg',
-        fs_url: 'https://foursquare.com/v/...',
-        fs_id: 'peter'
-      },
+      {
+          "name": "Cerveseria Catalana",
+          "location": {
+              "address": "Mallorca, 236, 08008  Barcelona",
+              "lat": 41.39244917514369,
+              "lng": 2.1608519554138184
+          },
+          "rating": 9.54,
+          "likes": 298,
+          "picture_url": "https://irs0.4sqi.net/img/general/205x205/45770872_O53s36C31FvUXlPOU9EghvbwyFJXvjamsTVy6AKgmj0.jpg",
+          "fs_url": "https://foursquare.com/v/cerveseria-catalana/4b475a53f964a520982f26e3",
+          "fs_id": "4b475a53f964a520982f26e3"
+      }
     ],
   nightlife: [
     ],
