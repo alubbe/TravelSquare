@@ -111,30 +111,36 @@ travelSquareControllers.controller('PlanningCtrl', [
             $scope.sections = [];
 
             function TCget(turl, name) {
-                // console.log("TCGet: " + name);
-                $http({
-                    method: 'GET',
-                    url: turl
-                }).
-                success(function (data, status) {
-                    // this callback will be called asynchronously
-                    // when the response is available
-                   //console.log(data);
-                   for (var i=0;i<data.length;i++)
-                    {
-                        data[i].section = name;
-                        data[i].required = false;
-                        }
-                
-                    $scope.sections[name] = data;
-                    //console.log($scope.sections[name] );
-                }).
-                error(function (data, status, headers, config) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with an error status.
-                    console.log('TCget returned an error');
+                 // Do not load loaded section again
+                   if (!Array.isArray($scope.sections[name] )){                      
+
+                    // console.log("TCGet: " + name);
+                    $http({
+                        method: 'GET',
+                        url: turl
+                    }).
+                    success(function (data, status) {
+                        // this callback will be called asynchronously
+                        // when the response is available
+                       //console.log(data);
+                      
+                       for (var i=0;i<data.length;i++)
+                        {
+                            data[i].section = name;
+                            data[i].required = false;
+                            }
                     
-                });
+                        $scope.sections[name] = data;
+                        //console.log($scope.sections[name] );
+                    }).
+                    error(function (data, status, headers, config) {
+                        // called asynchronously if an error occurs
+                        // or server returns response with an error status.
+                        console.log('TCget returned an error');
+                        
+                    });
+
+                }
             };
 
             function getUrl(section, amount) {
@@ -154,7 +160,22 @@ travelSquareControllers.controller('PlanningCtrl', [
              TCget(getUrl("restaurants", 8), "restaurants");
             $timeout(function () {
                 TCget(getUrl("coffee", 8), "coffee")
-            }, 800); // preloding second section as well
+            }, 1300); // preloding more sections as well
+
+            $timeout(function () {
+                TCget(getUrl("arts", 8), "arts")
+            }, 1800); // preloding more sections as well
+
+            $timeout(function () {
+                TCget(getUrl("shops", 8), "shops")
+            }, 2200); // preloding more sections as well
+
+            $timeout(function () {
+                TCget(getUrl("drinks", 8), "drinks")
+            }, 2800); // preloding more sections as well
+            $timeout(function () {
+                TCget(getUrl("outdoors", 8), "outdoors")
+            }, 3500); // preloding more sections as well
 
             // JQueries of ng-created elements
             $timeout(function () {
@@ -185,16 +206,28 @@ travelSquareControllers.controller('PlanningCtrl', [
 
         // Called by the form in the planning.html
         $scope.submit = function (planningModel) {
+        
         $rootScope.selectedvenues = {
-            city : $scope.city,
-            numberOfCalendarDays : $scope.days,
-            sights : $scope.requiredvenues
+        city : $scope.city,
+        numberOfCalendarDays : $scope.days,
         };
 
-            // Update the URL
-            //$rootScope.selectedvenues = $scope.
-//            $location.path('/tours');
+        var requiredvenues = $scope.requiredvenues;    
+        for (var i=0;i<requiredvenues.length;i++)
+            {
 
+                var section = requiredvenues[i].section;
+                if (!Array.isArray($rootScope.selectedvenues[section]))
+                    { 
+                        //create new sections
+                        $rootScope.selectedvenues[section] = [];
+                    }
+                $rootScope.selectedvenues[section].push(requiredvenues[i]);
+            }
+
+            console.log($rootScope.selectedvenues);
+            $location.path('/tours');
+            
 
 
 
