@@ -79,6 +79,6 @@ module.exports = function(app, passport, auth) {
 
     //foursquare routes
     var foursquare = require('../app/controllers/foursquare');
-    app.get('/itenary', foursquare.buildItenary);
+    app.post('/itenary', foursquare.buildItenary);
     app.get('/foursquare/:city/:category/:limit', foursquare.getVenuesCityCat);
 };
