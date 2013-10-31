@@ -23,17 +23,13 @@ var exploreCityCat = function(location, category, limit, fullDetails, callback) 
   var options = {
     host: 'api.foursquare.com',
     port: 443,
-    path: '/v2/venues/explore?client_id=WUH3Z4VTUYMQCD54KHR0O2BBXXSCIBIQ31I2NX2VGNL2T4AF&client_secret=S0LD0WYY11CYTJQZ01EYBBL0SGNSLUN0RXRXJOJMO0Y540WU&v=20130815%20%20%20&section=' + category + '&limit=' + limit,
-    location: location,
-    category: category
+    path: '/v2/venues/explore?client_id=WUH3Z4VTUYMQCD54KHR0O2BBXXSCIBIQ31I2NX2VGNL2T4AF&client_secret=S0LD0WYY11CYTJQZ01EYBBL0SGNSLUN0RXRXJOJMO0Y540WU&v=20130815%20%20%20&section=' + category + '&limit=' + limit
   };
   if(typeof location === "string") options.path += '&near=' + location;
   else options.path += "&ll=" + location.lat + "," + location.lng + "&radius=" + location.radius;
 
-
-  getJSON(options, function(statusCode, result, options){
-    if(result.response.groups == null) return callback(result.meta.code, result, {location: options.location, category: options.category});
-    
+  getJSON(options, function(statusCode, result){
+    if(result.response.groups == null) return callback(result.meta.code, result);
     if(fullDetails) {
       //collect the ids of all returned stores
       var ids = [];
@@ -41,24 +37,24 @@ var exploreCityCat = function(location, category, limit, fullDetails, callback) 
         ids.push( result.response.groups[0].items[i].venue.id);
 
       //get further venue details for the collected ids and return them to the callback
-      getVenueDetails(ids, options, callback);
+      getVenueDetails(ids, callback);
     }
     else {
       var venues = [];
-      for(var i = 0; i < result.response.groups[0].items.length; i++)
-        venues.push(convertToTravelSquareFormat(result.response.groups[0].items[i]));
-      callback(200, venues, options);
+      for(var j = 0; j < result.response.groups[0].items.length; j++)
+        venues.push(convertToTravelSquareFormat(result.response.groups[0].items[j]));
+      callback(200, venues);
     }
   });
 };
 
-var getVenueDetails = function(arrayId, options, callback) {
+var getVenueDetails = function(arrayId, callback) {
   //arrayId contains a list of foursquare venue ids
   //callback will be called with the first argument containing all venue details
   var venueCount = arrayId.length, venueDetails = [];
 
   //"global" variable saving for how many IDs the details have been returned
-  var receiveCount = 0; //
+  var receivedCount = 0; //
 
   for(var i = 0; i < venueCount; i++) {
     var venueOption = {
@@ -68,14 +64,17 @@ var getVenueDetails = function(arrayId, options, callback) {
     };
     getJSON(venueOption, function(statusCode, result) {
       // increase received details count
-      receiveCount++;
+      receivedCount++;
 
       // modify data to TravelSquare format and add it to array
-      venueDetails.push(convertToTravelSquareFormat(result.response)); 
+      if (result.response != null) venueDetails.push(convertToTravelSquareFormat(result.response)); 
+      else venueDetails.push({});
 
+      console.log("receivedCount is " + receivedCount + " and venueCount is " + venueCount);
+      // console.log(venueDetails);
       // finish if all venue details have been received
-      if(receiveCount == venueCount) 
-        callback(200, venueDetails, options);
+      if(receivedCount == venueCount) 
+        callback(200, venueDetails);
     });
   }
 };
@@ -142,10 +141,10 @@ var convertToTravelSquareFormat = function(foursquare_item){
 };
 
 exports.buildItenary = function(req, res) {
-  var requiredTourstops = req.body || mock_requiredTourstops;
+  var requiredTourstops = req.body.requiredTourstops || mock_requiredTourstops;
   var tourstops = [], centerIDs = [], i, j;
   var priorities = ["sights", "arts", "outdoors", "dinner", "nightlife", "shopping", "lunch", "cafe", "breakfast"]; 
-  var numberOfCalendarDays = 3; // requiredTourstops.numberOfCalendarDays
+  var numberOfCalendarDays = 2; // requiredTourstops.numberOfCalendarDays
 
   for(i = 0; i < priorities.length && tourstops.length < numberOfCalendarDays; i++) {
     var priority = priorities[i];
@@ -227,54 +226,108 @@ var completeTheTour = function(tourstops, centerIDs, numberOfAlreadyIncludedVenu
   // console.log("I see " + numberOfAlreadyIncludedVenues + " already included venues");
   var queueLength = 0, receivedCount = 0;
   for(var i = 0; i < tourstops.length; i++){
-    var center = getMiddleOfLatLongMatrix([tourstops[i]]);
+    // var center = getMiddleOfLatLongMatrix([tourstops[i]]);
     var location = tourstops[i][centerIDs[i]].location;
     location.radius = 500; // 500m
-    location.i = i;
     for(var j = 0; j < tourstops[i].length; j++){
       if(tourstops[i][j] == null) {
         queueLength++;
-        location.j = j;
-        var onResult = function(statusCode, additionalVenues, originalOptions){
-          var new_radius = parseInt(originalOptions.location.radius) * 2;
-          if(statusCode !== 200 && new_radius <= 12000) {
-            originalOptions.location.radius = new_radius;
-            return exploreCityCat(originalOptions.location, originalOptions.category, numberOfAlreadyIncludedVenues + 1, false, onResult);
-          }
+        findAdditionalVenues(location, indexToCategory(j), i, j, numberOfAlreadyIncludedVenues + 1, function(additionalVenues, _category, _i, _j){
           receivedCount++;
-          if (statusCode !== 200) {
-            console.log("Cannot find anything for the category " + originalOptions.category);
-            console.log(originalOptions.location);
-            console.log("receivedCount is " + receivedCount + " & and queueLength is " + queueLength);
-            console.log(additionalVenues);
-            if(receivedCount >= queueLength) res.jsonp(tourstops);
-            return;
+          // return an error if no venue was found
+          if(additionalVenues.length === 0){
+            console.log("Could not find any additional venues for category " + _category + "; i = " + _i + " & j = " + _j);
+            console.log(location);
           }
-          console.log("receivedCount is " + receivedCount + " & and queueLength is " + queueLength);
+          // else iterate through each venue, find the first new one and put it into tourstops
           for(var k = 0; k < additionalVenues.length; k++){
             var additionalVenue = additionalVenues[k];
             // ensure that the new venue hasnt been used already
             var venueIsNew = true;
             for(var l = 0; l < tourstops.length; l++) {
-              var categoryArray = categoryToIndex(originalOptions.category, true);
-              for(var m = 0; m < categoryArray.length; m++)
-                if(tourstops[l][categoryArray[m]] != null && additionalVenue.fs_id === tourstops[l][categoryArray[m]].fs_id) venueIsNew = false;
+              for(var m = 0; m < tourstops[l].length; m++){
+                if(tourstops[l][m] != null && additionalVenue.fs_id === tourstops[l][m].fs_id){ 
+                  venueIsNew = false;
+                }
+              }
             }
             if(venueIsNew){
-              tourstops[originalOptions.location.i][originalOptions.location.j] = additionalVenue;
-              console.log("Put in a new venue!");
-              console.log(additionalVenue);
+              tourstops[_i][_j] = additionalVenue;
+              console.log("Put in a new venue at i = " + _i + " & j = " + _j + "!");
               break;
             }
           }
-          if(receivedCount >= queueLength) res.jsonp(tourstops);
-        };
-        exploreCityCat(location, indexToCategory(j), numberOfAlreadyIncludedVenues + 1, false, onResult);
+          if(receivedCount >= queueLength){
+            getAllDetails(tourstops, function(statusCode, _tourstops){
+              var final_tour = [];
+              for(var p = 0; p < _tourstops.length / 7; p++){
+                final_tour.push([_tourstops[0], _tourstops[1], _tourstops[2], _tourstops[3], _tourstops[4], _tourstops[5], _tourstops[6]]);
+              }
+              res.jsonp(final_tour);
+            });
+          }
+        });
       }
     }
   }
   if(queueLength == 0) res.jsonp(tourstops);
-}
+};
+
+var findAdditionalVenues = function(location, category, i, j, n, callback) {
+  var processResponse = function(statusCode, additionalVenues){
+    // if nothing was found, increase the radius
+    if (statusCode !== 200 || additionalVenues.length === 0) {
+      location.radius *= 2;
+      if(location.radius <= 5000){
+        console.log("Increasing the radius for " + category);
+        return exploreCityCat(location, category, n, false, processResponse);
+      }
+      // if the radius cannot be increased any more, print an error and return the callback with an empty array
+      return callback([], category, i, j);
+    }
+    // else return the additional venues
+    callback(additionalVenues, category, i, j);
+  };
+  exploreCityCat(location, category, n, false, processResponse);
+};
+
+var getAllDetails = function(tourstops, callback){
+  var queueLength = 0, receivedCount = 0;
+  console.log(tourstops);
+
+  for(var i = 0; i < tourstops.length; i++){
+    for(var j = 0; j < tourstops[i].length; j++){
+      if(tourstops[i][j] != null){
+        queueLength++;
+        var venueOption = {
+          host: 'api.foursquare.com',
+          port: 443,
+          path: '/v2/venues/'+ tourstops[i][j].fs_id + '?client_id=WUH3Z4VTUYMQCD54KHR0O2BBXXSCIBIQ31I2NX2VGNL2T4AF&client_secret=S0LD0WYY11CYTJQZ01EYBBL0SGNSLUN0RXRXJOJMO0Y540WU&v=20130815%20%20%20'
+        };
+        peter(venueOption, i, j, function(venue, _i, _j) {
+          // increase received details count
+          receivedCount++;
+
+          // modify data to TravelSquare format and add it to array
+          if (venue != null) tourstops[_i][_j] = venue; 
+          else tourstops[_i][_j] = {};
+
+          console.log("receivedCount is " + receivedCount + " and queueLength is " + queueLength);
+          // console.log(venue);
+          // finish if all venue details have been received
+          if(receivedCount == queueLength) 
+            callback(200, tourstops);
+        });
+      }
+    }
+  }
+};
+
+var peter = function(venueOption, i, j, callback) {
+  getJSON(venueOption, function(statusCode, result) {
+    callback(convertToTravelSquareFormat(result.response), i, j);
+  });
+};
 
 var categoryToIndex = function(category, asAnArray) {
   var result = "N/A";
@@ -318,8 +371,7 @@ var getJSON = function(options, onResult) {
   var prot, req;
   prot = options.port === 443 ? https : http;
   req = prot.request(options, function(res) {
-    var output;
-    output = "";
+    var output = "";
     res.setEncoding("utf8");
     res.on("data", function(chunk) {
       return output += chunk;
@@ -329,10 +381,10 @@ var getJSON = function(options, onResult) {
       if (res.headers["content-type"].indexOf("json") === -1) {
         return onResult(res.statusCode, {
           error: "response is not JSON"
-        }, options);
+        });
       } else {
         obj = JSON.parse(output);
-        return onResult(res.statusCode, obj, options);
+        return onResult(res.statusCode, obj);
       }
     });
   });
@@ -340,7 +392,7 @@ var getJSON = function(options, onResult) {
     console.log(e);
     return onResult("Unknown error code", {
       error: e.message
-    }, options);
+    });
   });
   return req.end();
 };
