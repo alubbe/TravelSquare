@@ -49,6 +49,8 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 		}, function(err) {
 			console.log('ERROR: Failed to generate tours...');
 			console.log(err);
+			// Remove the loading overlad
+			$('#loading-overlay').remove();
 			$location.path('/');
 		});
 
