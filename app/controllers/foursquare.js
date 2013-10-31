@@ -257,7 +257,6 @@ var completeTheTour = function(tourstops, centerIDs, numberOfAlreadyIncludedVenu
               break;
             }
           }
-<<<<<<< HEAD
           if(receivedCount >= queueLength){
             getAllDetails(tourstops, function(statusCode, _tourstops){
               var final_tour = [];
