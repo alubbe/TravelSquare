@@ -13,7 +13,8 @@ orange:; #FFBF2A */;
     font-size: 46px;
     line-height: 48px;
     margin: 10px 0px;
-    font-family: Montserrat,sans-serif;
+    font-weight: bold;
+    /*font-family: Montserrat,sans-serif; */
 }
 
 .containerSquares {
@@ -30,6 +31,7 @@ orange:; #FFBF2A */;
     margin-top: 10px;
     margin-right: 15px;
     margin-left: 25px;
+    float: right;
 }
 
 .stdwidth{
@@ -48,7 +50,7 @@ orange:; #FFBF2A */;
     clear: block;
     /*border: 1px solid gray;*/
     position: relative;
-    height: 550px;
+    height: 470px;
 }
 
 .titlebar {
@@ -201,9 +203,9 @@ orange:; #FFBF2A */;
 
 .textopaquefilter {
     background-color: #fff;
-    -moz-opacity: 0.50;
-    opacity: 0.50;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha"(Opacity=50);
+    -moz-opacity: 0.70;
+    opacity: 0.70;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha"(Opacity=70);
 }
 
 

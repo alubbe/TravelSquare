@@ -13,34 +13,46 @@ exports.getVenuesCityCat = function(req, res) {
   var city = req.params.city;
   var category = req.params.category;
   var limit = req.params.limit;
-  exploreCityCat(city, category, limit, function(json_data) {
+  exploreCityCat(city, category, limit, true, function(statusCode, json_data) {
       res.jsonp(json_data); 
   });
 };
 
-var exploreCityCat = function(location, category, limit, callback) {
+var exploreCityCat = function(location, category, limit, fullDetails, callback) {
   //initialise getJSON options
   var options = {
     host: 'api.foursquare.com',
     port: 443,
-    path: '/v2/venues/explore?client_id=WUH3Z4VTUYMQCD54KHR0O2BBXXSCIBIQ31I2NX2VGNL2T4AF&client_secret=S0LD0WYY11CYTJQZ01EYBBL0SGNSLUN0RXRXJOJMO0Y540WU&v=20130815%20%20%20&section=' + category + '&limit=' + limit
+    path: '/v2/venues/explore?client_id=WUH3Z4VTUYMQCD54KHR0O2BBXXSCIBIQ31I2NX2VGNL2T4AF&client_secret=S0LD0WYY11CYTJQZ01EYBBL0SGNSLUN0RXRXJOJMO0Y540WU&v=20130815%20%20%20&section=' + category + '&limit=' + limit,
+    location: location,
+    category: category
   };
   if(typeof location === "string") options.path += '&near=' + location;
-  else options.path += "&ll=" + location.lat + "," + location.lng + "&radius=" + options.radius;
+  else options.path += "&ll=" + location.lat + "," + location.lng + "&radius=" + location.radius;
 
 
-  getJSON(options, function(statusCode, result){
-    //collect the ids of all returned stores
-    var ids = [];
-    for(var i = 0; i < result.response.groups[0].items.length; i++)
-      ids.push( result.response.groups[0].items[i].venue.id);
+  getJSON(options, function(statusCode, result, options){
+    if(result.response.groups == null) return callback(result.meta.code, result, {location: options.location, category: options.category});
+    
+    if(fullDetails) {
+      //collect the ids of all returned stores
+      var ids = [];
+      for(var i = 0; i < result.response.groups[0].items.length; i++)
+        ids.push( result.response.groups[0].items[i].venue.id);
 
-    //get further venue details for the collected ids and return them to the callback
-    getVenueDetails(ids, callback);
+      //get further venue details for the collected ids and return them to the callback
+      getVenueDetails(ids, options, callback);
+    }
+    else {
+      var venues = [];
+      for(var i = 0; i < result.response.groups[0].items.length; i++)
+        venues.push(convertToTravelSquareFormat(result.response.groups[0].items[i]));
+      callback(200, venues, options);
+    }
   });
 };
 
-var getVenueDetails = function(arrayId, callback) {
+var getVenueDetails = function(arrayId, options, callback) {
   //arrayId contains a list of foursquare venue ids
   //callback will be called with the first argument containing all venue details
   var venueCount = arrayId.length, venueDetails = [];
@@ -63,7 +75,7 @@ var getVenueDetails = function(arrayId, callback) {
 
       // finish if all venue details have been received
       if(receiveCount == venueCount) 
-        callback(venueDetails);
+        callback(200, venueDetails, options);
     });
   }
 };
@@ -144,13 +156,13 @@ exports.buildItenary = function(req, res) {
   // if there are not enough centers, find more sights to fill the remaining days
   if (tourstops.length < numberOfCalendarDays) {
     console.log("Too few centers!");
-    exploreCityCat(requiredTourstops.city, "sights", numberOfCalendarDays, function(additionalVenues){
+    exploreCityCat(requiredTourstops.city, "sights", numberOfCalendarDays, false, function(additionalVenues){
       for(var k = 0; k < additionalVenues.length && tourstops.length < numberOfCalendarDays; k++){
         var additionalVenue = additionalVenues[k];
         // ensure that the new venue hasnt been used already
         var venueIsNew = true;
         for(var l = 0; l < tourstops.length; l++) {
-          if(additionalVenue.fs_id === tourstops[l][centerIDs[l]]) venueIsNew = false;
+          if(additionalVenue.fs_id === tourstops[l][centerIDs[l]].fs_id) venueIsNew = false;
         }
         if(venueIsNew){
           var newEntry = [null, null, null, null, null, null, null];
@@ -204,34 +216,52 @@ exports.buildItenary = function(req, res) {
 };
 
 var completeTheTour = function(tourstops, centerIDs, numberOfAlreadyIncludedVenues, res) {
-  console.log("I see " + numberOfAlreadyIncludedVenues + " already included venues");
-  var queueLength = 0, receiveCount = 0;
+  // console.log("I see " + numberOfAlreadyIncludedVenues + " already included venues");
+  var queueLength = 0, receivedCount = 0;
   for(var i = 0; i < tourstops.length; i++){
     var center = getMiddleOfLatLongMatrix([tourstops[i]]);
+    var location = tourstops[i][centerIDs[i]].location;
+    location.radius = 500; // 500m
+    location.i = i;
     for(var j = 0; j < tourstops[i].length; j++){
       if(tourstops[i][j] == null) {
         queueLength++;
-        var location = tourstops[i][centerIDs[i]].location;
-        location.radius = 2000; // 2km
-        exploreCityCat(location, indexToCategory(j), numberOfAlreadyIncludedVenues, function(additionalVenues){
-          for(var k = 0; k < additionalVenues.length && tourstops.length < numberOfCalendarDays; k++){
+        location.j = j;
+        var onResult = function(statusCode, additionalVenues, originalOptions){
+          var new_radius = parseInt(originalOptions.location.radius) * 2;
+          if(statusCode !== 200 && new_radius <= 12000) {
+            originalOptions.location.radius = new_radius;
+            return exploreCityCat(originalOptions.location, originalOptions.category, numberOfAlreadyIncludedVenues + 1, false, onResult);
+          }
+          receivedCount++;
+          if (statusCode !== 200) {
+            console.log("Cannot find anything for the category " + originalOptions.category);
+            console.log(originalOptions.location);
+            console.log("receivedCount is " + receivedCount + " & and queueLength is " + queueLength);
+            console.log(additionalVenues);
+            if(receivedCount >= queueLength) res.jsonp(tourstops);
+            return;
+          }
+          console.log("receivedCount is " + receivedCount + " & and queueLength is " + queueLength);
+          for(var k = 0; k < additionalVenues.length; k++){
             var additionalVenue = additionalVenues[k];
             // ensure that the new venue hasnt been used already
             var venueIsNew = true;
             for(var l = 0; l < tourstops.length; l++) {
-              if(additionalVenue.fs_id === tourstops[l][centerIDs[l]]) venueIsNew = false;
+              var categoryArray = categoryToIndex(originalOptions.category, true);
+              for(var m = 0; m < categoryArray.length; m++)
+                if(tourstops[l][categoryArray[m]] != null && additionalVenue.fs_id === tourstops[l][categoryArray[m]].fs_id) venueIsNew = false;
             }
             if(venueIsNew){
-              var newEntry = [null, null, null, null, null, null, null];
-              var new_centerID = categoryToIndex("sights");
-              // console.log("the new centerID is " + new_centerID);
-              centerIDs.push(new_centerID);
-              newEntry[new_centerID] = additionalVenue;
-              tourstops.push(newEntry);
+              tourstops[originalOptions.location.i][originalOptions.location.j] = additionalVenue;
+              console.log("Put in a new venue!");
+              console.log(additionalVenue);
+              break;
             }
           }
-          if(receiveCount >= queueLength) res.jsonp(tourstops);
-        });
+          if(receivedCount >= queueLength) res.jsonp(tourstops);
+        };
+        exploreCityCat(location, indexToCategory(j), numberOfAlreadyIncludedVenues + 1, false, onResult);
       }
     }
   }
@@ -261,11 +291,11 @@ var categoryToIndex = function(category, asAnArray) {
 
 var indexToCategory = function(index) {
   switch(index) {
-    case 0: return chooseOneAtRandom("breakfast", "cafe");    // Morning 1
-    case 1: return chooseOneAtRandom("arts", "sights");       // Morning 2
+    case 0: return chooseOneAtRandom(["breakfast", "cafe"]);    // Morning 1
+    case 1: return chooseOneAtRandom(["arts", "sights"]);       // Morning 2
     case 2: return "lunch";                                   // Lunch
-    case 3: return chooseOneAtRandom("arts", "sights");       // Afternoon 1
-    case 4: return chooseOneAtRandom("outdoors", "shopping"); // Afternoon 2
+    case 3: return chooseOneAtRandom(["arts", "sights"]);       // Afternoon 1
+    case 4: return chooseOneAtRandom(["outdoors", "shopping"]); // Afternoon 2
     case 5: return "dinner";                                  // Evening
     case 6: return "nightlife";                               // Night
   }
@@ -273,8 +303,8 @@ var indexToCategory = function(index) {
 };
 
 var chooseOneAtRandom = function(array) {
-  return array[ Math.floor( Math.random() * array.length)] ;
-}
+  return array[ Math.floor( Math.random() * array.length)];
+};
 
 var getJSON = function(options, onResult) {
   var prot, req;
@@ -291,10 +321,10 @@ var getJSON = function(options, onResult) {
       if (res.headers["content-type"].indexOf("json") === -1) {
         return onResult(res.statusCode, {
           error: "response is not JSON"
-        });
+        }, options);
       } else {
         obj = JSON.parse(output);
-        return onResult(res.statusCode, obj);
+        return onResult(res.statusCode, obj, options);
       }
     });
   });
@@ -302,7 +332,7 @@ var getJSON = function(options, onResult) {
     console.log(e);
     return onResult("Unknown error code", {
       error: e.message
-    });
+    }, options);
   });
   return req.end();
 };
