@@ -16,7 +16,8 @@ travelSquareApp.config([
 			controller: 'PlanningCtrl'
 		}).when('/tours', {
 			templateUrl: 'views/tours.html',
-			controller: 'ToursCtrl'
+			controller: 'ToursCtrl',
+			reloadOnSearch: false
 		}).when('/', {
 			templateUrl: 'views/index.html',
 			controller: 'IndexCtrl'
