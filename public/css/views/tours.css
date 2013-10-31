@@ -70,7 +70,7 @@
 }
 
 #day-selection li div {
-	text-decoration: underline;
+	/*text-decoration: underline;*/
 	cursor: pointer;
 }
 

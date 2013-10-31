@@ -34,22 +34,7 @@ orange:; #FFBF2A */;
     float: right;
 }
 
-.stdwidth{
-    width: 1100px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.titlebar {
-}
-
-
-
 .blocky {
-    display: block;
-    clear: block;
-    /*border: 1px solid gray;*/
-    position: relative;
     height: 470px;
 }
 
@@ -82,48 +67,56 @@ orange:; #FFBF2A */;
     color: white;
 }
 
-#accordion-restaurants {
+#accordion-sights {
     background: none;
     padding-left: 10px;
     background-color: rgb(255,225,89);
 }
 
-#accordion-coffee {
+#accordion-arts {
     background: none;
     padding-left: 10px;
     background-color: rgb(255,164,89);
 }
 
-#accordion-sights {
+#accordion-outdoors {
     background: none;
     padding-left: 10px;
     background-color: rgb(254,116,88);
 }
 
-#accordion-arts {
+#accordion-dinner {
     background: none;
     padding-left: 10px;
     background-color: rgb(71,214,121);
 }
 
-#accordion-shops {
+#accordion-nightlife {
     background: none;
     padding-left: 10px;
     background-color: rgb(84,155,247);
 }
 
-#accordion-drinks {
+#accordion-outdoors {
     background: none;
     padding-left: 10px;
     background-color: rgb(127,125,231);
 }
 
-#accordion-outdoors {
+#accordion-shopping {
     background: none;
     padding-left: 10px;
     background-color: rgb(254,100,162);
 }
 
+#submit-button {
+    background-color: rgba(252, 224, 61, 0.96);
+    float: right;
+    border-color: rgba(252, 224, 61, 0.4);
+    font-family: Lato, sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+}
 
 
 
@@ -132,7 +125,7 @@ orange:; #FFBF2A */;
 
 .venueSquare {
     position: relative;
-    border: 2px solid rgb(166, 166, 166);
+    border: 2px solid white;
     width: 220px;
     height: 220px;
     padding: 10px;
