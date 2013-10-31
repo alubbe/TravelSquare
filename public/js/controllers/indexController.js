@@ -18,22 +18,31 @@ angular.module('travelSquare.index', []).controller('IndexCtrl', [
       console.log('Index view loaded');
       var maps = $window.google.maps;
 
-      //var autocompletemain = new maps.places.Autocomplete(document.getElementById('location'), {
-      //  types: ["(cities)"],
-      //  componentRestrictions: {country: 'de'}
-      //});
+      var autocompletemain = new maps.places.Autocomplete(document.getElementById('location'), {
+       types: ["(cities)"],
+       componentRestrictions: {country: 'de'}
+      });
 
     }
 
     // Called by the form in the index.html
     $scope.submit = function(indexModel) {
-      //TODO: add error handling if some input is missing
-
-      if(indexModel != null && indexModel.location != null && indexModel.days != null)
+      if (indexModel != null && indexModel.location != null && indexModel.days != null) {
+        // Get the location name
+        var location = indexModel.location;
+        if ($('#location').val() != location) {
+          // Use the location provided by the Google auto completion
+          location = $('#location').val();
+          if (location.indexOf(',') != -1) {
+            // Remove everything except for the name of the city
+            location = location.substring(0, location.indexOf(','));
+          }
+        }
         // Update the URL
         $location.path('/planning').
-          search('location', indexModel.location).
+          search('location', location).
           search('days', indexModel.days);
-    }
+      }
+    };
   }
 ]);
