@@ -127,7 +127,7 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 			// console.log('Tours view loaded');
 			// Add map
 			mapsWrapper = new GoogleMapsWrapper();
-			mapsWrapper.initializeMap();
+			mapsWrapper.initializeMap('tour-map-canvas');
 		};
 
 		// Parses the date fetched from the /itenary API end-point
