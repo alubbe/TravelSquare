@@ -3,8 +3,14 @@ angular.module('travelSquare.index', []).controller('IndexCtrl', [
   '$rootScope',
   '$http',
   '$location',
-  function ($scope, $rootScope, $http, $location) {
+  '$routeParams',
+  function ($scope, $rootScope, $http, $location, $routeParams) {
     console.log('Index controller loaded');
+
+    // Remove all URL parameters
+    for (var key in $routeParams) {
+      $location.search(key, null);
+    }
 
     // Called when loading the index.html
     $scope.setup = function() {
