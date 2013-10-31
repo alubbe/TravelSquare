@@ -28,6 +28,11 @@ function GoogleMapsWrapper() {
 		}
 		this.markers = [];
 
+		// Check if new places are given
+		if (places.length == 0) {
+			return;
+		}
+
 		// Create all markers
 		this.bounds = new google.maps.LatLngBounds();
 		for (var i = 0; i < places.length; i++) {
@@ -43,8 +48,21 @@ function GoogleMapsWrapper() {
 			this.markers.push(marker);
 		}
 
+		// Don't zoom in too far with only one marker
+		if (this.bounds.getNorthEast().equals(this.bounds.getSouthWest())) {
+			var extendPoint1 = new google.maps.LatLng(this.bounds.getNorthEast().lat() + 0.01, this.bounds.getNorthEast().lng() + 0.01);
+			var extendPoint2 = new google.maps.LatLng(this.bounds.getNorthEast().lat() - 0.01, this.bounds.getNorthEast().lng() - 0.01);
+			this.bounds.extend(extendPoint1);
+			this.bounds.extend(extendPoint2);
+		}
+
 		// Fit the map to display all markers
 		this.map.fitBounds(this.bounds);
+
+		if (this.markers.length == 1) {
+			// Can't calculate route with only one marker
+			return;
+		}
 
 		// Create waypoints
 		var waypoints = [];
@@ -69,29 +87,3 @@ function GoogleMapsWrapper() {
 		});
 	};
 }
-
-// var points = [
-// 	{
-// 		lat: 40.728162904651136,
-// 		lng: -73.98801601305168
-// 	},{
-// 		lat: 40.689644,
-// 		lng: -73.971364
-// 	},{
-// 		lat: 40.697673182111075,
-// 		lng: -73.99341344833374
-// 	},{
-// 		lat: 40.731673368956436,
-// 		lng: -74.00453787112845
-// 	}
-// ];
-
-// var wrapper = new GoogleMapsWrapper();
-// function start() {
-// 	wrapper.initializeMap();
-// 	wrapper.updateRoute(points);
-// }
-
-// google.maps.event.addDomListener(window, 'load', start);
-
-
