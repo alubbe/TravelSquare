@@ -48,6 +48,7 @@
     "grunt-contrib-jshint": "latest",
     "grunt-nodemon": "latest",
     "grunt-concurrent": "latest",
-    "grunt-mocha-test": "latest"
+    "grunt-mocha-test": "latest",
+    "grunt-node-inspector": "~0.1.1"
   }
 }

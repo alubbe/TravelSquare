@@ -45,6 +45,7 @@ module.exports = function(grunt) {
                     watchedExtensions: ['js'],
                     watchedFolders: ['app', 'config'],
                     debug: true,
+                    nodeArgs: ['--debug'],
                     delayTime: 1,
                     env: {
                         PORT: 3000
@@ -53,8 +54,18 @@ module.exports = function(grunt) {
                 }
             }
         },
+        'node-inspector': {
+          custom: {
+            options: {
+              'web-port': 8080,
+              'web-host': 'localhost',
+              'debug-port': 5858,
+              'save-live-edit': true
+            }
+          }
+        },
         concurrent: {
-            tasks: ['nodemon', 'watch'], 
+            tasks: ['nodemon', 'watch', 'node-inspector'], 
             options: {
                 logConcurrentOutput: true
             }
@@ -77,6 +88,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-nodemon');
+    grunt.loadNpmTasks('grunt-node-inspector');
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-env');
 
