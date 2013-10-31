@@ -8,26 +8,24 @@ angular.module('travelSquare.planning', []).controller('PlanningCtrl', [
     '$timeout',
     function ($scope, $rootScope, $http, $location, $routeParams, $window, $timeout) {
         console.log('Planning controller loaded');
-        $scope.test = 'planning OK';
-
-        $scope.sectiontitles = [{
-            id: "restaurants",
-            name: "FOOD"
-        }, {
-            id: "coffee",
-            name: "COFFEE"
+        $scope.sectiontitles = [{ 
+            id: "sights",
+            name: "SIGHTS"
         }, {
             id: "arts",
             name: "ARTS"
         }, {
-            id: "shops",
-            name: "SHOPPING"
-        }, {
-            id: "drinks",
-            name: "NIGHTLIFE"
-        }, {
             id: "outdoors",
             name: "OUTDOORS"
+        }, {
+            id: "dinner",
+            name: "DINNER"
+        }, {
+            id: "nightlife",
+            name: "NIGHTLIFE"
+        }, {
+            id: "shopping",
+            name: "SHOPPING"
         }];
         var $ = $window.jQuery;
         $scope.requiredvenues = [];
@@ -37,7 +35,6 @@ angular.module('travelSquare.planning', []).controller('PlanningCtrl', [
            // console.log("addVenue");
             console.log(venue.required);
          //   console.log(event.target);
-           
 
             if (venue.required === true){
                 //deactivate heart
@@ -58,16 +55,10 @@ angular.module('travelSquare.planning', []).controller('PlanningCtrl', [
                 };
             };
 
-
-
-        // TODO
-        console.log('TODO: Load the planning data...')
-
         // Called when loading the index.html
         $scope.setup = function () {
             console.log('Planning view loaded');
             $scope.test = "Controller ok";
-
 
             var urlparams, param_city = "Barcelona",
                 param_days = "2";
@@ -108,9 +99,7 @@ angular.module('travelSquare.planning', []).controller('PlanningCtrl', [
                         // called asynchronously if an error occurs
                         // or server returns response with an error status.
                         console.log('TCget returned an error');
-                        
                     });
-
                 }
             };
 
@@ -118,35 +107,33 @@ angular.module('travelSquare.planning', []).controller('PlanningCtrl', [
                 return "/foursquare/" + $scope.city + "/" + section + "/" + amount;
             };
 
-           
-
-
             function loadOnDemand(sectiontitle) {
                 console.log("Gettting sectiontitle data for section: " + sectiontitle);
                 console.log(sectiontitle);
                 TCget(getUrl(sectiontitle, 8), sectiontitle);
             };
 
-
-             TCget(getUrl("restaurants", 8), "restaurants");
-            $timeout(function () {
-                TCget(getUrl("coffee", 8), "coffee")
-            }, 1300); // preloding more sections as well
+            TCget(getUrl("sights", 8), "sights");
 
             $timeout(function () {
                 TCget(getUrl("arts", 8), "arts")
-            }, 1800); // preloding more sections as well
+            }, 500); // preloding more sections as well
 
-            $timeout(function () {
-                TCget(getUrl("shops", 8), "shops")
-            }, 2200); // preloding more sections as well
-
-            $timeout(function () {
-                TCget(getUrl("drinks", 8), "drinks")
-            }, 2800); // preloding more sections as well
             $timeout(function () {
                 TCget(getUrl("outdoors", 8), "outdoors")
-            }, 3500); // preloding more sections as well
+            }, 1000); // preloding more sections as well
+
+            $timeout(function () {
+                TCget(getUrl("dinner", 8), "dinner")
+            }, 1500); // preloding more sections as well
+
+            $timeout(function () {
+                TCget(getUrl("nightlife", 8), "nightlife")
+            }, 2000); // preloding more sections as well
+
+            $timeout(function () {
+                TCget(getUrl("shopping", 8), "shopping")
+            }, 2500); // preloding more sections as well
 
             // JQueries of ng-created elements
             $timeout(function () {
@@ -160,7 +147,7 @@ angular.module('travelSquare.planning', []).controller('PlanningCtrl', [
                     loadOnDemand((event.currentTarget.id).substring(10))
                 });
 
-            }, 10);
+            }, 20);
 
 
             $("input[type=submit]")

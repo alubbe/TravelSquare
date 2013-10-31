@@ -2,7 +2,6 @@
 <a href="/" id="logo"><img height="25" src="../img/travelsquare_Mini.png"/></a>
 </header>
 <section ng-init="setup()">
-  <br/>
   <div class="row">
     <div class="large-8 columns" id="lblcity">
        {{city}}
@@ -14,39 +13,37 @@
       <img class="navigationtopbuttons" src="../img/map.png" alt="map" ng-click="submit(planningModel)">
     </div>
   </div>
-  <br/>
-  <div id="accordion" class="stdwidth">
-    <div ng-repeat="sectiontitle in sectiontitles">
+  <div id="accordion">
+    <div ng-repeat="sectiontitle in sectiontitles" class="row">
       <h3 id="accordion-{{sectiontitle.id}}" class="accorideonIndiHeader">{{sectiontitle.name}}</h3>
-      <div>
-        <div class="blocky">
-          <!-- Begin of Squeres holder two -->
-          <!-- <div id="sortable" class"containerSquares">-->
-          <div class="row">
-            <div ng-repeat="venue in sections[sectiontitle.id]">
-              <div class="large-3 columns" ng-click="addVenue(venue)">
-                <div id="{{venue.fs_id}}" class="venueSquare">
-                  <div class="squareImageHolder" >
-                    <img class="squareImage" src="{{venue.picture_url}}">
-                  </div>
-                  <div class="squareHeart"  ng-class="{ notclickedHeart : venue.required == false,  clickedHeart : venue.required == true}">
-                  </div>
-                  <div class="squareVenuename textopaquefilter">
-                     {{venue.name}}
-                  </div>
-                  <div class="squareVenueinfo textopaquefilter">
-                    <center>
-                    Rating {{venue.rating}} - Likes {{venue.likes}} - <a href="{{venue.fs_url}}" target="_blank">more</a>
-                    </center>
-                  </div>
+    
+      <div class="blocky">
+        <!-- Begin of Squeres holder two -->
+        <!-- <div id="sortable" class"containerSquares">-->
+          <div ng-repeat="venue in sections[sectiontitle.id]">
+            <div class="large-3 columns" ng-click="addVenue(venue)">
+              <div id="{{venue.fs_id}}" class="venueSquare">
+                <div class="squareImageHolder" >
+                  <img class="squareImage" src="{{venue.picture_url}}">
+                </div>
+                <div class="squareHeart"  ng-class="{ notclickedHeart : venue.required == false,  clickedHeart : venue.required == true}">
+                </div>
+                <div class="squareVenuename textopaquefilter">
+                   {{venue.name}}
+                </div>
+                <div class="squareVenueinfo textopaquefilter">
+                  <center>
+                  Rating {{venue.rating}} - Likes {{venue.likes}} - <a href="{{venue.fs_url}}" target="_blank">more</a>
+                  </center>
                 </div>
               </div>
             </div>
-            <!-- End of Squeres holder one -->
           </div>
-          <!-- End of Squeres holder two -->
-        </div>
+          <!-- End of Squeres holder one -->
+        
+        <!-- End of Squeres holder two -->
       </div>
+    
     </div>
     <!-- ng-repeat sectiontitles-->
   </div>
@@ -56,9 +53,7 @@
     <div id="debugnexturl">debug url</div>
     <br /><br /><br /><br />
    -->
-  <div class="stdwidth">
-    <div>
-      <button ng-click="submit(planningModel)">Plan my tour</a>
-    </div>
+  <div class="row">
+      <button ng-click="submit(planningModel)" id="submit-button">Plan my tour</a>
   </div>
 </section>
