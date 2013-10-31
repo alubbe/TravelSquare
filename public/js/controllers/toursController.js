@@ -103,6 +103,14 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 		};
 		// console.log(payload);
 
+		// Show loading overlay
+		$('body').append(
+			'<div id="loading-overlay">'+
+				'<div class="text">Generating your itinerary...</div>'+
+				'<img src="../img/loading-indicator.gif" alt="Loading..." class="animation" />'+
+			'</div>'
+		);
+
 		// Load all tours
 		$http({
 			url: '/itenary',
@@ -111,6 +119,9 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 		}).success(function(data, status) {
 			console.log(status);
 			console.log(data);
+			// Remove the loading overlad
+			$('#loading-overlay').remove();
+			// Parse the response
 			$scope.days = $scope.parseData(data);
 			$scope.selectedDay = null;
 			// Try to get the selected day from the URL
