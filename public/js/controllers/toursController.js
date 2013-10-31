@@ -117,7 +117,7 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 			// Remove the loading overlad
 			$('#loading-overlay').remove();
 			// Parse the response
-			$scope.days = $scope.parseData(response.stops);
+			$scope.days = $scope.parseData(response);
 			$scope.selectedDay = null;
 			// Try to get the selected day from the URL
 			var selectedDayIndex = ($routeParams.selectedDay) ? parseInt($routeParams.selectedDay) : 0;
