@@ -81,7 +81,7 @@ var getVenueDetails = function(arrayId, options, callback) {
 };
 
 var convertToTravelSquareFormat = function(foursquare_item){
-  var venue = {}, location = {}, photo = {};
+  var venue = {}, location = {}, photo = {}, categories = {}, likes = {};
   if (foursquare_item.venue == null){
     console.log("response.venue is null");
     console.log(foursquare_item);
@@ -92,13 +92,21 @@ var convertToTravelSquareFormat = function(foursquare_item){
       console.log(venue);
     } else {
       location = venue.location;
+      if (venue.categories == null){
+        console.log("venue.categories is null");
+        console.log(venue);
+      } else categories = venue.categories;
+      if (venue.likes == null){
+        console.log("venue.likes is null");
+        console.log(venue);
+      } else likes = venue.likes;
       if (venue.photos.groups == null){
         console.log("venue.photos.groups is null");
         console.log(venue.photos);
       } else {
         if (venue.photos.groups[0] == null){
-          console.log("venue.photos.groups[0] is null");
-          console.log(venue.photos);
+          // console.log("venue.photos.groups[0] is null");
+          // console.log(venue.photos);
         } else {
           if (venue.photos.groups[0].items == null){
             console.log("venue.photos.groups[0].items is null");
@@ -124,9 +132,9 @@ var convertToTravelSquareFormat = function(foursquare_item){
       lat:location.lat,
       lng:location.lng
     },
-    category:venue.categories.name, 
+    category:categories.name, 
     rating:venue.rating,
-    likes:venue.likes.count,
+    likes:likes.count,
     picture_url:photo.prefix + "205x205" + photo.suffix, // photo.width + "x" + photo.height
     fs_url:venue.canonicalUrl,
     fs_id:venue.id
