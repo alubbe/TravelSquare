@@ -1,12 +1,17 @@
-angular.
-	module('mean.tours').
-	factory('Tours', ['$resource', function ($resource) {
-		return $resource('tours2.json', {}, {
-		// return $resource('/itenary', {}, {
+angular.module('travelSquare.services', []).factory('Tours', [
+	'$resource',
+	function ($resource) {
+		return $resource('/itenary', {}, {
 			get: {
-				method: 'GET',
-				params: {},
+				method: 'POST',
 				isArray: false
 			}
 		});
-	}]);
+		// return $resource('tours2.json', {}, {
+		// 	get: {
+		// 		method: 'GET',
+		// 		isArray: false
+		// 	}
+		// });
+	}
+]);

@@ -89,6 +89,15 @@
 	height: 500px;
 }
 
+#tour-map-canvas label {
+	width: auto;
+	display:inline;
+}
+
+#tour-map-canvas img {
+	max-width: none;
+}
+
 /* Venues */
 .row.spots {
 	margin-top: 40px;

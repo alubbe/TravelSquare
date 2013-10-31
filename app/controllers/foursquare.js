@@ -257,20 +257,21 @@ var completeTheTour = function(tourstops, centerIDs, numberOfAlreadyIncludedVenu
               break;
             }
           }
+<<<<<<< HEAD
           if(receivedCount >= queueLength){
             getAllDetails(tourstops, function(statusCode, _tourstops){
               var final_tour = [];
               for(var p = 0; p < _tourstops.length / 7; p++){
                 final_tour.push([_tourstops[0], _tourstops[1], _tourstops[2], _tourstops[3], _tourstops[4], _tourstops[5], _tourstops[6]]);
               }
-              res.jsonp(final_tour);
+              res.jsonp({data:final_tour});
             });
           }
         });
       }
     }
   }
-  if(queueLength == 0) res.jsonp(tourstops);
+  if(queueLength == 0) res.jsonp({data: null});
 };
 
 var findAdditionalVenues = function(location, category, i, j, n, callback) {

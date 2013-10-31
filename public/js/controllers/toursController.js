@@ -4,7 +4,8 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 	'$http',
 	'$location',
 	'$routeParams',
-	function ($scope, $rootScope, $http, $location, $routeParams) {
+	'Tours',
+	function ($scope, $rootScope, $http, $location, $routeParams, Tours) {
 		// console.log('Tours controller loaded');
 
 		// TODO: REMOVE DUMMY DATA
@@ -101,7 +102,6 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 		for (var key in $rootScope.selectedvenues) {
 			payload[key] = $rootScope.selectedvenues[key];
 		};
-		// console.log(payload);
 
 		// Show loading overlay
 		$('body').append(
@@ -111,24 +111,23 @@ angular.module('travelSquare.tours', []).controller('ToursCtrl', [
 			'</div>'
 		);
 
-		// Load all tours
-		$http({
-			url: '/itenary',
-			method: 'POST',
-			data: payload
-		}).success(function(data, status) {
-			console.log(status);
-			console.log(data);
+		// Get the tours
+		Tours.get(payload, function(response) {
 			// Remove the loading overlad
 			$('#loading-overlay').remove();
+			if (!response.data) {
+				// Missing data in the response
+				$location.path('/');
+				return;
+			}
 			// Parse the response
-			$scope.days = $scope.parseData(data);
+			$scope.days = $scope.parseData(response.data);
 			$scope.selectedDay = null;
 			// Try to get the selected day from the URL
 			var selectedDayIndex = ($routeParams.selectedDay) ? parseInt($routeParams.selectedDay) : 0;
 			$scope.selectDay(selectedDayIndex);
-		}).error(function(data, status) {
-			console.log('ERROR: Failed to generate tours...');
+		}, function() {
+			// console.log('ERROR: Failed to generate tours...');
 			$location.path('/');
 		});
 
